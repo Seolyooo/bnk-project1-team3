@@ -1,0 +1,175 @@
+body {
+    font-family: '맑은 고딕', sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    color: #111;
+}
+
+.container {
+    width: 950px;
+    margin: 40px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* 정보 테이블 */
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.info-table th, .info-table td {
+    border: 1px solid #ddd;
+    padding: 10px 14px;
+    text-align: center;
+}
+
+.info-table th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 투자자 유형 */
+.investor-type {
+    border-top: 2px solid #b22222;
+    padding-top: 30px;
+}
+
+.investor-type h2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #004080;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.investor-type p {
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+.chart-box {
+    display: flex;
+    justify-content: center;
+}
+
+.chart-box img {
+    width: 420px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+/* 주의사항 */
+.notice {
+    margin-top: 50px;
+    font-size: 14px;
+    color: #333;
+}
+
+.notice ul {
+    margin: 10px 0 20px 0;
+    padding-left: 20px;
+    line-height: 1.7;
+}
+
+/* 투자유형 안내 */
+.type-guide {
+    margin-top: 20px;
+}
+
+.type-guide h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #b22222;
+    padding-bottom: 6px;
+}
+
+.type-guide table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.type-guide th, .type-guide td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.type-guide th {
+    background-color: #f8f8f8;
+}
+
+.type-guide tr:nth-child(odd) {
+    background-color: #fcfcfc;
+}
+
+/* 경고 박스 */
+.warning-box {
+    border: 2px solid #b22222;
+    padding: 15px;
+    color: #b22222;
+    margin: 25px 0;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* 결과 영역 */
+.result-section {
+    margin-top: 30px;
+}
+
+.result-section h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.result-box {
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.result-box input,
+.result-box select {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    font-size: 13px;
+}
+
+.btn-analyze {
+    display: block;
+    margin: 0 auto;
+    background-color: #b22222;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 14px;
+}
+
+.btn-analyze:hover {
+    background-color: #8b0000;
+}

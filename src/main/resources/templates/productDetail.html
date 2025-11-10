@@ -1,418 +1,105 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>미래에셋코어테크증권투자신탁(주식) 종류A-e</title>
+    <title>펀드상품 상세 | BNK부산은행</title>
+    <link rel="stylesheet" th:href="@{/css/productDetail.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: '맑은 고딕', sans-serif;
-            background-color: #fff;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            width: 1000px;
-            margin: 40px auto;
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 15px;
-            margin-bottom: 25px;
-        }
-
-        .info-box {
-            display: flex;
-            justify-content: space-between;
-            gap: 40px;
-        }
-
-        .info-left {
-            flex: 1;
-        }
-
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .info-table td {
-            padding: 8px 4px;
-            vertical-align: top;
-        }
-
-        .info-table td:first-child {
-            width: 100px;
-            color: #777;
-            font-weight: bold;
-        }
-
-        .chart-box {
-            flex: 1;
-            text-align: center;
-        }
-
-        .chart-box canvas {
-            max-width: 100%;
-        }
-
-        .btn-area {
-            margin: 30px 0;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: #b22222;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 3px;
-            text-decoration: none;
-            font-size: 14px;
-            margin-right: 8px;
-            transition: 0.2s;
-        }
-
-        .btn:hover {
-            background-color: #8b0000;
-        }
-
-        /* 사용자 분석 */
-        .section {
-            margin-top: 60px;
-        }
-
-        .section h2 {
-            font-size: 20px;
-            border-bottom: 2px solid #b22222;
-            padding-bottom: 6px;
-            margin-bottom: 20px;
-        }
-
-        .chart-area {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .chart-area canvas {
-            width: 350px;
-            height: 300px;
-        }
-
-        /* 상세 탭 영역 */
-        .detail-tabs {
-            margin-top: 80px;
-            border-bottom: 2px solid #b22222;
-            display: flex;
-        }
-
-        .detail-tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            font-weight: bold;
-            background-color: #f7f7f7;
-            margin-right: 4px;
-            transition: 0.2s;
-        }
-
-        .detail-tab.active {
-            background-color: #fff;
-            border-top: 2px solid #b22222;
-            color: #b22222;
-        }
-
-        .detail-content {
-            padding: 30px;
-            border: 1px solid #ddd;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .detail-content h3 {
-            color: #b22222;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-
-        .footer {
-            margin-top: 80px;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
-            text-align: center;
-            color: #888;
-            font-size: 13px;
-        }
-        /* ============================ */
-        /* ✅ 투자 유의 문구 박스 스타일 */
-        /* ============================ */
-        .notice-box {
-            display: flex;
-            align-items: flex-start;
-            border: 1px solid #ddd;
-            background-color: #fafafa;
-            padding: 20px;
-            font-size: 14px;
-            color: #333;
-            margin-top: 60px;
-            line-height: 1.6;
-        }
-
-        .notice-icon {
-            font-size: 22px;
-            color: #1e88e5;
-            margin-right: 10px;
-            margin-top: 2px;
-        }
-
-        .notice-text .highlight {
-            color: #b22222;
-            font-weight: bold;
-        }
-
-        /* ============================ */
-        /* ✅ 하단 버튼 영역 스타일 */
-        /* ============================ */
-        .bottom-btn-area {
-            margin: 30px 0 80px;
-            text-align: center;
-        }
-
-        .bottom-btn-area .btn {
-            display: inline-block;
-            margin: 0 6px;
-            padding: 10px 25px;
-            border-radius: 2px;
-            font-size: 14px;
-            text-decoration: none;
-            font-weight: bold;
-            border: 1px solid #ccc;
-        }
-
-        .bottom-btn-area .btn.red {
-            background-color: #b22222;
-            color: #fff;
-            border: none;
-        }
-
-        .bottom-btn-area .btn.gray {
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        .bottom-btn-area .btn.white {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            color: #222;
-        }
-
-        .bottom-btn-area .btn:hover {
-            opacity: 0.85;
-        }
-    </style>
 </head>
 <body>
 <div class="container">
     <div class="subtitle">주식형</div>
     <h1>미래에셋코어테크증권투자신탁(주식) 종류A-e</h1>
 
+    <!-- 기본정보 + 차트 -->
     <div class="info-box">
         <div class="info-left">
             <table class="info-table">
-                <tr>
-                    <td>클래스명칭</td>
-                    <td>
-                        수수료선취 온라인
-                    </td>
-                </tr>
+                <tr><td>클래스명칭</td><td>수수료선취 온라인</td></tr>
                 <tr><td>상품성향</td><td>적극투자형</td></tr>
                 <tr><td>가입대상</td><td>제한없음</td></tr>
                 <tr><td>투자등급</td><td>1등급 (매우 높은 위험)</td></tr>
                 <tr><td>설정일</td><td>2019년 10월 21일</td></tr>
                 <tr><td>운용사</td><td>미래에셋자산운용</td></tr>
-                <tr><td colspan="2">
-                    정보통신, 반도체, 2차전지 등 미래 산업 성장주 중심으로 투자하는 기술주 펀드입니다.<br>
-                    AI, 로봇, 전기차, 메타버스 등 고성장 산업에 투자해 장기 수익을 추구합니다.
-                </td></tr>
+                <tr>
+                    <td colspan="2">
+                        정보통신, 반도체, 2차전지 등 미래 산업 성장주 중심으로 투자하는 기술주 펀드입니다.<br>
+                        AI, 로봇, 전기차, 메타버스 등 고성장 산업에 투자해 장기 수익을 추구합니다.
+                    </td>
+                </tr>
             </table>
         </div>
 
         <div class="chart-box">
-            <h4>최근 3개월 기준가(DB데이터 불러와야함(애매))</h4>
+            <h4>최근 3개월 기준가(DB 데이터 예정)</h4>
             <canvas id="fundTrend"></canvas>
         </div>
     </div>
 
+    <!-- 가입 버튼 -->
     <div class="btn-area">
-        <a href="#" class="btn">인터넷가입</a>
-        <a href="#" class="btn" style="background-color:#555;">스마트폰가입</a>
-        <a href="#" class="btn" style="background-color:#888;">상담신청</a>
-        <a href="#" class="btn" style="background-color:#777;">클래스별수수료</a>
+        <a href="#" class="btn red">인터넷가입</a>
+        <a href="#" class="btn gray">스마트폰가입</a>
+        <a href="#" class="btn dark">상담신청</a>
+        <a href="#" class="btn gray2">클래스별수수료</a>
     </div>
 
+    <!-- 사용자 분석 -->
     <div class="section">
         <h2>사용자분석</h2>
-        <p>이 상품에 가입하신 고객현황입니다.</p>
+        <p>이 상품에 가입하신 고객 현황입니다.</p>
         <div class="chart-area">
             <div>
-                <h4>가입고객 성별(비율)(나중에 DB 데이터 불러와야함)</h4>
+                <h4>성별 비율</h4>
                 <canvas id="genderChart"></canvas>
             </div>
             <div>
-                <h4>연령대별 가입자 현황(나중에 DB 데이터 불러와야함)</h4>
+                <h4>연령대별 가입자 현황</h4>
                 <canvas id="ageChart"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- ✅ 하단 상세정보 탭 -->
+    <!-- 상세정보 탭 -->
     <div class="detail-tabs">
         <div class="detail-tab active" data-tab="overview">상품개요</div>
         <div class="detail-tab" data-tab="nav">펀드기준가</div>
         <div class="detail-tab" data-tab="performance">성과분석</div>
         <div class="detail-tab" data-tab="chart">차트분석</div>
-        <div class="detail-tab" data-tab="docs">성과분석</div>
         <div class="detail-tab" data-tab="risk">위험분석</div>
         <div class="detail-tab" data-tab="portfolio">포트폴리오분석</div>
         <div class="detail-tab" data-tab="bou">보유내역</div>
-
     </div>
 
     <div class="detail-content" id="tab-content">
         <h3>상품개요</h3>
         <p>
             급격하게 성장하고 변화하는 산업 패러다임에 적극적으로 대응할 수 있는 기술과 경쟁력을 지닌 국내 및 글로벌 기업에 투자합니다.<br>
-            - 구경제에서 신경제로 변화하는 산업패러다임에 적극적으로 대응할 수 있는 기술과 경쟁력을 지닌 국내 IT 관련 기업에 주로 투자<br>
-            - 글로벌 경쟁력을 보유한 IT기업 그리고 이러한 기업에 소재, 부품, 자비를 공급하는 기업, 소프트웨어 및 IT관련 서비스 기업에 주로 투자<br>
-            - IT관련 기업에 속하지 않지만 기술과 경쟁력을 지닌 기업으로 글로벌 시장점유율 상위에 속하는 글로벌 경쟁력 보유 기업 및 브랜딩, 기술력 등의 경쟁력을 보유한 기업에 투자
+            - 정보통신, 반도체, 소프트웨어 및 IT 관련 서비스 기업 중심<br>
+            - AI, 로봇, 전기차 등 고성장 산업에 초점을 맞춤<br>
+            - 장기적으로 안정적 자본이득을 목표로 합니다.
         </p>
-
-        <h3>출금(환매)방법</h3>
-        <p>
-            15시 30분 이전: 2영업일 기준가 적용 4영업일에 연결계좌로 지급<br>
-
-            15시 30분 이후: 3영업일 기준가 적용 4영업일에 연결계좌로 지급
-        </p>
-
-        <h3>거래방법</h3>
-        <p>
-            15시 30분 이전: 2영업일 기준가 적용하여 매입<br>
-            15시 30분 이후: 3영업일 기준가 적용하여 매입
-        </p>
-
-        <h3>펀드유형</h3>
-        <p>주식형</p>
-
-        <h3>투자대상유형</h3>
-        <p>일반</p>
-
-        <h3>투자지역</h3>
-        <p>국내</p>
-
-        <h3>가입방법</h3>
-        <p>인터넷</p>
     </div>
 
-    <!-- ✅ 투자 유의 문구 박스 -->
+    <!-- 투자 유의 문구 -->
     <div class="notice-box">
         <div class="notice-icon">ℹ️</div>
         <div class="notice-text">
             집합투자증권을 취득하기 전에 투자대상, 보수, 수수료 및 환매방법 등에 관하여
             <span class="highlight">투자설명서를 반드시 읽어보시기 바랍니다.</span><br>
-            집합투자증권은 운용결과에 따라 투자원금의 손실이 발생할 수 있으며,
-            그 손실은 투자자에게 귀속됩니다. 또한 과거 운용실적이 미래의 수익을 보장하지 않습니다.
+            운용결과에 따라 투자원금의 손실이 발생할 수 있으며,
+            과거 운용실적이 미래의 수익을 보장하지 않습니다.
         </div>
     </div>
 
-    <!-- ✅ 하단 버튼 영역 -->
+    <!-- 하단 버튼 -->
     <div class="bottom-btn-area">
         <a href="#" class="btn red">인터넷가입</a>
         <a href="#" class="btn gray">스마트폰가입</a>
-        <a href="productList.html" class="btn white">목록보기</a>
+        <a th:href="@{/productList}" class="btn white">목록보기</a>
     </div>
 </div>
 
-<script>
-    // ===== 상단 기준가 추이 =====
-    new Chart(document.getElementById('fundTrend'), {
-        type: 'line',
-        data: {
-            labels: ['8월', '9월', '10월', '11월'],
-            datasets: [{
-                label: '기준가 (원)',
-                data: [9400, 9700, 10200, 10800],
-                borderColor: '#b22222',
-                backgroundColor: 'rgba(178,34,34,0.15)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.3
-            }]
-        },
-        options: { plugins: { legend: { display: false } } }
-    });
-
-    // ===== 성별 분석 =====
-    new Chart(document.getElementById('genderChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['남성(31%)', '여성(69%)'],
-            datasets: [{ data: [31, 69], backgroundColor: ['#4e79a7', '#f28e2b'] }]
-        },
-        options: { plugins: { legend: { position: 'bottom' } } }
-    });
-
-    // ===== 연령대별 분석 =====
-    new Chart(document.getElementById('ageChart'), {
-        type: 'bar',
-        data: {
-            labels: ['10대', '20대', '30대', '40대', '50대', '60대'],
-            datasets: [
-                { label: '남성', data: [3, 5, 8, 14, 21, 28], backgroundColor: '#4e79a7' },
-                { label: '여성', data: [2, 7, 9, 13, 22, 31], backgroundColor: '#f28e2b' }
-            ]
-        },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-    });
-
-    // ===== 하단 탭 전환 =====
-    const tabs = document.querySelectorAll(".detail-tab");
-    const content = document.getElementById("tab-content");
-
-    const tabData = {
-        overview: `
-        <h3>상품개요</h3>
-        <p>급격하게 성장하고 변화하는 산업 패러다임에 적극적으로 대응할 수 있는 기술과 경쟁력을 지닌 국내 및 글로벌 기업에 투자합니다.<br>
-        - 정보통신, 반도체, 소프트웨어 및 IT 관련 서비스 기업 중심<br>
-        - AI, 로봇, 전기차 등 고성장 산업에 초점을 맞춤<br>
-        - 장기적으로 안정적 자본이득을 목표로 합니다.</p>`,
-        nav: `<h3>여기에 DB 데이터 쫙 불러와야함 ... 그래프 작업은 나중에</h3><p>여기에 DB ...</p>`,
-        performance: `<h3>일별기준가</h3><p>최근 6개월 기준 수익률: +94.51%, 1년 기준 수익률: +79.68%로 높은 성과를 유지하고 있습니다.</p>`,
-        chart: `<h3>차트분석</h3><p>이거 전부 그래프로 표현해야함 ..</p>`,
-        docs: `<h3>성과분석</h3><p>기간 누적 성과 .. 도표로 해야함</p>`,
-        risk: '<h3>위험분석</h3><p>?</p>',
-        portfolio: '<h3>포트폴리오분석</h3><p>이거 상당히 어려운데요</p>',
-        bou: '<h3>보유내역</h3><p>생각 많이 해야할 것 같습니다</p>'
-
-    };
-
-    tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-            tabs.forEach(t => t.classList.remove("active"));
-            tab.classList.add("active");
-            content.innerHTML = tabData[tab.dataset.tab];
-        });
-    });
-</script>
-
+<script th:src="@{/js/productDetail.js}"></script>
 </body>
 </html>

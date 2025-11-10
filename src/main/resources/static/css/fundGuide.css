@@ -1,0 +1,91 @@
+body {
+    font-family: '맑은 고딕', sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    color: #222;
+}
+
+.container {
+    width: 900px;
+    margin: 40px auto 80px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    color: #111;
+}
+
+h2 {
+    font-size: 20px;
+    color: #b22222;
+    margin-top: 50px;
+    border-bottom: 2px solid #b22222;
+    padding-bottom: 6px;
+}
+
+/* 표 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    margin-bottom: 40px;
+    font-size: 14px;
+    border-top: 2px solid #b22222;
+    border-bottom: 1px solid #ccc;
+}
+
+th, td {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 14px 20px;
+    text-align: center;
+    vertical-align: middle;
+    height: 55px;
+    line-height: 1.5;
+}
+
+th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+    width: 180px;
+}
+
+/* 세로줄 제거 */
+th:first-child, td:first-child {
+    border-left: none;
+}
+th:last-child, td:last-child {
+    border-right: none;
+}
+
+/* 용어해설 */
+.term-list {
+    list-style: none;
+    padding: 0;
+}
+
+.term-list li {
+    margin-bottom: 25px;
+}
+
+.term-title {
+    font-weight: bold;
+    font-size: 15px;
+    color: #111;
+    margin-bottom: 6px;
+}
+
+.term-desc {
+    font-size: 14px;
+    color: #333;
+    padding-left: 15px;
+}
+
+.term-bullet::before {
+    content: "▪ ";
+    color: #b22222;
+}

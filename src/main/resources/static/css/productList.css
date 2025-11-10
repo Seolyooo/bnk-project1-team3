@@ -1,0 +1,135 @@
+body {
+    font-family: '맑은 고딕', sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 1000px;
+    margin: 40px auto;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* 상단 탭 */
+.tab-menu {
+    display: flex;
+    border-bottom: 2px solid #b22222;
+    margin-bottom: 20px;
+}
+
+.tab-menu a {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    border-right: 1px solid #ddd;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.tab-menu a.active {
+    background-color: #b22222;
+    color: #fff;
+}
+
+/* 펀드상품 소분류 */
+.sub-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 15px 0 25px 0;
+}
+
+.sub-filter button {
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    border-radius: 3px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sub-filter button.active {
+    background-color: #b22222;
+    color: white;
+    border-color: #b22222;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px;
+    text-align: center;
+    vertical-align: top;
+}
+
+th {
+    background-color: #fafafa;
+}
+
+.fund-name {
+    text-align: left;
+    font-weight: bold;
+    color: #000;
+}
+
+.fund-name a {
+    text-decoration: none;
+    color: #005bac;
+    transition: color 0.2s;
+}
+
+.fund-name a:hover {
+    text-decoration: underline;
+    color: #b22222;
+}
+
+.desc {
+    font-size: 13px;
+    color: #555;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.tag {
+    display: inline-block;
+    padding: 2px 6px;
+    background-color: #005bac;
+    color: #fff;
+    border-radius: 3px;
+    font-size: 11px;
+    margin-right: 6px;
+}
+
+.btn-join {
+    background-color: #b22222;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.btn-join:hover {
+    background-color: #8b0000;
+}
+
+.sub-btn {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+    text-decoration: underline;
+}

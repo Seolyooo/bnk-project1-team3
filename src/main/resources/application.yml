@@ -30,5 +30,6 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
         format_sql: true
         show_sql: true

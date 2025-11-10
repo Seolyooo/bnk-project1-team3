@@ -1,135 +1,32 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>펀드시황</title>
-    <style>
-        body {
-            font-family: '맑은 고딕', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-        }
-
-        .container {
-            width: 1000px;
-            margin: 40px auto;
-        }
-
-        h1 {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #111;
-        }
-
-        .summary {
-            text-align: right;
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border-top: 2px solid #333;
-        }
-
-        th, td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #ddd;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f8f8f8;
-            font-weight: bold;
-        }
-
-        td.title {
-            text-align: left;
-        }
-
-        td.title a {
-            text-decoration: none;
-            color: #004080;
-            transition: color 0.2s;
-        }
-
-        td.title a:hover {
-            color: #b22222;
-            text-decoration: underline;
-        }
-
-        /* 페이지네이션 */
-        .pagination {
-            text-align: center;
-            margin: 25px 0;
-        }
-
-        .pagination button {
-            border: 1px solid #ccc;
-            background: #fff;
-            padding: 6px 10px;
-            margin: 0 2px;
-            cursor: pointer;
-        }
-
-        .pagination button.active {
-            background-color: #b22222;
-            color: #fff;
-            border-color: #b22222;
-        }
-
-        /* 검색 영역 */
-        .search-box {
-            border-top: 1px solid #ddd;
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        .search-box select,
-        .search-box input {
-            padding: 6px 8px;
-            font-size: 13px;
-            border: 1px solid #ccc;
-        }
-
-        .search-box button {
-            background-color: #444;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            cursor: pointer;
-            font-size: 13px;
-            margin-left: 6px;
-        }
-
-        .search-box button:hover {
-            background-color: #222;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/fundSihwang.css}">
+    <script th:src="@{/js/fundSihwang.js}" defer></script>
 </head>
 <body>
+
 <div class="container">
     <h1>펀드시황</h1>
-    <div class="summary">총 2,698건 현재 : 1 / 270페이지 (나중에 쿼리로 수정해야함)</div>
+    <div class="summary">
+        총 2,698건 현재 : 1 / 270페이지 <b>(나중에 쿼리로 수정해야함)</b>
+    </div>
 
     <table>
         <thead>
         <tr>
-            <th style="width: 10%;">번호</th>
-            <th style="width: 60%;">제목</th>
-            <th style="width: 15%;">등록일</th>
-            <th style="width: 15%;">조회수</th>
+            <th style="width:10%;">번호</th>
+            <th style="width:60%;">제목</th>
+            <th style="width:15%;">등록일</th>
+            <th style="width:15%;">조회수</th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td>3002</td>
-            <td class="title"><a href="#">관리자페이지에서 등록하면 여기에 나올 수 있게 만들기(DB저장도 해야함)</a></td>
+            <td class="title"><a href="#">관리자페이지에서 등록하면 여기에 나올 수 있게(DB저장)</a></td>
             <td>2025/10/31</td>
             <td>241</td>
         </tr>
@@ -171,19 +68,19 @@
         </tr>
         <tr>
             <td>2995</td>
-            <td class="title"><a href="#">[10/2 국내] 단기 투익 확실성 불확실성에 코스피 하락</a></td>
+            <td class="title"><a href="#">[10/2 국내] 단기 투익 불확실성에 코스피 하락</a></td>
             <td>2025/10/02</td>
             <td>600</td>
         </tr>
         <tr>
             <td>2994</td>
-            <td class="title"><a href="#">[9/26 해외] 경제지표 시강기에 부합하며 미증시 상승</a></td>
+            <td class="title"><a href="#">[9/26 해외] 경제지표 호조에 미증시 상승</a></td>
             <td>2025/09/26</td>
             <td>962</td>
         </tr>
         <tr>
             <td>2993</td>
-            <td class="title"><a href="#">[9/26 국내] 미국 금리지표 기대 이상에 금리 인하 기대 약화되며 한국증시 하락</a></td>
+            <td class="title"><a href="#">[9/26 국내] 금리인하 기대 약화로 한국증시 하락</a></td>
             <td>2025/09/26</td>
             <td>1026</td>
         </tr>
@@ -213,9 +110,10 @@
             <option>제목</option>
             <option>내용</option>
         </select>
-        <input type="text" placeholder="페이징+검색>기능들어가면">
-        <button>검색</button>
+        <input type="text" placeholder="페이징 + 검색 기능 추가 예정">
+        <button id="btnSearch">검색</button>
     </div>
 </div>
+
 </body>
 </html>

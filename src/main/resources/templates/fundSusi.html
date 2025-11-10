@@ -1,176 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>펀드 수시공시</title>
-    <style>
-        body {
-            font-family: '맑은 고딕', sans-serif;
-            background-color: #fff;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            width: 1000px;
-            margin: 40px auto;
-        }
-
-        h1 {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 25px;
-        }
-
-        /* 상단 탭 */
-        .tab-menu {
-            display: flex;
-            border: 1px solid #ddd;
-            border-bottom: 2px solid #e760a7;
-            margin-bottom: 20px;
-        }
-
-        .tab-menu a {
-            flex: 1;
-            text-align: center;
-            padding: 10px 0;
-            text-decoration: none;
-            color: #333;
-            border-right: 1px solid #ddd;
-            background-color: #fff;
-            transition: 0.2s;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .tab-menu a:last-child {
-            border-right: none;
-        }
-
-        .tab-menu a.active {
-            background-color: #e760a7;
-            color: #fff;
-        }
-
-        /* 공통 테이블 */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            border-top: 2px solid #e760a7;
-        }
-
-        th, td {
-            border-bottom: 1px solid #e0e0e0;
-            text-align: center;
-            padding: 10px;
-            height: 45px;
-            vertical-align: middle;
-        }
-
-        th {
-            background-color: #fafafa;
-            font-weight: bold;
-        }
-
-        td.title {
-            text-align: left;
-        }
-
-        .summary {
-            text-align: right;
-            color: #666;
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-
-        /* 버튼 */
-        .btn-download {
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            padding: 6px 10px;
-            font-size: 13px;
-            cursor: pointer;
-            background: #fff;
-            transition: 0.2s;
-        }
-
-        .btn-download:hover {
-            background-color: #f5f5f5;
-        }
-
-        /* 페이지네이션 */
-        .pagination {
-            text-align: center;
-            margin: 25px 0;
-        }
-
-        .pagination button {
-            border: 1px solid #ccc;
-            background: #fff;
-            padding: 6px 10px;
-            margin: 0 2px;
-            cursor: pointer;
-        }
-
-        .pagination button.active {
-            background-color: #e760a7;
-            color: #fff;
-            border-color: #e760a7;
-        }
-
-        .pagination button:disabled {
-            color: #aaa;
-            background-color: #f4f4f4;
-            cursor: default;
-        }
-
-        /* 검색창 */
-        .search-box {
-            border-top: 1px solid #ddd;
-            padding: 20px 0;
-            font-size: 13px;
-        }
-
-        .search-box label {
-            margin-right: 5px;
-            font-weight: bold;
-        }
-
-        .search-box input,
-        .search-box select {
-            border: 1px solid #ccc;
-            padding: 6px 8px;
-            margin-right: 10px;
-        }
-
-        .search-box button {
-            background-color: #444;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .search-box button:hover {
-            background-color: #222;
-        }
-
-        /* 컨텐츠 영역 */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/fundSusi.css}">
+    <script th:src="@{/js/fundSusi.js}" defer></script>
 </head>
 <body>
+
 <div class="container">
     <h1>수시공시</h1>
 
+    <!-- 상단 탭 -->
     <div class="tab-menu">
         <a class="tab active" data-tab="recent">수시공시(최근 1개월)</a>
         <a class="tab" data-tab="manage">자산운용보고서</a>
@@ -179,9 +20,9 @@
         <a class="tab" data-tab="all">수시공시(전체)</a>
     </div>
 
-    <!--  최근 1개월 -->
+    <!-- 수시공시(최근 1개월) -->
     <div class="tab-content active" id="recent">
-        <div class="summary">총 703건<b>DB데이터로 불러와야함</b></div>
+        <div class="summary">총 703건 <b>DB 데이터로 불러와야함</b></div>
         <table>
             <thead>
             <tr>
@@ -195,16 +36,16 @@
             <tbody>
             <tr>
                 <td>2025/11/28</td>
-                <td class="title">나중에 DB데이터 불러와야함</td>
+                <td class="title">DB 데이터로 불러와야함</td>
                 <td>키움투자운용</td>
                 <td>소규모해소(해지)</td>
-                <td><button class="btn-download"> 다운로드</button></td>
+                <td><button class="btn-download">📄 다운로드</button></td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    <!--  자산운용보고서 -->
+    <!-- 자산운용보고서 -->
     <div class="tab-content" id="manage">
         <div class="summary">총 <b>302건</b></div>
         <table>
@@ -223,13 +64,13 @@
                 <td class="title">삼성성장형증권투자신탁</td>
                 <td>2025년 2분기</td>
                 <td>우수</td>
-                <td><button class="btn-download"> 다운로드</button></td>
+                <td><button class="btn-download">📄 다운로드</button></td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    <!--  수탁관리보고서 -->
+    <!-- 수탁관리보고서 -->
     <div class="tab-content" id="trust">
         <div class="summary">총 <b>112건</b></div>
         <table>
@@ -248,13 +89,13 @@
                 <td class="title">KB밸런스자산운용펀드</td>
                 <td>KB국민은행</td>
                 <td>정상</td>
-                <td><button class="btn-download"> 다운로드</button></td>
+                <td><button class="btn-download">📄 다운로드</button></td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    <!--  회계감사보고서 -->
+    <!-- 회계감사보고서 -->
     <div class="tab-content" id="audit">
         <div class="summary">총 <b>85건</b></div>
         <table>
@@ -273,13 +114,13 @@
                 <td class="title">미래에셋글로벌코어테크증권투자신탁</td>
                 <td>삼일회계법인</td>
                 <td>적정</td>
-                <td><button class="btn-download"> 다운로드</button></td>
+                <td><button class="btn-download">📄 다운로드</button></td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    <!--  수시공시(전체) -->
+    <!-- 수시공시(전체) -->
     <div class="tab-content" id="all">
         <div class="summary">총 <b>1,028건</b></div>
         <table>
@@ -305,19 +146,5 @@
     </div>
 </div>
 
-<script>
-    // 탭 클릭 시 내용 전환
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(tab.dataset.tab).classList.add('active');
-        });
-    });
-</script>
 </body>
 </html>
-
-
-
