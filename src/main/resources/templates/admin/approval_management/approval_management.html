@@ -1,70 +1,20 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>결재(승인) 관리</title>
-    <link rel="stylesheet" href="approval_styles.css">
-    <script src="sidebar-script.js"></script>
+    <title>결재(승인) 관리 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/approval_styles.css}">
 </head>
 <body>
-<aside class="sidebar">
-    <div class="sidebar-header">
-        <div class="header-content">
-            <a href="adminMain.html">
-                <img src="logo.png" alt="BNK 부산은행" class="sidebar-logo">
-            </a>
-            <span class="admin-label">관리자</span>
-        </div>
-    </div>
-    <nav class="sidebar-menu">
-        <ul>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">상품관리</a>
-                <ul class="submenu">
-                    <li><a href="adminMain.html">상품 목록</a></li>
-                </ul>
-            </li>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">정보/공시</a>
-                <ul class="submenu">
-                    <li><a href="disclosure_documents.html">공시자료</a></li>
-                    <li><a href="ad-hoc_disclosure.html">수시공시</a></li>
-                    <li><a href="fund_infomation.html">펀드정보</a></li>
-                    <li><a href="guide.html">가이드</a></li>
-                    <li><a href="fund_market.html">펀드시황 관리</a></li>
-                </ul>
-            </li>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">고객지원</a>
-                <ul class="submenu">
-                    <li><a href="#">FAQ 관리</a></li>
-                    <li><a href="#">백문백답 관리</a></li>
-                    <li><a href="#">Q&amp;A 관리</a></li>
-                </ul>
-            </li>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">환경설정</a>
-                <ul class="submenu">
-                    <li><a href="search_keyword.html">검색어 관리</a></li>
-                    <li><a href="category_management.html">상품 카테고리 관리</a></li>
-                </ul>
-            </li>
-            <li class="menu-item">
-                <a href="approval_management.html" class="active">결재(승인) 관리</a>
-            </li>
-        </ul>
-    </nav>
-</aside>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar('approval')}"></div>
 
-<div class="main-content">
-    <header class="main-header">
-        <div class="header-right">
-            <span class="user-name">관리자님</span>
-            <span class="header-divider">|</span>
-            <a href="#" class="logout-link">로그아웃</a>
-        </div>
-    </header>
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
 
     <div class="main-content-body">
         <div class="container">
@@ -101,41 +51,47 @@
 
             <section class="section-block approval-filter">
                 <h2 class="section-title">결재 요청 검색</h2>
-                <form class="filter-form">
-                    <div class="filter-row">
-                        <div class="filter-field">
-                            <label for="filterKeyword">검색어</label>
-                            <input type="text" id="filterKeyword" placeholder="결재 ID 또는 요청자를 입력하세요">
-                        </div>
-                        <div class="filter-field">
-                            <label for="filterStatus">상태</label>
-                            <select id="filterStatus">
-                                <option>전체</option>
-                                <option>대기</option>
-                                <option>승인</option>
-                                <option>반려</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="filter-row">
-                        <div class="filter-field">
-                            <label for="filterRequester">요청자</label>
-                            <input type="text" id="filterRequester" placeholder="요청자 이름을 입력하세요">
-                        </div>
-                        <div class="filter-field">
-                            <label for="filterDateFrom">시작일</label>
-                            <input type="date" id="filterDateFrom">
-                        </div>
-                        <div class="filter-field">
-                            <label for="filterDateTo">종료일</label>
-                            <input type="date" id="filterDateTo">
-                        </div>
-                    </div>
-                    <div class="filter-actions">
+                <div class="search-section">
+                    <table class="search-table">
+                        <tbody>
+                            <tr>
+                                <td class="search-label">검색어</td>
+                                <td class="search-inputs">
+                                    <input type="text" class="form-input search-input-large" id="filterKeyword" placeholder="결재 ID 또는 요청자를 입력하세요">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="search-label">상태</td>
+                                <td class="search-inputs">
+                                    <select class="form-select search-select-medium" id="filterStatus">
+                                        <option>전체</option>
+                                        <option>대기</option>
+                                        <option>승인</option>
+                                        <option>반려</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="search-label">요청자</td>
+                                <td class="search-inputs">
+                                    <input type="text" class="form-input search-input-large" id="filterRequester" placeholder="요청자 이름을 입력하세요">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="search-label">기간</td>
+                                <td class="search-inputs">
+                                    <input type="date" class="form-input search-select-medium" id="filterDateFrom">
+                                    <span style="margin: 0 10px;">~</span>
+                                    <input type="date" class="form-input search-select-medium" id="filterDateTo">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="search-actions">
                         <button type="button" class="btn btn-secondary">초기화</button>
-                        <button type="submit" class="btn btn-primary">검색</button>
+                        <button type="button" class="btn btn-search">조회</button>
                     </div>
-                </form>
+                </div>
             </section>
 
             <section class="section-block">
@@ -146,7 +102,6 @@
                         <span class="pagination-info">1 / 1 page</span>
                     </div>
                     <table class="fund-table" id="pendingTable">
-                        <caption>결재 대기 상품 요청 목록</caption>
                         <thead>
                         <tr>
                             <th>결재 ID</th>
@@ -177,9 +132,11 @@
                         </tbody>
                     </table>
                     <div class="pagination">
-                        <button class="page-btn" disabled>이전</button>
-                        <button class="page-number active">1</button>
-                        <button class="page-btn" disabled>다음</button>
+                        <button class="page-btn prev" disabled>&lt;</button>
+                        <div class="page-numbers">
+                            <button class="page-number active">1</button>
+                        </div>
+                        <button class="page-btn next" disabled>&gt;</button>
                     </div>
                 </div>
             </section>
@@ -232,7 +189,7 @@
                         </div>
                         <div class="error-message" id="approvalError" aria-live="polite"></div>
                         <div class="detail-actions">
-                            <button type="button" class="btn btn-primary" id="approveButton">승인</button>
+                            <button type="button" class="btn btn-red" id="approveButton">승인</button>
                             <button type="button" class="btn btn-secondary" id="rejectButton">반려</button>
                         </div>
                     </div>
@@ -246,7 +203,6 @@
                             <span class="pagination-info">1 / 1 page</span>
                         </div>
                         <table class="fund-table" id="historyTable">
-                            <caption>완료된 상품 결재 이력</caption>
                             <thead>
                             <tr>
                                 <th>결재 ID</th>
@@ -280,13 +236,17 @@
                             </tbody>
                         </table>
                         <div class="pagination">
-                            <button class="page-btn" disabled>이전</button>
-                            <button class="page-number active">1</button>
-                            <button class="page-btn" disabled>다음</button>
+                            <button class="page-btn prev" disabled>&lt;</button>
+                            <div class="page-numbers">
+                                <button class="page-number active">1</button>
+                            </div>
+                            <button class="page-btn next" disabled>&gt;</button>
                         </div>
                     </div>
                 </section>
             </div>
+            <!-- 푸터 영역 -->
+            <footer class="admin-footer"></footer>
         </div>
     </div>
 </div>
@@ -396,6 +356,8 @@
         updateOverviewCounts();
     });
 </script>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>
 

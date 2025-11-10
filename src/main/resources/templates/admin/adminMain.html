@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar(null)}"></div>
+
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
+        <div class="main-content-body">
+            <div class="container">
+        
+        <!-- 통계 카드 섹션 -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <div class="stat-content">
+                    <h3>총 가입자수</h3>
+                    <p class="stat-value" id="totalUsers">0</p>
+                    <span class="stat-label">명</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-content">
+                    <h3>신규 가입자수</h3>
+                    <p class="stat-value" id="newUsers">0</p>
+                    <span class="stat-label">명</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-content">
+                    <h3>해지건수</h3>
+                    <p class="stat-value" id="cancellations">0</p>
+                    <span class="stat-label">건</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-content">
+                    <h3>총 운용 금액</h3>
+                    <p class="stat-value" id="totalAmount">0</p>
+                    <span class="stat-label">원</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 차트 섹션 -->
+        <section class="charts-section">
+            <!-- 투자 성향 원형 차트 -->
+            <div class="chart-card">
+                <h2>가입자 투자 성향 분포</h2>
+                <div class="chart-container pie-chart">
+                    <canvas id="investmentTendencyChart" style="max-width: 500px; max-height: 400px;"></canvas>
+                </div>
+            </div>
+
+            <!-- 판매 금액 추이 막대 그래프 -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2>판매 금액 추이</h2>
+                    <div class="chart-controls">
+                        <div class="period-selector">
+                            <button class="period-btn active" data-period="daily">일별</button>
+                            <button class="period-btn" data-period="monthly">월별</button>
+                        </div>
+                        <div class="week-selector" id="weekSelector" style="display: none;">
+                            <label for="weekSelect">주 선택: </label>
+                            <select id="weekSelect" class="week-select">
+                                <!-- 주 옵션이 동적으로 추가됩니다 -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top5 펀드 테이블 -->
+        <section class="table-section">
+            <div class="table-card">
+                <h2>가입수가 많은 펀드 Top 5</h2>
+                <table class="fund-table">
+                    <thead>
+                        <tr>
+                            <th>순위</th>
+                            <th>펀드명</th>
+                            <th>운용사</th>
+                            <th>가입자수</th>
+                            <th>판매금액</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topFundsTableBody">
+                        <tr>
+                            <td>1</td>
+                            <td>BNK 성장형 펀드</td>
+                            <td>BNK부산은행</td>
+                            <td>12,450</td>
+                            <td>245,000,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>KB 안정형 펀드</td>
+                            <td>KB은행</td>
+                            <td>11,230</td>
+                            <td>218,000,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>신한 밸런스 펀드</td>
+                            <td>신한은행</td>
+                            <td>10,890</td>
+                            <td>198,000,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>하나 글로벌 펀드</td>
+                            <td>하나은행</td>
+                            <td>9,560</td>
+                            <td>175,000,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>우리 배당형 펀드</td>
+                            <td>우리은행</td>
+                            <td>8,920</td>
+                            <td>162,000,000,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        </div>
+    </div>
+    </div>
+
+    <script>
+
+        // 통계 데이터
+        document.getElementById('totalUsers').textContent = '125,847';
+        document.getElementById('newUsers').textContent = '2,345';
+        document.getElementById('cancellations').textContent = '156';
+        document.getElementById('totalAmount').textContent = '1,234,567,890,000';
+
+        // 투자 성향 원형 차트
+        const investmentCtx = document.getElementById('investmentTendencyChart').getContext('2d');
+        const investmentChart = new Chart(investmentCtx, {
+            type: 'pie',
+            data: {
+                labels: ['주식형', '채권형', '혼합형', 'MMF', '기타'],
+                datasets: [{
+                    data: [35, 25, 28, 8, 4],
+                    backgroundColor: [
+                        '#cd1317',
+                        '#ff6b6b',
+                        '#ffa500',
+                        '#4ecdc4',
+                        '#95e1d3'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        top: 20,
+                        bottom: 60
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return label + ': ' + percentage + '%';
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    onComplete: function() {
+                        const chart = this.chart;
+                        const ctx = chart.ctx;
+                        const centerX = chart.chartArea.left + (chart.chartArea.right - chart.chartArea.left) / 2;
+                        const centerY = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
+                        
+                        // 총 퍼센트 계산
+                        const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        const percentages = chart.data.datasets[0].data.map(value => ((value / total) * 100).toFixed(1));
+                        
+                        // 중앙에 퍼센트 표시
+                        ctx.save();
+                        ctx.font = 'bold 24px Arial';
+                        ctx.fillStyle = '#333';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        
+                        // 가장 큰 비율 찾기
+                        const maxIndex = chart.data.datasets[0].data.indexOf(Math.max(...chart.data.datasets[0].data));
+                        const maxPercentage = percentages[maxIndex];
+                        const maxLabel = chart.data.labels[maxIndex];
+                        
+                        ctx.fillText(maxPercentage + '%', centerX, centerY - 10);
+                        ctx.font = '14px Arial';
+                        ctx.fillText(maxLabel, centerX, centerY + 15);
+                        ctx.restore();
+                    }
+                }
+            }
+        });
+
+        // 판매 금액 추이 막대 그래프
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        let salesChart;
+
+        // 일별 데이터
+        const dailyData = {
+            labels: ['월', '화', '수', '목', '금', '토', '일'],
+            data: [125000000, 158000000, 142000000, 168000000, 195000000, 98000000, 75000000]
+        };
+
+        // 월별 데이터
+        const monthlyData = {
+            labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            data: [3450000000, 3820000000, 4150000000, 3980000000, 4520000000, 4780000000, 4910000000, 5230000000, 4870000000, 5120000000, 5380000000, 5620000000]
+        };
+
+        function createSalesChart(data, isDaily = true) {
+            if (salesChart) {
+                salesChart.destroy();
+            }
+
+            const gradient = salesCtx.createLinearGradient(0, salesCtx.canvas.height, 0, 0);
+            gradient.addColorStop(0, '#e0e0e0');
+            gradient.addColorStop(1, '#ffffff');
+
+            salesChart = new Chart(salesCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '판매금액',
+                        data: data.data,
+                        backgroundColor: gradient,
+                        borderColor: '#999',
+                        borderWidth: 1,
+                        borderRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 1000000).toFixed(0) + 'M';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    return '판매금액: ' + value.toLocaleString() + '원';
+                                }
+                            }
+                        }
+                    },
+                    categoryPercentage: isDaily ? 0.3 : 0.6,
+                    barPercentage: 0.8,
+                    animation: {
+                        onComplete: function() {
+                            // 막대 위에 값 표시
+                            const chart = this.chart;
+                            const ctx = chart.ctx;
+                            ctx.font = '11px Arial';
+                            ctx.fillStyle = '#333';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'bottom';
+                            
+                            chart.data.datasets.forEach((dataset, i) => {
+                                const meta = chart.getDatasetMeta(i);
+                                meta.data.forEach((bar, index) => {
+                                    const value = dataset.data[index];
+                                    ctx.fillText(
+                                        (value / 1000000).toFixed(0) + 'M',
+                                        bar.x,
+                                        bar.y - 5
+                                    );
+                                });
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        // 초기 차트 생성 (일별)
+        createSalesChart(dailyData, true);
+
+        // 일별/월별 버튼 클릭 이벤트
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const period = this.dataset.period;
+                if (period === 'daily') {
+                    document.getElementById('weekSelector').style.display = 'none';
+                    createSalesChart(dailyData, true);
+                } else {
+                    document.getElementById('weekSelector').style.display = 'none';
+                    createSalesChart(monthlyData, false);
+                }
+            });
+        });
+
+    </script>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+</body>
+</html>
+

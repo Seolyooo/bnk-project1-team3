@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ 관리 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admincs.css}">
+</head>
+<body>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar('faq')}"></div>
+
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
+        <div class="main-content-body">
+            <div class="container">
+                <!-- 페이지 헤더 -->
+                <header class="page-header">
+                    <h1>FAQ 관리</h1>
+                    <div class="header-actions">
+                        <a th:href="@{/admin/cs/faq/register}" class="btn btn-red">FAQ 등록</a>
+                    </div>
+                </header>
+
+            
+                <!-- FAQ 검색 -->
+                <div class="search-section">
+                    <table class="search-table">
+                        <tbody>
+                            <tr>
+                                <td class="search-label">FAQ 검색</td>
+                                <td class="search-inputs">
+                                    <input type="text" class="form-input search-input-large" id="faqSearchInput" placeholder="입력하세요">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="search-actions">
+                        <button class="btn btn-red" onclick="performSearch()">검색</button>
+                        <button class="btn btn-secondary" onclick="resetSearch()">초기화</button>
+                    </div>
+                </div>
+
+                <!-- FAQ 목록 -->
+                <div class="table-section">
+                    <div class="table-info" id="faqTableInfo">
+                        <span>총 <strong>3</strong>건</span>
+                        <span class="pagination-info">현재: <span>1</span>/<span>1</span> 페이지</span>
+                    </div>
+                    <div class="product-table">
+                        <table class="faq-table">
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th colspan="2">질문</th>
+                                    <th>관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="faqTableBody">
+                               
+                            
+                                
+                                
+                                <tr>
+                                    <td>9</td>
+                                    <td colspan="2">
+                                        <div class="faq-item">
+                                            <div class="faq-question-row" onclick="toggleFaqAnswer(9)">
+                                                <span class="faq-q-icon">Q</span>
+                                                <span class="faq-question-text">가계대출 신청 시 DSR 규제가 무엇인가요?</span>
+                                            </div>
+                                            <div class="faq-answer-row" id="faq-answer-9">
+                                                <div class="faq-answer-container">
+                                                    <span class="faq-a-icon">A</span>
+                                                    <div class="faq-answer-content">
+                                                        <p>DSR(총부채원리금상환비율)은 연소득 대비 연간 원리금 상환액의 비율을 의미합니다. 금융당국에서 정한 기준을 초과하면 대출이 제한될 수 있습니다.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="faq-action-buttons">
+                                            <button class="btn btn-secondary btn-small" onclick="editFaq(9)">수정</button>
+                                            <button class="btn btn-secondary btn-small" onclick="deleteFaq(9)">삭제</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td colspan="2">
+                                        <div class="faq-item">
+                                            <div class="faq-question-row" onclick="toggleFaqAnswer(8)">
+                                                <span class="faq-q-icon">Q</span>
+                                                <span class="faq-question-text">결제일 변경 방법을 알고 싶습니다.</span>
+                                            </div>
+                                            <div class="faq-answer-row" id="faq-answer-8">
+                                                <div class="faq-answer-container">
+                                                    <span class="faq-a-icon">A</span>
+                                                    <div class="faq-answer-content">
+                                                        <p>결제일 변경은 고객센터(1588-6200)로 연락하시거나 인터넷뱅킹에서 변경하실 수 있습니다.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="faq-action-buttons">
+                                            <button class="btn btn-secondary btn-small" onclick="editFaq(8)">수정</button>
+                                            <button class="btn btn-secondary btn-small" onclick="deleteFaq(8)">삭제</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td colspan="2">
+                                        <div class="faq-item">
+                                            <div class="faq-question-row" onclick="toggleFaqAnswer(7)">
+                                                <span class="faq-q-icon">Q</span>
+                                                <span class="faq-question-text">[기업뱅킹] 기업뱅킹 재이용신청 경로 알려 주세요.</span>
+                                            </div>
+                                            <div class="faq-answer-row" id="faq-answer-7">
+                                                <div class="faq-answer-container">
+                                                    <span class="faq-a-icon">A</span>
+                                                    <div class="faq-answer-content">
+                                                        <p>기업뱅킹 재이용신청은 영업점 방문 또는 고객센터로 문의하시면 됩니다.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="faq-action-buttons">
+                                            <button class="btn btn-secondary btn-small" onclick="editFaq(7)">수정</button>
+                                            <button class="btn btn-secondary btn-small" onclick="deleteFaq(7)">삭제</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="faq-pagination" id="faqPagination">
+                        <button class="page-btn prev">&lt;</button>
+                        <div class="page-numbers">
+                            <button class="page-number active">1</button>
+                            <button class="page-number">2</button>
+                            <button class="page-number">3</button>
+                            <button class="page-number">4</button>
+                            <button class="page-number">5</button>
+                        </div>
+                        <button class="page-btn next">&gt;</button>
+                    </div>
+                </div>
+
+                <!-- 검색 결과 -->
+                <div class="faq-search-results" id="faqSearchResults" style="display: none;">
+                    <h3 class="faq-results-title">검색결과</h3>
+                    <p class="faq-results-count" id="faqResultsCount"></p>
+                    <div class="faq-results-list" id="faqResultsList"></div>
+                </div>
+
+                <!-- 푸터 영역 -->
+                <footer class="admin-footer"></footer>
+            </div>
+        </div>
+    </div>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var editUrl = /*[[@{/admin/cs/faq/edit}]]*/ '/admin/cs/faq/edit';
+        
+        // FAQ 검색 기능
+        const faqSearchInput = document.getElementById('faqSearchInput');
+        
+        // 샘플 FAQ 데이터
+        const faqData = [
+            {
+                id: 15,
+                question: '대출 만기가 되었는데, 기한연장 가능한가요?',
+                answer: '대출 만기 연장은 가능합니다. 다만 연장 시 이자율이 변경될 수 있으니 고객센터로 문의하시기 바랍니다.'
+            },
+            {
+                id: 14,
+                question: '[모바일뱅킹] 동장사본 발급 할 수 있나요?',
+                answer: '네, 모바일뱅킹에서 동장사본을 발급받으실 수 있습니다. 모바일뱅킹 > 증명서 발급 메뉴에서 가능합니다.'
+            },
+            {
+                id: 13,
+                question: '[모바일뱅킹] 모바일뱅킹에서 이체한도 변경이 가능한가요?',
+                answer: '네, 모바일뱅킹 > 설정 > 이체한도 변경에서 변경하실 수 있습니다.'
+            },
+            {
+                id: 12,
+                question: '[모바일뱅킹] 모바일뱅킹에서 입출금동지서비스는 어떻게 가입하나요?',
+                answer: '모바일뱅킹 > 서비스 신청 > 입출금동지서비스에서 가입하실 수 있습니다.'
+            },
+            {
+                id: 11,
+                question: '[개인뱅킹] 인터넷뱅킹 이체한도 상향은 어떻게 하나요?',
+                answer: '인터넷뱅킹 로그인 후 마이페이지 > 보안설정 > 이체한도 변경에서 상향하실 수 있습니다.'
+            },
+            {
+                id: 10,
+                question: '[개인뱅킹] 계좌 비밀번호 3회 오류 났는데 어떻게 해야 하나요?',
+                answer: '계좌 비밀번호를 3회 이상 잘못 입력하시면 계좌가 잠금 처리됩니다. 고객센터로 연락하시거나 영업점을 방문하셔서 해제하실 수 있습니다.'
+            },
+            {
+                id: 9,
+                question: '가계대출 신청 시 DSR 규제가 무엇인가요?',
+                answer: 'DSR(총부채원리금상환비율)은 연소득 대비 연간 원리금 상환액의 비율을 의미합니다. 금융당국에서 정한 기준을 초과하면 대출이 제한될 수 있습니다.'
+            },
+            {
+                id: 8,
+                question: '결제일 변경 방법을 알고 싶습니다.',
+                answer: '결제일 변경은 고객센터(1588-6200)로 연락하시거나 인터넷뱅킹에서 변경하실 수 있습니다.'
+            },
+            {
+                id: 7,
+                question: '[기업뱅킹] 기업뱅킹 재이용신청 경로 알려 주세요.',
+                answer: '기업뱅킹 재이용신청은 영업점 방문 또는 고객센터로 문의하시면 됩니다.'
+            },
+            {
+                id: 6,
+                question: '[기업뱅킹] 기업뱅킹 증명서 발급 경로 알려주세요.',
+                answer: '기업뱅킹 로그인 후 증명서 발급 메뉴에서 발급받으실 수 있습니다.'
+            }
+        ];
+
+        // 검색 결과 섹션 요소
+        const faqSearchResults = document.getElementById('faqSearchResults');
+        const faqResultsCount = document.getElementById('faqResultsCount');
+        const faqResultsList = document.getElementById('faqResultsList');
+
+        function performSearch() {
+            const searchTerm = faqSearchInput.value.trim().toLowerCase();
+            
+            if (searchTerm === '') {
+                // 검색어가 없으면 검색 결과 섹션 숨기기
+                faqSearchResults.style.display = 'none';
+                return;
+            }
+
+            let results = faqData.filter(faq => {
+                return faq.question.toLowerCase().includes(searchTerm) ||
+                       faq.answer.toLowerCase().includes(searchTerm);
+            });
+
+            // 검색 결과 섹션 표시
+            if (results.length > 0) {
+                faqSearchResults.style.display = 'block';
+                faqResultsCount.textContent = `"${faqSearchInput.value}"의 검색결과입니다.(${results.length}건)`;
+
+                faqResultsList.innerHTML = results.map(faq => `
+                    <div class="faq-result-item">
+                        <h4>${faq.question}</h4>
+                        <p>${faq.answer}</p>
+                    </div>
+                `).join('');
+            } else {
+                faqSearchResults.style.display = 'block';
+                faqResultsCount.textContent = `"${faqSearchInput.value}"의 검색결과입니다.(0건)`;
+                faqResultsList.innerHTML = '<p class="faq-no-results">검색 결과가 없습니다.</p>';
+            }
+        }
+
+        function resetSearch() {
+            document.getElementById('faqSearchInput').value = '';
+            faqSearchResults.style.display = 'none';
+        }
+
+        faqSearchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function toggleFaqAnswer(id) {
+            const answerRow = document.getElementById('faq-answer-' + id);
+            
+            if (answerRow.style.display === 'none') {
+                answerRow.style.display = 'block';
+            } else {
+                answerRow.style.display = 'none';
+            }
+        }
+
+        function editFaq(id) {
+            if (id) {
+                location.href = editUrl + '?id=' + id;
+            } else {
+                alert('FAQ ID가 없습니다.');
+            }
+        }
+
+        function deleteFaq(id) {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                alert('FAQ 삭제 기능: ID ' + id);
+                // 삭제 로직 구현
+            }
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>
+

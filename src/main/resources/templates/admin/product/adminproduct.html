@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>펀드 목록 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
+</head>
+<body>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar('product-list')}"></div>
+
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
+        <div class="main-content-body">
+            <div class="container">
+            <!-- 페이지 헤더 -->
+            <header class="page-header">
+                <h1>펀드 목록</h1>
+                <div class="header-actions">
+                    <a th:href="@{/admin/product/register}" class="btn btn-red">상품신규등록</a>
+                    <button class="btn btn-secondary" onclick="showDisplayOrder()">상품전시순서변경</button>
+                </div>
+            </header>
+
+            <!-- 검색 섹션 -->
+            <div class="search-section">
+                <table class="search-table">
+                    <tbody>
+                        <tr>
+                            <td class="search-label">검색조건</td>
+                            <td class="search-inputs">
+                                <select class="form-select search-select-small" id="searchNameSelect">
+                                    <option>펀드명</option>
+                                    <option>상품코드</option>
+                                    <option>유형</option>
+                                </select>
+                                <input type="text" class="form-input search-input-large" id="searchName" placeholder="입력하세요">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="search-label">펀드분류</td>
+                            <td class="search-inputs">
+                                <select class="form-select search-select-medium" id="searchCategory">
+                                    <option>전체</option>
+                                    <option>주식형</option>
+                                    <option>채권형</option>
+                                    <option>혼합형</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="search-label">상태</td>
+                            <td class="search-inputs">
+                                <div class="status-radio-group">
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="" checked>
+                                        <span>전체</span>
+                                    </label>
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="게시중">
+                                        <span>게시중</span>
+                                    </label>
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="수정중">
+                                        <span>수정중</span>
+                                    </label>
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="대기중">
+                                        <span>대기중</span>
+                                    </label>
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="중단">
+                                        <span>중단</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="search-actions">
+                    <button class="btn btn-search" onclick="searchProducts()">조회</button>
+                </div>
+            </div>
+
+            <!-- 상품 목록 테이블 -->
+            <div class="table-section">
+                <div class="table-info">
+                    <span>총 <strong id="totalCount">0</strong>개</span>
+                    <span class="pagination-info"><span id="currentPage">1</span> / <span id="totalPages">1</span> page</span>
+                </div>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>상품코드</th>
+                            <th>유형</th>
+                            <th>상품명</th>
+                            <th></th>
+                            <th>회사명</th>
+                            <th>등록일자</th>
+                            <th>상태</th>
+                            <th>상품관리</th>
+                            <th>수정</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                    
+                        <tr>
+                            <td>3</td>
+                            <td>0015400182</td>
+                            <td>적금</td>
+                            <td>
+                                <a href="#" class="product-name-link" onclick="viewProductDetail(2); return false;">
+                                    더음
+                                </a>
+                            </td>
+                            <td>
+                                <button class="view-detail-btn" onclick="viewProductDetail(2)" title="상세보기">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </td>
+                            <td>신한은행</td>
+                            <td>2022-03-15</td>
+                            <td><span class="status-badge modifying">수정중</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn resume" onclick="resumeProduct(2)">재개</button>
+                                    <button class="action-btn stop" onclick="endProduct(2)">상품종료</button>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="action-btn edit" onclick="editProduct(2)">수정</button>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>2</td>
+                            <td>0014500678</td>
+                            <td>대출</td>
+                            <td>
+                                <a href="#" class="product-name-link" onclick="viewProductDetail(4); return false;">
+                                    키드
+                                </a>
+                            </td>
+                            <td>
+                                <button class="view-detail-btn" onclick="viewProductDetail(4)" title="상세보기">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </td>
+                            <td>우리은행</td>
+                            <td>2023-05-10</td>
+                            <td><span class="status-badge stop">중단</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn resume" onclick="resumeProduct(4)">재개</button>
+                                    <button class="action-btn stop" onclick="endProduct(4)">상품종료</button>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="action-btn edit" onclick="editProduct(4)">수정</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>0016700890</td>
+                            <td>대출</td>
+                            <td>
+                                <a href="#" class="product-name-link" onclick="viewProductDetail(5); return false;">
+                                    기업대출상품
+                                </a>
+                            </td>
+                            <td>
+                                <button class="view-detail-btn" onclick="viewProductDetail(5)" title="상세보기">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </td>
+                            <td>NH은행</td>
+                            <td>2023-08-25</td>
+                            <td><span class="status-badge pending">대기중</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                </div>
+                            </td>
+                            <td>
+                                <button class="action-btn edit" onclick="editProduct(5)">수정</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button class="page-btn prev" onclick="prevPage()">&lt;</button>
+                    <div class="page-numbers">
+                        <button class="page-number active">1</button>
+                        <button class="page-number">2</button>
+                        <button class="page-number">3</button>
+                        <button class="page-number">4</button>
+                        <button class="page-number">5</button>
+                    </div>
+                    <button class="page-btn next" onclick="nextPage()">&gt;</button>
+                </div>
+            </div>
+            <!-- 푸터 영역 -->
+            <footer class="admin-footer"></footer>
+        </div>
+        </div>
+    </div>
+
+    <!-- 상품 세부사항 모달 -->
+    <div id="productDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>상품 세부사항</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 상품 상세 정보가 여기에 표시됩니다 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var editUrl = /*[[@{/admin/product/edit}]]*/ '';
+        function editProduct(productId) {
+            location.href = editUrl + '?id=' + productId;
+        }
+
+        // 상품 상세 데이터 (하드코딩, 나중에 서버에서 가져오기)
+        const productDetailData = {
+            2: {
+                productCode: '0015400182',
+                productType: '적금',
+                productName: '더음',
+                companyName: '신한은행',
+                registerDate: '2022-03-15',
+                status: '수정중',
+                overview: '상품 개요 내용이 여기에 표시됩니다.'
+            },
+            4: {
+                productCode: '0014500678',
+                productType: '대출',
+                productName: '키드',
+                companyName: '우리은행',
+                registerDate: '2023-05-10',
+                status: '중단',
+                overview: '대출 상품 개요 내용입니다.'
+            },
+            5: {
+                productCode: '0016700890',
+                productType: '대출',
+                productName: '기업대출상품',
+                companyName: 'NH은행',
+                registerDate: '2023-08-25',
+                status: '대기중',
+                overview: '기업대출 상품 개요 내용입니다.'
+            }
+        };
+
+        function viewProductDetail(productId) {
+            const product = productDetailData[productId];
+            if (!product) {
+                alert('상품 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="form-section" style="margin: 0;">
+                    <div class="form-table">
+                        <div class="form-row">
+                            <div class="form-label">상품코드</div>
+                            <div class="form-input-wrapper">
+                                <div class="product-detail-value">${product.productCode}</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">유형</div>
+                            <div class="form-input-wrapper">
+                                <div class="product-detail-value">${product.productType}</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">상품명</div>
+                            <div class="form-input-wrapper">
+                                <div class="product-detail-value">${product.productName}</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">회사명</div>
+                            <div class="form-input-wrapper">
+                                <div class="product-detail-value">${product.companyName}</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">등록일자</div>
+                            <div class="form-input-wrapper">
+                                <div class="product-detail-value">${product.registerDate}</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">상태</div>
+                            <div class="form-input-wrapper">
+                                <div class="product-detail-value">${product.status}</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">상품개요</div>
+                            <div class="form-input-wrapper">
+                                <div class="product-detail-content">${product.overview}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('productDetailModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('productDetailModal').classList.remove('active');
+        }
+
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('productDetailModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        /*]]>*/
+    </script>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+</body>
+</html>

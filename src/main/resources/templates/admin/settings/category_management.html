@@ -1,81 +1,33 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상품 카테고리 관리</title>
-    <link rel="stylesheet" href="settings_styles.css">
-    <link rel="stylesheet" href="category_management.css">
-    <script src="sidebar-script.js"></script>
+    <title>상품 카테고리 관리 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/settings_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/category_management.css}">
 </head>
 <body>
-<aside class="sidebar">
-    <div class="sidebar-header">
-        <div class="header-content">
-            <a href="adminMain.html">
-                <img src="logo.png" alt="BNK 부산은행" class="sidebar-logo">
-            </a>
-            <span class="admin-label">관리자</span>
-        </div>
-    </div>
-    <nav class="sidebar-menu">
-        <ul>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">상품관리</a>
-                <ul class="submenu">
-                    <li><a href="adminMain.html">상품 목록</a></li>
-                </ul>
-            </li>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">정보/공시</a>
-                <ul class="submenu">
-                    <li><a href="disclosure_documents.html">공시자료</a></li>
-                    <li><a href="ad-hoc_disclosure.html">수시공시</a></li>
-                    <li><a href="fund_infomation.html">펀드정보</a></li>
-                    <li><a href="guide.html">가이드</a></li>
-                    <li><a href="fund_market.html">펀드시황 관리</a></li>
-                </ul>
-            </li>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">고객지원</a>
-                <ul class="submenu">
-                    <li><a href="#">FAQ 관리</a></li>
-                    <li><a href="#">백문백답 관리</a></li>
-                    <li><a href="#">Q&amp;A 관리</a></li>
-                </ul>
-            </li>
-            <li class="menu-item has-submenu open">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">환경설정</a>
-                <ul class="submenu">
-                    <li><a href="search_keyword.html">검색어 관리</a></li>
-                    <li><a href="category_management.html" class="active">상품 카테고리 관리</a></li>
-                </ul>
-            </li>
-            <li class="menu-item">
-                <a href="approval_management.html">결재(승인) 관리</a>
-            </li>
-        </ul>
-    </nav>
-</aside>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar('settings-category')}"></div>
 
-<div class="main-content">
-    <header class="main-header">
-        <div class="header-right">
-            <span class="user-name">관리자님</span>
-            <span class="header-divider">|</span>
-            <a href="#" class="logout-link">로그아웃</a>
-        </div>
-    </header>
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
 
     <div class="main-content-body">
         <div class="container category-page">
-            <div class="category-header">
+            <header class="page-header">
                 <div>
                     <h1>상품 카테고리 관리</h1>
                     <p>은행 표준 분류를 자체 운영합니다. 사용 수가 0일 때만 삭제할 수 있습니다.</p>
                 </div>
-                <button id="openModalBtn" class="btn btn-primary">신규 등록</button>
-            </div>
+                <div class="header-actions">
+                    <button id="openModalBtn" class="btn btn-primary">신규 등록</button>
+                </div>
+            </header>
 
             <section class="summary-cards">
                 <article class="summary-card">
@@ -100,28 +52,38 @@
                 </article>
             </section>
 
-            <section class="filter-panel">
-                <div>
-                    <label for="filterKeyword">검색 (이름/코드/slug)</label>
-                    <input id="filterKeyword" type="text" placeholder="예: 주식형 / CAT-010 / equity">
+            <!-- 검색 섹션 -->
+            <div class="search-section">
+                <table class="search-table">
+                    <tbody>
+                        <tr>
+                            <td class="search-label">검색</td>
+                            <td class="search-inputs">
+                                <input type="text" class="form-input search-input-large" id="filterKeyword" placeholder="예: 주식형 / CAT-010 / equity">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="search-label">유형</td>
+                            <td class="search-inputs">
+                                <select class="form-select search-select-medium" id="filterType">
+                                    <option value="">전체</option>
+                                </select>
+                                <label style="display: flex; align-items: center; gap: 8px; margin-left: 20px;">
+                                    <input type="checkbox" id="filterActiveOnly" style="width: auto; margin: 0;">
+                                    노출만 보기
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; margin-left: 20px;">
+                                    <input type="checkbox" id="filterUsageZero" style="width: auto; margin: 0;">
+                                    사용 수 0만 보기
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="search-actions">
+                    <button class="btn btn-search" onclick="filterCategories()">조회</button>
                 </div>
-                <div>
-                    <label for="filterType">유형</label>
-                    <select id="filterType">
-                        <option value="">전체</option>
-                    </select>
-                </div>
-                <div class="check-row">
-                    <label>
-                        <input type="checkbox" id="filterActiveOnly">
-                        노출만 보기
-                    </label>
-                    <label>
-                        <input type="checkbox" id="filterUsageZero">
-                        사용 수 0만 보기
-                    </label>
-                </div>
-            </section>
+            </div>
 
             <section class="category-table-wrap">
                 <header>
@@ -145,7 +107,16 @@
                     <tr><td colspan="8" class="empty-row">조건에 맞는 항목이 없습니다.</td></tr>
                     </tbody>
                 </table>
+                <div class="pagination">
+                    <button class="page-btn prev" disabled>&lt;</button>
+                    <div class="page-numbers">
+                        <button class="page-number active">1</button>
+                    </div>
+                    <button class="page-btn next" disabled>&gt;</button>
+                </div>
             </section>
+            <!-- 푸터 영역 -->
+            <footer class="admin-footer"></footer>
         </div>
     </div>
 </div>
@@ -194,6 +165,8 @@
     </div>
 </div>
 
-<script src="category_management.js"></script>
+<script th:src="@{/js/admin/category_management.js}"></script>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>

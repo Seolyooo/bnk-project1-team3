@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QnA 답변 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admincs.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
+</head>
+<body>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar('qna')}"></div>
+
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
+        <div class="main-content-body">
+            <div class="container">
+                <!-- 페이지 헤더 -->
+                <header class="page-header">
+                    <h1>QnA 답변</h1>
+                </header>
+
+                <!-- QnA 답변 폼 -->
+                <form id="qnaEditForm" class="form-section">
+                    <div class="form-table">
+                        <div class="form-row">
+                            <div class="form-label">아이디</div>
+                            <div class="form-input-wrapper">
+                                <div class="qna-detail-user" id="qnaEditUser">user123</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">제목</div>
+                            <div class="form-input-wrapper">
+                                <div class="qna-detail-question" id="qnaEditQuestion">펀드 투자 시 세금은 어떻게 되나요?</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">질문</div>
+                            <div class="form-input-wrapper">
+                                <div class="qna-detail-question-content" id="qnaEditQuestionContent">펀드 투자 시 세금은 어떻게 되나요?</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">상태</div>
+                            <div class="form-input-wrapper">
+                                <div class="qna-detail-status" id="qnaEditStatus">답변대기</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">답변</div>
+                            <div class="form-input-wrapper">
+                                <textarea class="form-textarea" id="qnaEditAnswer" rows="8" placeholder="답변을 입력하세요" required>아직 답변이 등록되지 않았습니다.</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- 버튼 영역 -->
+                <div class="form-actions">
+                    <a th:href="@{/admin/cs/qna}" class="btn btn-secondary">취소</a>
+                    <button type="button" class="btn btn-red" onclick="saveQna()">저장</button>
+                </div>
+
+                <!-- 푸터 영역 -->
+                <footer class="admin-footer"></footer>
+            </div>
+        </div>
+    </div>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // URL 파라미터에서 QnA ID 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const qnaId = urlParams.get('id');
+
+        // TODO: 서버에서 QnA 데이터 가져오기
+        // 현재는 하드코딩된 데이터 사용
+        const qnaData = {
+            id: qnaId || '9',
+            userId: 'user123',
+            question: '펀드 투자 시 세금은 어떻게 되나요?',
+            questionContent: '펀드 투자 시 세금은 어떻게 되나요?',
+            status: 'pending',
+            answer: '아직 답변이 등록되지 않았습니다.'
+        };
+
+        // QnA 데이터를 폼에 표시
+        document.getElementById('qnaEditUser').textContent = qnaData.userId;
+        document.getElementById('qnaEditQuestion').textContent = qnaData.question;
+        document.getElementById('qnaEditQuestionContent').textContent = qnaData.questionContent;
+        document.getElementById('qnaEditStatus').textContent = qnaData.status === 'pending' ? '답변대기' : '답변완료';
+        document.getElementById('qnaEditAnswer').value = qnaData.answer;
+
+        function saveQna() {
+            const form = document.getElementById('qnaEditForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const answer = document.getElementById('qnaEditAnswer').value.trim();
+            if (!answer || answer === '') {
+                alert('답변을 입력해주세요.');
+                return;
+            }
+
+            const formData = {
+                id: qnaId,
+                answer: answer
+            };
+
+            // TODO: 서버로 답변 저장 요청
+            console.log('QnA 답변 데이터:', formData);
+            alert('답변이 등록되었습니다.');
+            window.location.href = /*[[@{/admin/cs/qna/detail}]]*/ '/admin/cs/qna/detail?id=' + qnaId;
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>
+

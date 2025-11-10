@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>펀드 등록 대기 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
+</head>
+<body>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar('product-pending')}"></div>
+
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
+        <div class="main-content-body">
+            <div class="container">
+            <!-- 페이지 헤더 -->
+            <header class="page-header">
+                <h1>펀드 등록 대기</h1>
+                <div class="header-actions">
+                    <a th:href="@{/admin/product}" class="btn btn-secondary">목록으로</a>
+                </div>
+            </header>
+
+            <!-- 검색 섹션 -->
+            <div class="search-section">
+                <table class="search-table">
+                    <tbody>
+                        <tr>
+                            <td class="search-label">검색조건</td>
+                            <td class="search-inputs">
+                                <select class="form-select search-select-small" id="searchNameSelect">
+                                    <option>펀드명</option>
+                                    <option>상품코드</option>
+                                    <option>유형</option>
+                                </select>
+                                <input type="text" class="form-input search-input-large" id="searchName" placeholder="입력하세요">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="search-label">펀드분류</td>
+                            <td class="search-inputs">
+                                <select class="form-select search-select-medium" id="searchCategory">
+                                    <option>전체</option>
+                                    <option>주식형</option>
+                                    <option>채권형</option>
+                                    <option>혼합형</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="search-label">상태</td>
+                            <td class="search-inputs">
+                                <div class="status-radio-group">
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="" checked>
+                                        <span>전체</span>
+                                    </label>
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="게시중">
+                                        <span>게시중</span>
+                                    </label>
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="수정중">
+                                        <span>수정중</span>
+                                    </label>
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="대기중">
+                                        <span>대기중</span>
+                                    </label>
+                                    <label class="status-radio-label">
+                                        <input type="radio" name="searchStatus" value="중단">
+                                        <span>중단</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="search-actions">
+                    <button class="btn btn-search" onclick="searchPendingProducts()">조회</button>
+                </div>
+            </div>
+
+            <!-- 등록 대기 목록 테이블 -->
+            <div class="table-section">
+                <div class="table-info">
+                    <span>총 <strong id="totalCount">0</strong>개</span>
+                </div>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>상품코드</th>
+                            <th>상품명</th>
+                            <th></th>
+                            <th>회사명</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingTableBody">
+                        <tr>
+                            <td>0010100177</td>
+                            <td>예금</td>
+                            <td>
+                                <button class="view-detail-btn" onclick="viewPendingDetail(1)" title="상세보기">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </td>
+                            <td>KB은행</td>
+                            <td><span class="status-badge pending">대기중</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn approval" onclick="requestApproval(1)">승인요청</button>
+                                    <button class="action-btn reserve" onclick="reserveProduct(1)">예약</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>0015400182</td>
+                            <td>더음</td>
+                            <td>
+                                <button class="view-detail-btn" onclick="viewPendingDetail(2)" title="상세보기">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </td>
+                            <td>신한은행</td>
+                            <td><span class="status-badge pending">대기중</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn approval" onclick="requestApproval(2)">승인요청</button>
+                                    <button class="action-btn reserve" onclick="reserveProduct(2)">예약</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button class="page-btn prev" onclick="prevPage()">&lt;</button>
+                    <div class="page-numbers">
+                        <button class="page-number active">1</button>
+                        <button class="page-number">2</button>
+                        <button class="page-number">3</button>
+                        <button class="page-number">4</button>
+                        <button class="page-number">5</button>
+                    </div>
+                    <button class="page-btn next" onclick="nextPage()">&gt;</button>
+                </div>
+            </div>
+            <!-- 푸터 영역 -->
+            <footer class="admin-footer"></footer>
+        </div>
+        </div>
+    </div>
+
+    <!-- 상품 세부사항 모달 -->
+    <div id="productDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>상품 세부사항</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 상품 상세 정보가 여기에 표시됩니다 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+</body>
+</html>
+

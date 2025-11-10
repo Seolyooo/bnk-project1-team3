@@ -1,171 +1,11 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    background: #fff;
-    min-height: 100vh;
-    color: #333;
-    display: flex;
-}
-
-.sidebar {
-    width: 250px;
-    background: white;
-    border-right: 1px solid #eee;
-    min-height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-}
-
-.sidebar-header {
-    padding: 10px 20px 7px 20px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.header-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-}
-
-.sidebar-header a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    text-decoration: none;
-}
-
-.sidebar-logo {
-    max-width: 75%;
-    height: auto;
-    max-height: 35px;
-    object-fit: contain;
-}
-
-.admin-label {
-    font-size: 0.75rem;
-    color: #645b4e;
-    align-self: flex-end;
-    margin-right: 28px;
-}
-
-.sidebar-menu {
-    padding: 20px 0;
-}
-
-.sidebar-menu ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.menu-item a {
-    display: block;
-    padding: 15px 20px;
-    color: #666;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border-left: 3px solid transparent;
-}
-
-.menu-item a:hover,
-.menu-item a.active {
-    background: #fbf9fa;
-    color: #cd1317;
-    border-left-color: #cd1317;
-    font-weight: 600;
-}
-
-.menu-item.has-submenu > a {
-    position: relative;
-}
-
-.submenu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    background: #f8f9fa;
-}
-
-.menu-item.open > .submenu {
-    max-height: 500px;
-}
-
-.submenu a {
-    display: block;
-    padding: 12px 20px 12px 45px;
-    color: #666;
-    font-size: 0.9rem;
-    border-left: 3px solid transparent;
-}
-
-.submenu a:hover,
-.submenu a.active {
-    background: #fbf9fa;
-    color: #cd1317;
-    border-left-color: #cd1317;
-    font-weight: 600;
-}
-
-.main-content {
-    margin-left: 250px;
-    flex: 1;
-    width: calc(100% - 250px);
-    display: flex;
-    flex-direction: column;
-}
-
-.main-header {
-    height: 64px;
-    background: white;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 20px;
-    position: fixed;
-    top: 0;
-    left: 250px;
-    right: 0;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logout-link {
-    color: #666;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.logout-link:hover {
-    color: #cd1317;
-}
-
 .main-content-body {
     margin-top: 81px;
-    padding: 40px 60px;
+    padding: 20px;
 }
 
 .container {
     width: 100%;
-    max-width: 1000px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -173,12 +13,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 28px;
+    padding-bottom: 10px;
 }
 
 .page-header h1 {
-    font-size: 2rem;
+    font-size: 30px;
     font-weight: 700;
+    color: #333;
+    margin: 0;
 }
 
 .header-actions {
@@ -187,9 +29,22 @@ body {
 }
 
 .section-title {
-    font-size: 1.1rem;
-    margin-bottom: 12px;
+    font-size: 1.3rem;
     font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    padding: 8px 30px 0 0;
+    position: relative;
+}
+
+.section-title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25px;
+    height: 3px;
+    background: #cd1317;
 }
 
 button,
@@ -214,17 +69,15 @@ button:hover {
 }
 
 .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 18px;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 600;
+    padding: 6px 20px;
     border: none;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
     text-decoration: none;
+    display: inline-block;
 }
 
 .btn-primary {
@@ -257,8 +110,8 @@ button:hover {
 .fund-table {
     width: 100%;
     border-collapse: collapse;
-    border-top: 2px solid #dee2e6;
-    border-bottom: 1px solid #dee2e6;
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #333;
 }
 
 .fund-table thead {
@@ -282,6 +135,11 @@ button:hover {
 .fund-table td {
     color: #666;
     font-size: 15px;
+}
+
+.fund-table tbody tr td:first-child {
+    color: #666;
+    font-weight: normal;
 }
 
 .fund-table tbody tr:hover {
@@ -310,38 +168,80 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    margin-top: 18px;
+    gap: 5px;
+    margin-top: 30px;
+    padding: 20px 0;
 }
 
-.page-btn,
-.page-number {
-    padding: 8px 14px;
-    border-radius: 6px;
-    border: 1px solid #dee2e6;
-    background: #fff;
-    color: #495057;
+.page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.2s ease, color 0.2s ease;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
 }
 
 .page-btn:disabled {
-    cursor: default;
-    color: #adb5bd;
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: white;
+    border-color: #ddd;
+    color: #999;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.page-number {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-number:hover {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
 }
 
 .page-number.active {
-    background: #3b5bdb;
-    color: #fff;
-    border-color: #3b5bdb;
+    background: white;
+    border-color: #ddd;
+    color: #cd1317;
+    font-weight: 600;
 }
 
-.page-btn:hover,
-.page-number:hover {
-    background: #edf2ff;
-    color: #3b5bdb;
-    border-color: #3b5bdb;
+.page-number.active:hover {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
 }
 
 .modal-overlay {

@@ -1,0 +1,755 @@
+/* 페이지 헤더 */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.page-header h1 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* 버튼 스타일 */
+.btn {
+    padding: 6px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-red {
+    background: #cd1317;
+    color: white;
+}
+
+.btn-red:hover {
+    background: #cd1317;
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+.btn-small {
+    padding: 6px 15px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* 검색 섹션 */
+.search-section {
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.search-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #333;
+}
+
+.search-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.search-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.search-label {
+    width: 120px;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: #333;
+    background: #f8f9fa;
+    vertical-align: middle;
+    text-align: left;
+    font-size: 15px;
+}
+
+.search-inputs {
+    padding: 15px 20px;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-input-large {
+    flex: 1;
+    min-width: 300px;
+}
+
+.search-select-small {
+    width: 120px;
+}
+
+.search-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+/* 폼 스타일 */
+.form-input,
+.form-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+    background: white;
+}
+
+.form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+
+/* 테이블 섹션 */
+.table-section {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 0;
+}
+
+.table-section .table-info {
+    padding: 0 10px;
+}
+
+.table-section .product-table {
+    padding: 0 10px;
+}
+
+.table-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.table-info span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.table-info strong {
+    color: #cd1317;
+}
+
+.pagination-info {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-top: 2px solid #333;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.product-table thead {
+    background: #f8f9fa;
+}
+
+.product-table th {
+    padding: 15px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+}
+
+.product-table > table {
+    width: 100%;
+}
+
+.product-table td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #eee;
+    color: #666;
+    font-size: 15px;
+    text-align: center;
+}
+
+.product-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.product-table tbody tr:hover {
+    background: #f8f9ff;
+}
+
+/* 페이지네이션 */
+.page-btn {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #666;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.page-btn:hover {
+    background: #f0f0f0;
+    border-color: #667eea;
+}
+
+.page-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* QnA 상세 페이지 */
+.qna-detail-user,
+.qna-detail-question,
+.qna-detail-question-content {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+    padding: 10px 0;
+}
+
+.qna-detail-question {
+    font-weight: 600;
+}
+
+.qna-detail-status {
+    font-size: 15px;
+    color: #666;
+    padding: 10px 0;
+}
+
+.qna-detail-answer {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.8;
+    padding: 10px 0;
+    white-space: pre-wrap;
+}
+
+/* ============================================
+   FAQ 전용 스타일
+   ============================================ */
+
+/* FAQ 안내 메시지 */
+.faq-guide {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.faq-guide ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.faq-guide li {
+    margin-bottom: 5px;
+}
+
+/* FAQ 테이블 */
+.faq-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.faq-table thead {
+    background: #f8f9fa;
+}
+
+.faq-table th {
+    padding: 15px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+}
+
+.faq-table th:first-child {
+    width: 80px;
+    text-align: center;
+}
+
+.faq-table th:nth-child(2) {
+    text-align: center;
+}
+
+.faq-table th:nth-child(3) {
+    width: 120px;
+    text-align: center;
+}
+
+.faq-table td {
+    text-align: left;
+    padding: 0;
+}
+
+.faq-table td:first-child {
+    text-align: center;
+    width: 80px;
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+.faq-table td:nth-child(3) {
+    text-align: center;
+    width: 120px;
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+.faq-table td:nth-child(3) .faq-action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* FAQ 아이템 */
+.faq-item {
+    width: 100%;
+}
+
+.faq-question-row {
+    cursor: pointer;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.faq-question-row .faq-q-icon {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    background: #e0e0e0;
+    color: #333;
+    border-radius: 50%;
+    text-align: center;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.faq-question-row .faq-question-text {
+    flex: 1;
+}
+
+.faq-question-row .faq-action-buttons {
+    display: flex;
+    gap: 5px;
+    margin-left: 10px;
+}
+
+.faq-answer-row {
+    display: none;
+    padding: 15px 20px 15px 55px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+}
+
+.faq-answer-row .faq-answer-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+.faq-answer-row .faq-a-icon {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    background: #555555;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    font-weight: bold;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.faq-answer-row .faq-answer-content {
+    flex: 1;
+}
+
+.faq-answer-row .faq-answer-content p {
+    margin: 0;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* FAQ 페이지네이션 */
+.faq-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 30px;
+    padding: 20px 0;
+}
+
+.faq-pagination .page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.faq-pagination .page-btn:hover:not(:disabled) {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
+}
+
+.faq-pagination .page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: white;
+    border-color: #ddd;
+    color: #999;
+}
+
+.faq-pagination .page-numbers {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.faq-pagination .page-number {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.faq-pagination .page-number:hover {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
+}
+
+.faq-pagination .page-number.active {
+    background: white;
+    border-color: #ddd;
+    color: #cd1317;
+    font-weight: 600;
+}
+
+.faq-pagination .page-number.active:hover {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
+}
+
+/* FAQ 검색 결과 */
+.faq-search-results {
+    display: none;
+    margin-top: 30px;
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.faq-results-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.faq-results-count {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.faq-results-list {
+    margin-top: 20px;
+}
+
+.faq-results-list .faq-result-item {
+    background: #f8f9fa;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.faq-results-list .faq-result-item h4 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.faq-results-list .faq-result-item p {
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.faq-results-list .faq-no-results {
+    color: #999;
+    text-align: center;
+    padding: 40px;
+}
+
+.faq-no-results-cell {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+/* ============================================
+   QnA 전용 스타일
+   ============================================ */
+
+/* QnA 테이블 */
+.qna-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.qna-table thead {
+    background: #f8f9fa;
+}
+
+.qna-table th {
+    padding: 15px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+}
+
+.qna-table th:first-child {
+    width: 80px;
+    text-align: center;
+}
+
+.qna-table th:nth-child(2) {
+    text-align: center;
+}
+
+.qna-table th:nth-child(3) {
+    width: 100px;
+    text-align: center;
+    padding-right: 20px;
+}
+
+.qna-table th:nth-child(4) {
+    width: 120px;
+    text-align: center;
+}
+
+.qna-table td {
+    text-align: left;
+    padding: 0;
+}
+
+.qna-table td:first-child {
+    text-align: center;
+    width: 80px;
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+.qna-table td:nth-child(2) {
+    text-align: center;
+    padding: 12px 15px;
+}
+
+.qna-table td:nth-child(3) {
+    text-align: center;
+    width: 100px;
+    padding: 12px 15px;
+    padding-right: 20px;
+    vertical-align: middle;
+}
+
+.qna-table td:nth-child(4) {
+    text-align: center;
+    width: 120px;
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+.qna-table td:nth-child(4) .faq-action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.qna-no-results-cell {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+/* QnA 페이지네이션 */
+.qna-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 30px;
+    padding: 20px 0;
+}
+
+.qna-pagination .page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qna-pagination .page-btn:hover:not(:disabled) {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
+}
+
+.qna-pagination .page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: white;
+    border-color: #ddd;
+    color: #999;
+}
+
+.qna-pagination .page-numbers {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.qna-pagination .page-number {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qna-pagination .page-number:hover {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
+}
+
+.qna-pagination .page-number.active {
+    background: white;
+    border-color: #ddd;
+    color: #cd1317;
+    font-weight: 600;
+}
+
+.qna-pagination .page-number.active:hover {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
+}
+
+/* QnA 상태 라디오 버튼 */
+.qna-status-radio {
+    display: flex;
+    gap: 20px;
+}
+
+.qna-status-radio label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+}
+
+.qna-status-radio input[type="radio"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+

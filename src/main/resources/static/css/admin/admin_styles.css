@@ -28,7 +28,7 @@ body {
 
 
 .sidebar-header {
-    padding: 10px 20px 7px 20px;
+    padding: 4px 20px 6px 20px;
     border-bottom: 1px solid #eee;
     display: flex;
     align-items: center;
@@ -40,7 +40,6 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
     width: 100%;
     position: relative;
 }
@@ -54,9 +53,10 @@ body {
 }
 
 .sidebar-logo {
-    max-width: 75%;
+    width: 75%;
     height: auto;
-    max-height: 35px;
+    max-height: 70px;
+    min-height: 40px;
     object-fit: contain;
     display: block;
 }
@@ -180,7 +180,52 @@ body {
 .header-right {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+}
+
+.header-bell {
+    color: #cd1317;
+    font-size: 1.2rem;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+#search_icon {
+    color: #cd1317;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+#search_icon i {
+    color: #cd1317;
+}
+
+#notification {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+#notification i {
+    color: #cd1317;
+    font-size: 1.2rem;
+}
+
+.note-num {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    z-index: 3;
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    text-align: center;
+    background-color: #cd1317;
+    border-radius: 50%;
+    display: inline-block;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: bold;
 }
 
 .user-name {
@@ -378,7 +423,7 @@ body {
     margin-bottom: 30px;
 }
 
-.section-block {
+.table-card {
     background: white;
     border-radius: 12px;
     padding: 18px;
@@ -387,7 +432,7 @@ body {
     overflow-x: auto;
 }
 
-.section-block h2 {
+.table-card h2 {
     font-size: 1.2rem;
     margin-bottom: 15px;
     color: #333;
@@ -400,6 +445,17 @@ body {
     margin-top: 10px;
 }
 
+.fund-table thead {
+    background: #f8f9fa;
+}
+
+.fund-table th {
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+}
+
 .fund-table tbody tr {
     border-bottom: 1px solid #eee;
     transition: background 0.2s ease;
@@ -409,16 +465,25 @@ body {
     background: #fff5f5;
 }
 
+/* 푸터 영역 */
+.admin-footer {
+    height: 60px;
+    width: 100%;
+}
+
+.fund-table th,
 .fund-table td {
     padding: 12px;
     color: #333;
     font-size: 0.85rem;
+    text-align: center;
 }
 
 .fund-table td:first-child {
     font-weight: 700;
     color: #cd1317;
     font-size: 0.95rem;
+    text-align: center;
 }
 
 /* 반응형 디자인 */

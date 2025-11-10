@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ 등록 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admincs.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
+</head>
+<body>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar('faq')}"></div>
+
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
+        <div class="main-content-body">
+            <div class="container">
+                <!-- 페이지 헤더 -->
+                <header class="page-header">
+                    <h1>FAQ 등록</h1>
+                </header>
+
+                <!-- FAQ 등록 폼 -->
+                <div class="form-section">
+                    <h2 class="section-title">FAQ 정보</h2>
+                    <div class="form-table">
+                        <div class="form-row">
+                            <div class="form-label">질문</div>
+                            <div class="form-input-wrapper">
+                                <input type="text" class="form-input" id="faqQuestion" placeholder="질문을 입력하세요">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label">답변</div>
+                            <div class="form-input-wrapper">
+                                <textarea class="form-textarea" id="faqAnswer" rows="10" placeholder="답변을 입력하세요"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 버튼 영역 -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-red" onclick="saveFaq()">저장</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelFaq()">취소</button>
+                </div>
+
+                <!-- 푸터 영역 -->
+                <footer class="admin-footer"></footer>
+            </div>
+        </div>
+    </div>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function saveFaq() {
+            const question = document.getElementById('faqQuestion').value.trim();
+            const answer = document.getElementById('faqAnswer').value.trim();
+            
+            if (question === '') {
+                alert('질문을 입력해주세요.');
+                return;
+            }
+            
+            if (answer === '') {
+                alert('답변을 입력해주세요.');
+                return;
+            }
+            
+            // TODO: 서버로 데이터 전송
+            console.log('FAQ 저장:', { question, answer });
+            alert('FAQ가 등록되었습니다.');
+            
+            // 목록 페이지로 이동
+            window.location.href = /*[[@{/admin/cs/faq}]]*/ '/admin/cs/faq';
+        }
+
+        function cancelFaq() {
+            if (confirm('작성 중인 내용이 사라집니다. 정말 취소하시겠습니까?')) {
+                window.location.href = /*[[@{/admin/cs/faq}]]*/ '/admin/cs/faq';
+            }
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>
+

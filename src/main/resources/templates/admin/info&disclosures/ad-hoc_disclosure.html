@@ -1,70 +1,20 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>수시공시 관리</title>
-    <link rel="stylesheet" href="info_disclosure.css">
-    <script src="sidebar-script.js"></script>
+    <title>수시공시 관리 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/info_disclosure.css}">
 </head>
 <body>
-<aside class="sidebar">
-    <div class="sidebar-header">
-        <div class="header-content">
-            <a href="adminMain.html">
-                <img src="logo.png" alt="BNK 부산은행" class="sidebar-logo">
-            </a>
-            <span class="admin-label">관리자</span>
-        </div>
-    </div>
-    <nav class="sidebar-menu">
-        <ul>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">상품관리</a>
-                <ul class="submenu">
-                    <li><a href="adminMain.html">상품 목록</a></li>
-                </ul>
-            </li>
-            <li class="menu-item has-submenu open">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">정보/공시</a>
-                <ul class="submenu">
-                    <li><a href="disclosure_documents.html">공시자료</a></li>
-                    <li><a href="ad-hoc_disclosure.html" class="active">수시공시</a></li>
-                    <li><a href="fund_infomation.html">펀드정보</a></li>
-                    <li><a href="guide.html">가이드</a></li>
-                    <li><a href="fund_market.html">펀드시황 관리</a></li>
-                </ul>
-            </li>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">고객지원</a>
-                <ul class="submenu">
-                    <li><a href="#">FAQ 관리</a></li>
-                    <li><a href="#">백문백답 관리</a></li>
-                    <li><a href="#">Q&amp;A 관리</a></li>
-                </ul>
-            </li>
-            <li class="menu-item has-submenu">
-                <a href="#" onclick="toggleSubmenu(this.parentElement); return false;">환경설정</a>
-                <ul class="submenu">
-                    <li><a href="search_keyword.html">검색어 관리</a></li>
-                    <li><a href="category_management.html">상품 카테고리 관리</a></li>
-                </ul>
-            </li>
-            <li class="menu-item">
-                <a href="approval_management.html">결재(승인) 관리</a>
-            </li>
-        </ul>
-    </nav>
-</aside>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar('info-ad-hoc')}"></div>
 
-<div class="main-content">
-    <header class="main-header">
-        <div class="header-right">
-            <span class="user-name">관리자님</span>
-            <span class="header-divider">|</span>
-            <a href="#" class="logout-link">로그아웃</a>
-        </div>
-    </header>
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
 
     <div class="main-content-body">
         <div class="container">
@@ -123,11 +73,15 @@
                     </tbody>
                 </table>
                 <div class="pagination">
-                    <button class="page-btn" disabled>이전</button>
-                    <button class="page-number active">1</button>
-                    <button class="page-btn" disabled>다음</button>
+                    <button class="page-btn prev" disabled>&lt;</button>
+                    <div class="page-numbers">
+                        <button class="page-number active">1</button>
+                    </div>
+                    <button class="page-btn next" disabled>&gt;</button>
                 </div>
             </section>
+            <!-- 푸터 영역 -->
+            <footer class="admin-footer"></footer>
         </div>
     </div>
 </div>
@@ -205,5 +159,7 @@
         });
     });
 </script>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>
