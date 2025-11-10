@@ -54,5 +54,8 @@ public class fundController {
     public String dopisitGuide() {
         return "dopisitGuide";
     }
-
+    @GetMapping("/admin/info")
+    public String InfoAndDisclosure() {
+        return "admin/info&disclosures/disclosures";
+    }
 }

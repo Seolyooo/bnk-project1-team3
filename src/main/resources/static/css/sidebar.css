@@ -1,3 +1,4 @@
+/* ========== 초기화 ========== */
 * {
     margin: 0;
     padding: 0;
@@ -11,162 +12,111 @@ body {
     line-height: 1.6;
 }
 
-/* Header Styles */
-header {
-    width: 100%;
-    background-color: #fff;
-    min-height: 100px;
-}
-
-/* Main Content */
-main {
-    min-height: calc(100vh - 200px);
-    background-color: #fff;
-}
-
+/* ========== 메인 레이아웃 ========== */
 .main-container {
-    max-width: 1000px;
+    max-width: 1200px; /*  통일 */
     margin: 0 auto;
-    padding: 0px;
+    padding: 0;
 }
 
-/* Content Wrapper */
 .content-wrapper {
     display: flex;
-    gap: 30px;
-    margin-top: 20px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 40px;
 }
 
-/* Sidebar */
+/* ========== 사이드바 ========== */
 .sidebar {
-    width: 170px;
+    flex: 0 0 220px;      /*  고정폭 */
+    width: 220px;
     background-color: #fff;
-    padding: 0;
+    border-right: 1px solid #e5e5e5;
+    padding-bottom: 30px;
 }
 
 .sidebar-title {
     font-size: 16px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 0;
-    padding: 10px 15px;
-    background-color: #fff;
+    padding: 12px 16px;
     border-top: 1px solid #28282b;
     border-bottom: 1px solid #e0e0e1;
 }
 
-.title-divider-light {
-    height: 1px;
-    background-color: #e0e0e1;
-    margin: 0;
+.sidebar-menu {
+    list-style: none;
 }
 
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 0;
+.menu-item {
+    border-bottom: 1px solid #eee;
 }
 
-.sidebar-link {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
-    color: #333;
-    text-decoration: none;
-    font-size: 12px;
-    border-radius: 0;
-    transition: all 0.3s;
-    border-bottom: 1px solid #e0e0e1;
-    background-color: #fff;
-}
-
-.sidebar-link:hover {
-    background-color: #f8f8fa;
-    color: #d32f2f;
-}
-
-.sidebar-link.active {
-    background-color: #f8f8fa;
-    color: #d32f2f;
-    font-weight: bold;
-}
-
-.sidebar-link.active:hover {
-    background-color: #f8f8fa;
-    color: #d32f2f;
-}
-
-.sidebar-link:last-child {
-    border-bottom: none;
-}
-
-.arrow {
-    font-size: 12px;
-}
-
-.sidebar-icons {
-    display: flex;
-    justify-content: space-around;
-    padding-top: 15px;
-    margin-top: 0;
-    border-top: 1px solid #e0e0e1;
-}
-
-.sidebar-icon-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-}
-
-.icon-bubble,
-.icon-envelope,
-.icon-question {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-}
-
-.sidebar-icon-item span {
-    font-size: 11px;
-    color: #666;
-}
-
-/* Main Content Area */
-.main-content {
-    width: 800px;
-    flex: 1;
-    background-color: #fff;
-    padding: 0;
-}
-
-.content-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 10px 15px;
-}
-
-/* Footer */
-footer {
+.menu-btn {
     width: 100%;
-    background-color: #fff;
-    min-height: 100px;
+    background: #fff;
+    border: none;
+    text-align: left;
+    padding: 10px 15px;
+    font-size: 13px;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.2s;
 }
 
-/* Responsive adjustments */
+.menu-btn:hover {
+    background-color: #f8f8fa;
+    color: #b22222;
+}
+
+.submenu {
+    list-style: none;
+    padding-left: 20px;
+    display: none;
+}
+
+.submenu li a {
+    display: block;
+    padding: 6px 0;
+    font-size: 12px;
+    color: #444;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.submenu li a:hover {
+    color: #b22222;
+}
+
+/* ========== 본문 ========== */
+.main-content {
+    flex: 1;
+    padding-left: 40px; /*  사이드바와 간격 */
+    background: #fff;
+}
+
+/* 제목 정렬 */
+.content-header h1 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+/* 반응형 */
 @media (max-width: 1024px) {
     .content-wrapper {
         flex-direction: column;
     }
-
     .sidebar {
         width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .main-content {
+        padding: 20px 10px;
     }
 }

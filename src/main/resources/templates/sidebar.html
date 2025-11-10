@@ -1,76 +1,51 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>부산은행 - FAQ(자주하시는질문)</title>
-    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
-</head>
-<body>
-<!-- Header Section -->
-<header>
-</header>
+<aside class="sidebar" th:fragment="sidebar">
+    <h2 class="sidebar-title">펀드</h2>
+    <ul class="sidebar-menu">
+        <!-- 펀드상품 -->
+        <li class="menu-item">
+            <button class="menu-btn">펀드상품 <span class="arrow">▶</span></button>
+            <ul class="submenu">
+                <li><a href="/bnk/productList">추천펀드</a></li>
+                <li><a href="/bnk/fundReturnBest">수익률BEST</a></li>
+                <li><a href="/bnk/fundSalesBest">판매BEST</a></li>
+                <li><a href="/bnk/fundELF">ELF</a></li>
+            </ul>
+        </li>
 
-<!-- Main Content Section -->
-<main>
-    <div class="main-container">
+        <!-- 펀드케어 -->
+        <li class="menu-item">
+            <button class="menu-btn">펀드케어 <span class="arrow">▶</span></button>
+            <ul class="submenu">
+                <li><a href="/bnk/fundCompare">보유펀드비교분석</a></li>
+            </ul>
+        </li>
 
+        <!-- 펀드정보센터 -->
+        <li class="menu-item">
+            <button class="menu-btn">펀드정보센터 <span class="arrow">▶</span></button>
+            <ul class="submenu">
+                <li><a href="/bnk/fundMarket">펀드시황</a></li>
+                <li><a href="/bnk/fundDisclosure">공시자료</a></li>
+            </ul>
+        </li>
 
-        <div class="content-wrapper">
-            <!-- Left Sidebar -->
-            <aside class="sidebar">
-                <div class="title-divider-light"></div>
-                <nav class="sidebar-nav">
-                    <h2 class="sidebar-title">고객상담</h2>
+        <!-- 펀드이용가이드 -->
+        <li class="menu-item">
+            <button class="menu-btn">펀드이용가이드 <span class="arrow">▶</span></button>
+            <ul class="submenu">
+                <li><a href="/bnk/fundGuide">펀드안내</a></li>
+                <li><a href="/bnk/fundFAQ">펀드FAQ</a></li>
+                <li><a href="/bnk/fundNotice">펀드수시공시</a></li>
+                <li><a href="/bnk/dopisitGuide">투자자예탁금 이용료안내</a></li>
+            </ul>
+        </li>
 
-                    <a href="#" class="sidebar-link active">
-                        FAQ(자주하시는질문)
-                        <span class="arrow">→</span>
-                    </a>
-                    <a href="#" class="sidebar-link">
-                        (업무별)은행거래 필요서류 안내
-                        <span class="arrow">→</span>
-                    </a>
-                    <a href="#" class="sidebar-link">
-                        TALK상담
-                        <span class="arrow">→</span>
-                    </a>
-                    <a href="#" class="sidebar-link">
-                        온라인상담
-                        <span class="arrow">→</span>
-                    </a>
-                </nav>
-                <div class="sidebar-icons">
-                    <div class="sidebar-icon-item">
-                        <div class="icon-bubble">💬</div>
-                        <span>Talk상담</span>
-                    </div>
-                    <div class="sidebar-icon-item">
-                        <div class="icon-envelope">✉</div>
-                        <span>메일상담</span>
-                    </div>
-                    <div class="sidebar-icon-item">
-                        <div class="icon-question">?</div>
-                        <span>FAQ</span>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Main Content Area -->
-            <div class="main-content">
-                <div class="content-header">
-                </div>
-
-
-            </div>
-        </div>
-    </div>
-</main>
-
-<!-- Footer Section -->
-<footer>
-</footer>
-
-</body>
-</html>
-
+        <!-- 펀드서비스 -->
+        <li class="menu-item">
+            <button class="menu-btn">펀드서비스 <span class="arrow">▶</span></button>
+            <ul class="submenu">
+                <li><a href="/bnk/fundService">서비스 안내</a></li>
+            </ul>
+        </li>
+    </ul>
+</aside>
