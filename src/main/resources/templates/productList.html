@@ -1,303 +1,157 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>펀드상품 / 수익률BEST</title>
-    <style>
-        body {
-            font-family: '맑은 고딕', sans-serif;
-            background-color: #fff;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            width: 1000px;
-            margin: 40px auto;
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        /* 상단 탭 */
-        .tab-menu {
-            display: flex;
-            border-bottom: 2px solid #b22222;
-            margin-bottom: 20px;
-        }
-
-        .tab-menu a {
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-            border-right: 1px solid #ddd;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .tab-menu a.active {
-            background-color: #b22222;
-            color: #fff;
-        }
-
-        /* 펀드상품 소분류 */
-        .sub-filter {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 15px 0 25px 0;
-        }
-
-        .sub-filter button {
-            border: 1px solid #ccc;
-            background: #f9f9f9;
-            border-radius: 3px;
-            padding: 6px 14px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .sub-filter button.active {
-            background-color: #b22222;
-            color: white;
-            border-color: #b22222;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border-bottom: 1px solid #e0e0e0;
-            padding: 12px;
-            text-align: center;
-            vertical-align: top;
-        }
-
-        th {
-            background-color: #fafafa;
-        }
-
-        .fund-name {
-            text-align: left;
-            font-weight: bold;
-            color: #000;
-        }
-
-        .fund-name a {
-            text-decoration: none;
-            color: #005bac;
-            transition: color 0.2s;
-        }
-
-        .fund-name a:hover {
-            text-decoration: underline;
-            color: #b22222;
-        }
-
-        .desc {
-            font-size: 13px;
-            color: #555;
-            margin-top: 4px;
-            line-height: 1.4;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 2px 6px;
-            background-color: #005bac;
-            color: #fff;
-            border-radius: 3px;
-            font-size: 11px;
-            margin-right: 6px;
-        }
-
-        .btn-join {
-            background-color: #b22222;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .btn-join:hover {
-            background-color: #8b0000;
-        }
-
-        .sub-btn {
-            display: block;
-            margin-top: 5px;
-            font-size: 12px;
-            color: #666;
-            text-decoration: underline;
-        }
-    </style>
+    <title>펀드상품</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/productList.css}">
 </head>
 <body>
-<div class="container">
-    <h1 id="title">펀드상품(헤더 푸터 사이드바 추가해야함)</h1>
 
-    <!-- 상단 탭 -->
-    <div class="tab-menu" id="tabs">
-        <a class="tab active" data-type="fund">펀드상품</a>
-        <a class="tab" data-type="recommend">추천펀드</a>
-        <a class="tab" data-type="best">수익률BEST</a>
-        <a class="tab" data-type="sale">판매BEST</a>
-        <a class="tab" data-type="elf">ELF</a>
-        <a class="tab" data-type="interest">관심상품</a>
+<header class="header">
+    <div class="header-top">
+        <div class="container">
+            <div class="logo">
+                <a href="/bnk">
+                    <img th:src="@{/images/main/h1_busanbank_new.png}" alt="BNK부산은행">
+                </a>
+            </div>
+            <div class="header-utils">
+                <a href="#" class="util-link">로그인</a>
+                <button type="button" class="btn-search" title="검색하기">검색하기</button>
+                <button type="button" class="btn-allmenu" title="전체메뉴">전체메뉴</button>
+            </div>
+        </div>
     </div>
 
-    <!--  펀드상품 전용 필터 -->
-    <div class="sub-filter" id="fund-filter" style="display:flex;">
-        <button class="active" data-category="all">전체</button>
-        <button data-category="recommend">추천펀드</button>
-        <button data-category="ipo">공격투자형</button>
-        <button data-category="dividend">적극투자형</button>
-        <button data-category="neutral">위험중립형</button>
-        <button data-category="stable">안정추구형</button>
-        <button data-category="safe">안정형</button>
+    <nav class="nav">
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="/bnk/productList">펀드상품</a></li>
+                <li><a href="/bnk/productList">추천펀드</a></li>
+                <li><a href="/bnk/productList">수익률BEST</a></li>
+                <li><a href="/bnk/productList">판매BEST</a></li>
+                <li><a href="/bnk/productList">ELF</a></li>
+                <li><a href="/bnk/fundGuide">펀드케어</a></li>
+                <li><a href="/bnk/fundInformation">펀드정보센터</a></li>
+                <li><a href="#">펀드이용가이드</a></li>
+                <li><a href="#">펀드서비스</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="main-container">
+        <div class="content-wrapper">
+
+            <!--  사이드바 시작 -->
+            <aside class="sidebar">
+                <div class="title-divider-light"></div>
+                <nav class="sidebar-nav">
+                    <h2 class="sidebar-title">펀드상품안내</h2>
+                    <a href="/bnk/productList" class="sidebar-link active">펀드상품 <span class="arrow">→</span></a>
+                    <a href="/bnk/fundGuide" class="sidebar-link">펀드케어 <span class="arrow">→</span></a>
+                    <a href="/bnk/fundInformation" class="sidebar-link">펀드정보센터 <span class="arrow">→</span></a>
+                    <a href="/bnk/dopisitGuide" class="sidebar-link">이용안내 <span class="arrow">→</span></a>
+                    <a href="/bnk/FAQ" class="sidebar-link">FAQ(자주묻는질문) <span class="arrow">→</span></a>
+                </nav>
+                <div class="sidebar-icons">
+                    <div class="sidebar-icon-item">
+                        <div class="icon-bubble">💬</div>
+                        <span>Talk상담</span>
+                    </div>
+                    <div class="sidebar-icon-item">
+                        <div class="icon-envelope">✉</div>
+                        <span>메일상담</span>
+                    </div>
+                    <div class="sidebar-icon-item">
+                        <div class="icon-question">?</div>
+                        <span>FAQ</span>
+                    </div>
+                </div>
+            </aside>
+            <!--  사이드바 끝 -->
+
+            <!-- 메인 컨텐츠 시작 -->
+            <div class="main-content">
+                <div class="content-header">
+                    <h1 id="title">펀드상품</h1>
+                </div>
+
+                <!-- 상단 탭 -->
+                <div class="tab-menu" id="tabs">
+                    <a class="tab active" data-type="fund">펀드상품</a>
+                    <a class="tab" data-type="recommend">추천펀드</a>
+                    <a class="tab" data-type="best">수익률BEST</a>
+                    <a class="tab" data-type="sale">판매BEST</a>
+                    <a class="tab" data-type="elf">ELF</a>
+                    <a class="tab" data-type="interest">관심상품</a>
+                </div>
+
+                <!-- 펀드상품 전용 필터 -->
+                <div class="sub-filter" id="fund-filter" style="display:flex;">
+                    <button class="active" data-category="all">전체</button>
+                    <button data-category="recommend">추천펀드</button>
+                    <button data-category="ipo">공격투자형</button>
+                    <button data-category="dividend">적극투자형</button>
+                    <button data-category="neutral">위험중립형</button>
+                    <button data-category="stable">안정추구형</button>
+                    <button data-category="safe">안정형</button>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>상품명</th>
+                        <th>1개월</th>
+                        <th>3개월</th>
+                        <th>6개월</th>
+                        <th>12개월</th>
+                        <th>가입</th>
+                    </tr>
+                    </thead>
+                    <tbody id="fund-list"></tbody>
+                </table>
+            </div>
+            <!--  메인 컨텐츠 끝 -->
+        </div>
     </div>
+</main>
 
-    <table>
-        <thead>
-        <tr>
-            <th>상품명</th>
-            <th>1개월</th>
-            <th>3개월</th>
-            <th>6개월</th>
-            <th>12개월</th>
-            <th>가입</th>
-        </tr>
-        </thead>
-        <tbody id="fund-list"></tbody>
-    </table>
-</div>
+<script th:src="@{/js/productList.js}"></script>
 
-<script>
-    // ====== 데이터 정의 ======
-    const fundData = [
-        {
-            tag: "매우높은위험",
-            name: "여기에 DB데이터 불러와야함",
-            desc: `AI, 로봇, 반도체, 전기차 등 미래 성장 산업 중심의 기술주 투자`,
-            rates: [18.81, 46.80, 94.51, 79.68],
-            link: "detail_mirae_core.html",
-            category: "recommend"
-        },
-        {
-            tag: "높은위험",
-            name: "여기에 DB데이터 불러와야함",
-            desc: `청년층의 장기 투자 혜택과 소득공제를 지원하는 성장형 펀드`,
-            rates: [18.81, 46.76, 94.42, 79.62],
-            link: "detail_mirae_youth.html",
-            category: "ipo"
-        },
-        {
-            tag: "보통위험",
-            name: "KB배당인컴증권투자신탁(주식) 종류A",
-            desc: `안정적인 배당 수익과 중장기 자본이득을 함께 추구하는 펀드`,
-            rates: [8.11, 16.45, 23.21, 30.55],
-            link: "detail_kb_dividend.html",
-            category: "dividend"
-        },
-        {
-            tag: "중위험중수익",
-            name: "신한위험중립형밸런스펀드",
-            desc: `주식과 채권을 균형 있게 구성하여 리스크를 낮춘 밸런스형 펀드`,
-            rates: [6.21, 11.43, 15.98, 20.33],
-            link: "detail_shinhan_neutral.html",
-            category: "neutral"
-        },
-        {
-            tag: "낮은위험",
-            name: "우리안정추구형증권펀드",
-            desc: `채권 비중을 높여 안정적인 이자수익을 추구하는 펀드`,
-            rates: [2.15, 3.87, 5.24, 6.45],
-            link: "detail_woori_stable.html",
-            category: "stable"
-        },
-        {
-            tag: "안정형",
-            name: "하나안정형자산배분펀드",
-            desc: `국공채 및 고등급 채권 위주의 초저위험 펀드`,
-            rates: [0.95, 1.87, 3.12, 3.80],
-            link: "detail_hana_safe.html",
-            category: "safe"
-        }
-    ];
+<footer class="footer">
+    <div class="container">
+        <div class="footer-links">
+            <a href="#"><span style="color: #004890 !important;">개인정보처리방침</span></a>
+            <span class="divider">·</span>
+            <a href="#">영업점</a>
+            <span class="divider">·</span>
+            <a href="#">고객정보취급방침</a>
+            <span class="divider">·</span>
+            <a href="#">보호금융상품목록</a>
+            <span class="divider">·</span>
+            <a href="#">상품공시실</a>
+            <span class="divider">·</span>
+            <a href="#">전자민원접수</a>
+            <span class="divider">·</span>
+            <a href="#">전자금융이용자보호조치</a>
+            <span class="divider">·</span>
+            <a href="#">전자금융거래기본약관펀드</a>
+        </div>
+        <div class="footer-links">
+            <a href="#">위치기반서비스 이용약관</a>
+        </div>
+        <div class="footer-info">
+            <p><strong>고객상담 1588-6200, 1544-6200 | 해외 82-2-1588-6200</strong></p>
+        </div>
+        <div class="footer-copyright">
+            <p>COPYRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</p>
+        </div>
+    </div>
+</footer>
 
-    // ====== 테이블 렌더링 ======
-    function renderFundList(category = "all") {
-        const tbody = document.getElementById("fund-list");
-        tbody.innerHTML = "";
-
-        const filtered = category === "all"
-            ? fundData
-            : fundData.filter(f => f.category === category);
-
-        if (filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6">해당 조건에 맞는 펀드가 없습니다.</td></tr>`;
-            return;
-        }
-
-        filtered.forEach(fund => {
-            tbody.innerHTML += `
-          <tr>
-            <td class="fund-name">
-              ${fund.tag ? `<span class="tag">${fund.tag}</span>` : ""}
-              <a href="productDetail.html" target="_blank">${fund.name}</a>
-              <div class="desc">${fund.desc}</div>
-            </td>
-            <td>${fund.rates[0]}</td>
-            <td>${fund.rates[1]}</td>
-            <td>${fund.rates[2]}</td>
-            <td>${fund.rates[3]}</td>
-            <td>
-              <button class="btn-join" onclick="location.href='${fund.link}'">인터넷가입</button>
-              <span class="sub-btn">스마트폰가입</span>
-            </td>
-          </tr>`;
-        });
-    }
-
-    // ====== 탭 클릭 이벤트 ======
-    document.querySelectorAll(".tab").forEach(tab => {
-        tab.addEventListener("click", () => {
-            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-            tab.classList.add("active");
-            const type = tab.dataset.type;
-            document.getElementById("title").textContent = tab.textContent;
-
-            if (type === "fund") {
-                document.getElementById("fund-filter").style.display = "flex";
-                renderFundList("all");
-            } else {
-                document.getElementById("fund-filter").style.display = "none";
-                document.getElementById("fund-list").innerHTML = `<tr><td colspan='6'>${tab.textContent} DB데이터 맞게</td></tr>`;
-            }
-        });
-    });
-
-    // ====== 필터 버튼 클릭 이벤트 ======
-    document.querySelectorAll("#fund-filter button").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll("#fund-filter button").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            const category = btn.dataset.category;
-            renderFundList(category);
-        });
-    });
-
-    //  첫 화면: 펀드상품 + 전체 목록 표시
-    renderFundList("all");
-</script>
 </body>
 </html>

@@ -1,115 +1,15 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>펀드안내</title>
-    <style>
-        body {
-            font-family: '맑은 고딕', sans-serif;
-            background-color: #fff;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            color: #222;
-        }
-
-        .container {
-            width: 900px;
-            margin: 40px auto 80px;
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 25px;
-            color: #111;
-        }
-
-        h2 {
-            font-size: 20px;
-            color: #b22222;
-            margin-top: 50px;
-            border-bottom: 2px solid #b22222;
-            padding-bottom: 6px;
-        }
-
-        /* 표 스타일 */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            margin-bottom: 40px;
-            font-size: 14px;
-            border-top: 2px solid #b22222;
-            border-bottom: 1px solid #ccc;
-        }
-
-        th, td {
-            border-top: 1px solid #ccc;
-            border-bottom: 1px solid #ccc;
-            padding: 14px 20px;
-            text-align: center;
-            vertical-align: middle;
-            height: 55px;
-            line-height: 1.5;
-        }
-
-        th {
-            background-color: #f8f8f8;
-            font-weight: bold;
-            width: 180px;
-        }
-
-        /*  세로줄 제거 */
-        th:first-child, td:first-child {
-            border-left: none;
-        }
-        th:last-child, td:last-child {
-            border-right: none;
-        }
-
-        /* 용어해설 */
-        .term-section {
-            margin-top: 50px;
-        }
-
-        .term-section h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: #111;
-        }
-
-        .term-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .term-list li {
-            margin-bottom: 25px;
-        }
-
-        .term-title {
-            font-weight: bold;
-            font-size: 15px;
-            color: #111;
-            margin-bottom: 6px;
-        }
-
-        .term-desc {
-            font-size: 14px;
-            color: #333;
-            padding-left: 15px;
-        }
-
-        .term-bullet::before {
-            content: "▪ ";
-            color: #b22222;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/fundGuide.css}">
+    <script th:src="@{/js/fundGuide.js}" defer></script>
 </head>
 <body>
+
 <div class="container">
-    <h1>펀드안내(표 등등 다듬기 진행 하는 중)</h1>
+    <h1>펀드안내 (표 등등 다듬기 진행 중)</h1>
 
     <h2>저금리 시대의 자산운용 전략</h2>
 
@@ -123,11 +23,11 @@
         <tbody>
         <tr>
             <td>채권형</td>
-            <td>주식 편입없이 투자신탁자산총액의 60%이상을 채권(금융채 포함)으로 운용</td>
+            <td>주식 편입 없이 투자신탁자산총액의 60% 이상을 채권(금융채 포함)으로 운용</td>
         </tr>
         <tr>
             <td>주식형</td>
-            <td>투자신탁자산총액의 60%이상을 주식(수익자산·옵션포함)으로 운용</td>
+            <td>투자신탁자산총액의 60% 이상을 주식(수익자산·옵션 포함)으로 운용</td>
         </tr>
         <tr>
             <td>혼합형</td>
@@ -135,11 +35,11 @@
         </tr>
         <tr>
             <td>MMF</td>
-            <td>단기상품(우량채권, CP, CD, CALL 등)위주로 운용하며, 입출금이 자유로운 상품</td>
+            <td>단기상품(우량채권, CP, CD, CALL 등) 위주로 운용하며, 입출금이 자유로운 상품</td>
         </tr>
         <tr>
             <td>해외투자상품</td>
-            <td>전 세계시장 우량자산에 분산 투자함으로써 안정적인 자산증식을 추구하는 상품</td>
+            <td>전 세계 시장 우량자산에 분산 투자함으로써 안정적인 자산증식을 추구하는 상품</td>
         </tr>
         </tbody>
     </table>
@@ -173,7 +73,7 @@
         <li>
             <div class="term-title term-bullet">기준가격</div>
             <div class="term-desc">
-                수익증권의 거래를 신청시 적용이 되는 가격으로 수익증권의 순자산총액을 발행좌수로 나눈 값이며,
+                수익증권의 거래를 신청 시 적용되는 가격으로 수익증권의 순자산총액을 발행좌수로 나눈 값이며,
                 투자자가 펀드 신탁계좌에 입금한 총자산에서 비용을 공제한 순자산총액을 수익증권의 총좌수로 나눈 가격입니다.
             </div>
         </li>
@@ -181,8 +81,8 @@
         <li>
             <div class="term-title term-bullet">과표기준가격</div>
             <div class="term-desc">
-                세금 산정을 위한 과세의 산출시 기준이 되는 가격으로 주식 등의 평가 및 매매손익을 비과세하므로
-                가격산식에 반영되지 않지만, 세전 이득(운용성과) 평가를 위한 세후 기준가격으로 계산합니다.
+                세금 산정을 위한 과세 산출 시 기준이 되는 가격으로, 주식 등의 평가 및 매매손익을 비과세하므로
+                가격산식에 반영되지 않지만 세전 이득(운용성과) 평가를 위한 세후 기준가격으로 계산합니다.
             </div>
         </li>
 
@@ -195,5 +95,6 @@
         </li>
     </ul>
 </div>
+
 </body>
 </html>

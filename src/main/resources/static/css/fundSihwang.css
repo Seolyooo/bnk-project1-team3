@@ -1,0 +1,107 @@
+body {
+    font-family: '맑은 고딕', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+.container {
+    width: 1000px;
+    margin: 40px auto;
+}
+
+h1 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #111;
+}
+
+.summary {
+    text-align: right;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* 테이블 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid #333;
+}
+
+th, td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    text-align: center;
+}
+
+th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+td.title {
+    text-align: left;
+}
+
+td.title a {
+    text-decoration: none;
+    color: #004080;
+    transition: color 0.2s;
+}
+
+td.title a:hover {
+    color: #b22222;
+    text-decoration: underline;
+}
+
+/* 페이지네이션 */
+.pagination {
+    text-align: center;
+    margin: 25px 0;
+}
+
+.pagination button {
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 6px 10px;
+    margin: 0 2px;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background-color: #b22222;
+    color: #fff;
+    border-color: #b22222;
+}
+
+/* 검색 영역 */
+.search-box {
+    border-top: 1px solid #ddd;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.search-box select,
+.search-box input {
+    padding: 6px 8px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+}
+
+.search-box button {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-left: 6px;
+}
+
+.search-box button:hover {
+    background-color: #222;
+}

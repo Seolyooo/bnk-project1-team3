@@ -1,0 +1,205 @@
+body {
+    font-family: '맑은 고딕', sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 1000px;
+    margin: 40px auto;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 25px;
+}
+
+/* 기본정보 */
+.info-box {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.info-left {
+    flex: 1;
+}
+
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.info-table td {
+    padding: 8px 4px;
+    vertical-align: top;
+}
+
+.info-table td:first-child {
+    width: 100px;
+    color: #777;
+    font-weight: bold;
+}
+
+.chart-box {
+    flex: 1;
+    text-align: center;
+}
+
+.chart-box canvas {
+    max-width: 100%;
+}
+
+/* 버튼 */
+.btn-area {
+    margin: 30px 0;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 8px;
+    transition: 0.2s;
+}
+
+.btn.red { background-color: #b22222; color: #fff; }
+.btn.gray { background-color: #f4f4f4; color: #333; }
+.btn.dark { background-color: #555; color: #fff; }
+.btn.gray2 { background-color: #888; color: #fff; }
+
+.btn:hover { opacity: 0.85; }
+
+/* 사용자 분석 */
+.section {
+    margin-top: 60px;
+}
+
+.section h2 {
+    font-size: 20px;
+    border-bottom: 2px solid #b22222;
+    padding-bottom: 6px;
+    margin-bottom: 20px;
+}
+
+.chart-area {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.chart-area canvas {
+    width: 350px;
+    height: 300px;
+}
+
+/* 상세 탭 */
+.detail-tabs {
+    margin-top: 80px;
+    border-bottom: 2px solid #b22222;
+    display: flex;
+}
+
+.detail-tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    font-weight: bold;
+    background-color: #f7f7f7;
+    margin-right: 4px;
+    transition: 0.2s;
+}
+
+.detail-tab.active {
+    background-color: #fff;
+    border-top: 2px solid #b22222;
+    color: #b22222;
+}
+
+.detail-content {
+    padding: 30px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.detail-content h3 {
+    color: #b22222;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+/* 투자 유의 문구 */
+.notice-box {
+    display: flex;
+    align-items: flex-start;
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    padding: 20px;
+    font-size: 14px;
+    color: #333;
+    margin-top: 60px;
+    line-height: 1.6;
+}
+
+.notice-icon {
+    font-size: 22px;
+    color: #1e88e5;
+    margin-right: 10px;
+    margin-top: 2px;
+}
+
+.notice-text .highlight {
+    color: #b22222;
+    font-weight: bold;
+}
+
+/* 하단 버튼 영역 */
+.bottom-btn-area {
+    margin: 30px 0 80px;
+    text-align: center;
+}
+
+.bottom-btn-area .btn {
+    display: inline-block;
+    margin: 0 6px;
+    padding: 10px 25px;
+    border-radius: 2px;
+    font-size: 14px;
+    text-decoration: none;
+    border: 1px solid #ccc;
+}
+
+.bottom-btn-area .btn.red {
+    background-color: #b22222;
+    color: #fff;
+    border: none;
+}
+
+.bottom-btn-area .btn.gray {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.bottom-btn-area .btn.white {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #222;
+}
+
+.bottom-btn-area .btn:hover {
+    opacity: 0.85;
+}

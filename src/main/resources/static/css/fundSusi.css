@@ -1,0 +1,161 @@
+body {
+    font-family: '맑은 고딕', sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 1000px;
+    margin: 40px auto;
+}
+
+h1 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+/* 상단 탭 */
+.tab-menu {
+    display: flex;
+    border: 1px solid #ddd;
+    border-bottom: 2px solid #e760a7;
+    margin-bottom: 20px;
+}
+
+.tab-menu a {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    text-decoration: none;
+    color: #333;
+    border-right: 1px solid #ddd;
+    background-color: #fff;
+    transition: 0.2s;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tab-menu a:last-child {
+    border-right: none;
+}
+
+.tab-menu a.active {
+    background-color: #e760a7;
+    color: #fff;
+}
+
+/* 테이블 공통 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    border-top: 2px solid #e760a7;
+}
+
+th, td {
+    border-bottom: 1px solid #e0e0e0;
+    text-align: center;
+    padding: 10px;
+    height: 45px;
+    vertical-align: middle;
+}
+
+th {
+    background-color: #fafafa;
+    font-weight: bold;
+}
+
+td.title {
+    text-align: left;
+}
+
+.summary {
+    text-align: right;
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+/* 버튼 */
+.btn-download {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    background: #fff;
+    transition: 0.2s;
+}
+
+.btn-download:hover {
+    background-color: #f5f5f5;
+}
+
+/* 페이지네이션 */
+.pagination {
+    text-align: center;
+    margin: 25px 0;
+}
+
+.pagination button {
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 6px 10px;
+    margin: 0 2px;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background-color: #e760a7;
+    color: #fff;
+    border-color: #e760a7;
+}
+
+.pagination button:disabled {
+    color: #aaa;
+    background-color: #f4f4f4;
+    cursor: default;
+}
+
+/* 검색창 */
+.search-box {
+    border-top: 1px solid #ddd;
+    padding: 20px 0;
+    font-size: 13px;
+}
+
+.search-box label {
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+.search-box input,
+.search-box select {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    margin-right: 10px;
+}
+
+.search-box button {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.search-box button:hover {
+    background-color: #222;
+}
+
+/* 컨텐츠 영역 */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
