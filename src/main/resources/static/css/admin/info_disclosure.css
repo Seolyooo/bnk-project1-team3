@@ -265,6 +265,7 @@ button:hover {
     background: rgba(0, 0, 0, 0.4);
     align-items: center;
     justify-content: center;
+    z-index: 1000;
 }
 
 .modal-overlay.show {
@@ -281,6 +282,8 @@ button:hover {
     display: flex;
     flex-direction: column;
     gap: 22px;
+    z-index: 1001;
+    position: relative;
 }
 
 .modal-actions {
@@ -360,6 +363,97 @@ button:hover {
 
 .modal-form .file-field input[type="file"]:focus {
     box-shadow: none;
+}
+
+/* 상세 모달 읽기 전용 스타일 */
+.detail-value {
+    padding: 10px 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #212529;
+    background: #f8f9fa;
+    min-height: 20px;
+    line-height: 1.5;
+}
+
+.detail-value.detail-content {
+    min-height: 140px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* 테이블 버튼 스타일 */
+.btn-action {
+    background: #e9ecef;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    cursor: pointer;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.btn-action:hover {
+    background: #dee2e6;
+    border-color: #ced4da;
+    color: #212529;
+}
+
+/* 승인 버튼 (주요 액션) */
+.btn-action-primary {
+    background: #3b5bdb;
+    border-color: #3b5bdb;
+    color: #fff;
+}
+
+.btn-action-primary:hover {
+    background: #2f4fc7;
+    border-color: #2f4fc7;
+    color: #fff;
+}
+
+/* 판매중지 버튼 (경고 액션) */
+.btn-action-warning {
+    background: #f59f00;
+    border-color: #f59f00;
+    color: #fff;
+}
+
+.btn-action-warning:hover {
+    background: #e58900;
+    border-color: #e58900;
+    color: #fff;
+}
+
+/* 반려 버튼 (위험 액션) */
+.btn-action-danger {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.btn-action-danger:hover {
+    background: #c82333;
+    border-color: #c82333;
+    color: #fff;
+}
+
+.cell-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.cell-title {
+    text-align: left;
 }
 
 @media (max-width: 768px) {

@@ -108,7 +108,33 @@
                         </tr>
                     </thead>
                     <tbody id="productTableBody">
-                    
+                        <tr th:each="fund : ${fundList}">
+                            <td>[[${num}]]</td>
+                            <td>[[${fund.code}]]</td>
+                            <td>[[${fund.type}]]</td>
+                            <td>
+                                <a href="#" class="product-name-link" onclick="viewProductDetail(2); return false;">
+                                    [[${fund.name}]]
+                                </a>
+                            </td>
+                            <td>
+                                <button class="view-detail-btn" onclick="viewProductDetail(2)" title="상세보기">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </td>
+                            <td>[[${fund.company}]]</td>
+                            <td>[[${fund.createdat}]]</td>
+                            <td><span class="status-badge modifying">[[${fund.status}]]</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn resume" onclick="resumeProduct(4)">재개</button>
+                                    <button class="action-btn stop" onclick="endProduct(4)">상품종료</button>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="action-btn edit" onclick="editProduct(5)">수정</button>
+                            </td>
+                        </tr>
                         <tr>
                             <td>3</td>
                             <td>0015400182</td>
