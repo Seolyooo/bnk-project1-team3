@@ -9,12 +9,12 @@
     <link rel="stylesheet" th:href="@{/css/admin/info_disclosure.css}">
 </head>
 <body>
-    <!-- 사이드바 Fragment -->
-    <div th:replace="~{admin/_sidebar :: sidebar('info-disclosures')}"></div>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('info-disclosures')}"></div>
 
-    <div class="main-content">
-        <!-- 헤더 Fragment -->
-        <div th:replace="~{admin/_header :: header}"></div>
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
 
     <div class="main-content-body">
         <div class="container">
@@ -43,38 +43,71 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr
+                            data-id="3"
+                            data-title="월간 운용보고서 4월호"
+                            data-category="연간보고서"
+                            data-author="이수정"
+                            data-date="2024-04-20"
+                            data-content="월간 운용보고서 4월호 내용입니다."
+                            data-status="공시중">
                         <td>3</td>
                         <td class="text-left">월간 운용보고서 4월호</td>
                         <td>연간보고서</td>
                         <td>이수정</td>
                         <td>2024-04-20</td>
                         <td>공시중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-id="2"
+                            data-title="펀드 약관 개정 안내"
+                            data-category="안내사항"
+                            data-author="박지훈"
+                            data-date="2024-04-10"
+                            data-content="펀드 약관 개정 안내 내용입니다."
+                            data-status="대기중">
                         <td>2</td>
                         <td class="text-left">펀드 약관 개정 안내</td>
                         <td>안내사항</td>
                         <td>박지훈</td>
                         <td>2024-04-10</td>
                         <td>대기중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-id="1"
+                            data-title="2024년 1분기 운용보고서"
+                            data-category="운용보고서"
+                            data-author="홍길동"
+                            data-date="2024-04-01"
+                            data-content="2024년 1분기 운용보고서 내용입니다."
+                            data-status="공시중">
                         <td>1</td>
                         <td class="text-left">2024년 1분기 운용보고서</td>
                         <td>운용보고서</td>
                         <td>홍길동</td>
                         <td>2024-04-01</td>
                         <td>공시중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
                 <div class="pagination">
                     <button class="page-btn prev" disabled>&lt;</button>
-                    
+
                     <div class="page-numbers">
                         <button class="page-number active">1</button>
                         <button class="page-number">2</button>
@@ -91,6 +124,7 @@
     </div>
 </div>
 
+<!-- 등록 모달 -->
 <div id="announcementModal" class="modal-overlay">
     <div class="modal-card">
         <h3>공시자료 등록</h3>
@@ -125,38 +159,232 @@
     </div>
 </div>
 
+<!-- 상세 모달 -->
+<div id="announcementDetailModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>공시자료 상세</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <label>번호</label>
+                <div class="detail-value" id="detailAnnouncementId"></div>
+            </div>
+            <div class="form-field">
+                <label>제목</label>
+                <div class="detail-value" id="detailAnnouncementTitle"></div>
+            </div>
+            <div class="form-field">
+                <label>분류</label>
+                <div class="detail-value" id="detailAnnouncementCategory"></div>
+            </div>
+            <div class="form-field">
+                <label>등록자</label>
+                <div class="detail-value" id="detailAnnouncementAuthor"></div>
+            </div>
+            <div class="form-field">
+                <label>등록일</label>
+                <div class="detail-value" id="detailAnnouncementDate"></div>
+            </div>
+            <div class="form-field">
+                <label>내용</label>
+                <div class="detail-value detail-content" id="detailAnnouncementContent"></div>
+            </div>
+            <div class="form-field">
+                <label>상태</label>
+                <div class="detail-value" id="detailAnnouncementStatus"></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="announcementDetailModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 수정 모달 -->
+<div id="announcementEditModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>공시자료 수정</h3>
+        <form id="announcementEditForm" class="modal-form">
+            <input type="hidden" id="editAnnouncementId" name="id">
+            <div class="form-field">
+                <label for="editAnnouncementTitle">제목</label>
+                <input type="text" id="editAnnouncementTitle" name="title" placeholder="제목을 입력하세요" required>
+            </div>
+            <div class="form-field">
+                <label for="editAnnouncementCategory">분류</label>
+                <select id="editAnnouncementCategory" name="category" required>
+                    <option value="">선택하세요</option>
+                    <option value="운용보고서">운용보고서</option>
+                    <option value="연간보고서">연간보고서</option>
+                    <option value="안내사항">안내사항</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="editAnnouncementContent">내용</label>
+                <textarea id="editAnnouncementContent" name="content" rows="6" placeholder="공시 내용을 입력하세요" required></textarea>
+            </div>
+            <div class="form-field file-field">
+                <label for="editAnnouncementFile">첨부파일</label>
+                <input type="file" id="editAnnouncementFile" name="attachment">
+                <span class="field-hint">PDF, 이미지 등 최대 10MB까지 업로드 가능합니다.</span>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">확인</button>
+                <button type="button" id="announcementEditModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div id="announcementDeleteModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>공시자료 삭제</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <p style="margin: 0; color: #495057; font-size: 1rem;">
+                    정말로 <strong id="deleteAnnouncementTitle" style="color: #cd1317;"></strong> 공시자료를 삭제하시겠습니까?
+                </p>
+                <p style="margin: 10px 0 0 0; color: #868e96; font-size: 0.9rem;">
+                    삭제된 데이터는 복구할 수 없습니다.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="announcementDeleteConfirm" class="btn btn-primary">삭제</button>
+                <button type="button" id="announcementDeleteModalClose" class="btn btn-secondary">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // 등록 모달
         const form = document.getElementById('announcementForm');
         const modal = document.getElementById('announcementModal');
         const openBtn = document.getElementById('openAnnouncementModal');
         const closeBtn = document.getElementById('announcementModalClose');
 
-        function showModal() {
-            modal?.classList.add('show');
+        // 상세 모달
+        const detailModal = document.getElementById('announcementDetailModal');
+        const detailCloseBtn = document.getElementById('announcementDetailModalClose');
+
+        // 수정 모달
+        const editModal = document.getElementById('announcementEditModal');
+        const editForm = document.getElementById('announcementEditForm');
+        const editCloseBtn = document.getElementById('announcementEditModalClose');
+
+        // 삭제 모달
+        const deleteModal = document.getElementById('announcementDeleteModal');
+        const deleteCloseBtn = document.getElementById('announcementDeleteModalClose');
+        const deleteConfirmBtn = document.getElementById('announcementDeleteConfirm');
+
+        // 공통 모달 열기/닫기 함수
+        function showModal(modalElement) {
+            modalElement?.classList.add('show');
         }
 
-        function closeModal() {
-            modal?.classList.remove('show');
+        function closeModal(modalElement) {
+            modalElement?.classList.remove('show');
         }
 
-        openBtn?.addEventListener('click', showModal);
-        closeBtn?.addEventListener('click', closeModal);
+        // 등록 모달
+        openBtn?.addEventListener('click', () => showModal(modal));
+        closeBtn?.addEventListener('click', () => closeModal(modal));
 
         form?.addEventListener('submit', function (event) {
             event.preventDefault();
-            closeModal();
+            // TODO: 등록 API 호출
+            closeModal(modal);
         });
 
         modal?.addEventListener('click', function (event) {
             if (event.target === modal) {
-                closeModal();
+                closeModal(modal);
             }
+        });
+
+        // 상세 모달
+        detailCloseBtn?.addEventListener('click', () => closeModal(detailModal));
+        detailModal?.addEventListener('click', function (event) {
+            if (event.target === detailModal) {
+                closeModal(detailModal);
+            }
+        });
+
+        // 수정 모달
+        editCloseBtn?.addEventListener('click', () => closeModal(editModal));
+        editModal?.addEventListener('click', function (event) {
+            if (event.target === editModal) {
+                closeModal(editModal);
+            }
+        });
+
+        editForm?.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // TODO: 수정 API 호출
+            closeModal(editModal);
+        });
+
+        // 삭제 모달
+        deleteCloseBtn?.addEventListener('click', () => closeModal(deleteModal));
+        deleteConfirmBtn?.addEventListener('click', function () {
+            // TODO: 삭제 API 호출
+            const id = deleteConfirmBtn.getAttribute('data-id');
+            console.log('삭제할 ID:', id);
+            closeModal(deleteModal);
+            // 삭제 후 테이블 새로고침 또는 행 제거
+        });
+
+        deleteModal?.addEventListener('click', function (event) {
+            if (event.target === deleteModal) {
+                closeModal(deleteModal);
+            }
+        });
+
+        // 테이블 행의 버튼 이벤트 처리
+        const tableRows = document.querySelectorAll('.fund-table tbody tr');
+        tableRows.forEach(row => {
+            const buttons = row.querySelectorAll('[data-action]');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const action = this.getAttribute('data-action');
+                    const id = row.getAttribute('data-id');
+                    const title = row.getAttribute('data-title');
+                    const category = row.getAttribute('data-category');
+                    const author = row.getAttribute('data-author');
+                    const date = row.getAttribute('data-date');
+                    const content = row.getAttribute('data-content');
+                    const status = row.getAttribute('data-status');
+
+                    if (action === 'detail') {
+                        // 상세 모달에 데이터 채우기
+                        document.getElementById('detailAnnouncementId').textContent = id || '-';
+                        document.getElementById('detailAnnouncementTitle').textContent = title || '-';
+                        document.getElementById('detailAnnouncementCategory').textContent = category || '-';
+                        document.getElementById('detailAnnouncementAuthor').textContent = author || '-';
+                        document.getElementById('detailAnnouncementDate').textContent = date || '-';
+                        document.getElementById('detailAnnouncementContent').textContent = content || '-';
+                        document.getElementById('detailAnnouncementStatus').textContent = status || '-';
+                        showModal(detailModal);
+                    } else if (action === 'edit') {
+                        // 수정 모달에 데이터 채우기
+                        document.getElementById('editAnnouncementId').value = id || '';
+                        document.getElementById('editAnnouncementTitle').value = title || '';
+                        document.getElementById('editAnnouncementCategory').value = category || '';
+                        document.getElementById('editAnnouncementContent').value = content || '';
+                        showModal(editModal);
+                    } else if (action === 'delete') {
+                        // 삭제 모달에 데이터 채우기
+                        document.getElementById('deleteAnnouncementTitle').textContent = title || '';
+                        deleteConfirmBtn.setAttribute('data-id', id || '');
+                        showModal(deleteModal);
+                    }
+                });
+            });
         });
     });
 </script>
-    <!-- 사이드바 스크립트 -->
-    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>
-

@@ -9,12 +9,12 @@
     <link rel="stylesheet" th:href="@{/css/admin/info_disclosure.css}">
 </head>
 <body>
-    <!-- 사이드바 Fragment -->
-    <div th:replace="~{admin/_sidebar :: sidebar('info-ad-hoc')}"></div>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('info-ad-hoc')}"></div>
 
-    <div class="main-content">
-        <!-- 헤더 Fragment -->
-        <div th:replace="~{admin/_header :: header}"></div>
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
 
     <div class="main-content-body">
         <div class="container">
@@ -43,32 +43,65 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr
+                            data-adhocno="ADH-2024-006"
+                            data-title="해외 채권 투자 전략 변경"
+                            data-type="중요공시"
+                            data-start="2024-04-24T09:00"
+                            data-end="2024-05-01T23:59"
+                            data-content="4월 24일부로 해외 채권 투자 전략이 변경됩니다. 투자자분들의 양해를 부탁드립니다."
+                            data-status="공시중">
                         <td>ADH-2024-006</td>
                         <td class="text-left">해외 채권 투자 전략 변경</td>
                         <td>중요공시</td>
                         <td>2024-04-24 09:00</td>
                         <td>2024-05-01 23:59</td>
                         <td>공시중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-adhocno="ADH-2024-005"
+                            data-title="펀드 운용정지 공시"
+                            data-type="중요공시"
+                            data-start="2024-04-15T09:00"
+                            data-end="2024-04-22T23:59"
+                            data-content="일부 펀드 운용이 일시 정지됩니다. 빠른 시일 내에 정상화하도록 하겠습니다."
+                            data-status="공시중">
                         <td>ADH-2024-005</td>
                         <td class="text-left">펀드 운용정지 공시</td>
                         <td>중요공시</td>
                         <td>2024-04-15 09:00</td>
                         <td>2024-04-22 23:59</td>
                         <td>공시중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-adhocno="ADH-2024-004"
+                            data-title="수익률 변동 안내"
+                            data-type="일반공시"
+                            data-start="2024-04-12T10:30"
+                            data-end="2024-04-19T18:00"
+                            data-content="최근 수익률 변동에 대한 안내입니다. 자세한 내용은 고객센터로 문의해주세요."
+                            data-status="대기중">
                         <td>ADH-2024-004</td>
                         <td class="text-left">수익률 변동 안내</td>
                         <td>일반공시</td>
                         <td>2024-04-12 10:30</td>
                         <td>2024-04-19 18:00</td>
                         <td>대기중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -86,6 +119,7 @@
     </div>
 </div>
 
+<!-- 등록 모달 -->
 <div id="adhocModal" class="modal-overlay">
     <div class="modal-card">
         <h3>수시공시 등록</h3>
@@ -129,37 +163,246 @@
     </div>
 </div>
 
+<!-- 상세 모달 -->
+<div id="adhocDetailModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>수시공시 상세</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <label>공시번호</label>
+                <div class="detail-value" id="detailAdhocCode"></div>
+            </div>
+            <div class="form-field">
+                <label>제목</label>
+                <div class="detail-value" id="detailAdhocTitle"></div>
+            </div>
+            <div class="form-field">
+                <label>공시유형</label>
+                <div class="detail-value" id="detailAdhocType"></div>
+            </div>
+            <div class="field-row">
+                <div class="form-field">
+                    <label>게시 시작</label>
+                    <div class="detail-value" id="detailAdhocStart"></div>
+                </div>
+                <div class="form-field">
+                    <label>게시 종료</label>
+                    <div class="detail-value" id="detailAdhocEnd"></div>
+                </div>
+            </div>
+            <div class="form-field">
+                <label>내용</label>
+                <div class="detail-value detail-content" id="detailAdhocContent"></div>
+            </div>
+            <div class="form-field">
+                <label>상태</label>
+                <div class="detail-value" id="detailAdhocStatus"></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="adhocDetailModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 수정 모달 -->
+<div id="adhocEditModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>수시공시 수정</h3>
+        <form id="adhocEditForm" class="modal-form">
+            <input type="hidden" id="editAdhocNo" name="adhocno">
+            <div class="form-field">
+                <label for="editAdhocCode">공시번호</label>
+                <input type="text" id="editAdhocCode" name="code" placeholder="예: ADH-2024-002" required>
+            </div>
+            <div class="form-field">
+                <label for="editAdhocTitle">제목</label>
+                <input type="text" id="editAdhocTitle" name="title" placeholder="공시 제목을 입력하세요" required>
+            </div>
+            <div class="form-field">
+                <label for="editAdhocType">공시유형</label>
+                <select id="editAdhocType" name="type" required>
+                    <option value="">선택하세요</option>
+                    <option value="중요공시">중요공시</option>
+                    <option value="일반공시">일반공시</option>
+                    <option value="긴급공시">긴급공시</option>
+                </select>
+            </div>
+            <div class="field-row">
+                <div class="form-field">
+                    <label for="editAdhocStart">게시 시작</label>
+                    <input type="datetime-local" id="editAdhocStart" name="start" required>
+                </div>
+                <div class="form-field">
+                    <label for="editAdhocEnd">게시 종료</label>
+                    <input type="datetime-local" id="editAdhocEnd" name="end">
+                </div>
+            </div>
+            <div class="form-field">
+                <label for="editAdhocContent">내용</label>
+                <textarea id="editAdhocContent" name="content" rows="6" placeholder="공시 내용을 입력하세요" required></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">확인</button>
+                <button type="button" id="adhocEditModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div id="adhocDeleteModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>수시공시 삭제</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <p style="margin: 0; color: #495057; font-size: 1rem;">
+                    정말로 <strong id="deleteAdhocTitle" style="color: #cd1317;"></strong> 공시를 삭제하시겠습니까?
+                </p>
+                <p style="margin: 10px 0 0 0; color: #868e96; font-size: 0.9rem;">
+                    삭제된 데이터는 복구할 수 없습니다.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="adhocDeleteConfirm" class="btn btn-primary">삭제</button>
+                <button type="button" id="adhocDeleteModalClose" class="btn btn-secondary">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // 등록 모달
         const form = document.getElementById('adhocForm');
         const modal = document.getElementById('adhocModal');
         const openBtn = document.getElementById('openAdhocModal');
         const closeBtn = document.getElementById('adhocModalClose');
 
-        function showModal() {
-            modal?.classList.add('show');
+        // 상세 모달
+        const detailModal = document.getElementById('adhocDetailModal');
+        const detailCloseBtn = document.getElementById('adhocDetailModalClose');
+
+        // 수정 모달
+        const editModal = document.getElementById('adhocEditModal');
+        const editForm = document.getElementById('adhocEditForm');
+        const editCloseBtn = document.getElementById('adhocEditModalClose');
+
+        // 삭제 모달
+        const deleteModal = document.getElementById('adhocDeleteModal');
+        const deleteCloseBtn = document.getElementById('adhocDeleteModalClose');
+        const deleteConfirmBtn = document.getElementById('adhocDeleteConfirm');
+
+        // 공통 모달 열기/닫기 함수
+        function showModal(modalElement) {
+            modalElement?.classList.add('show');
         }
 
-        function closeModal() {
-            modal?.classList.remove('show');
+        function closeModal(modalElement) {
+            modalElement?.classList.remove('show');
         }
 
-        openBtn?.addEventListener('click', showModal);
-        closeBtn?.addEventListener('click', closeModal);
+        // 등록 모달
+        openBtn?.addEventListener('click', () => showModal(modal));
+        closeBtn?.addEventListener('click', () => closeModal(modal));
 
         form?.addEventListener('submit', function (event) {
             event.preventDefault();
-            closeModal();
+            // TODO: 등록 API 호출
+            closeModal(modal);
         });
 
         modal?.addEventListener('click', function (event) {
             if (event.target === modal) {
-                closeModal();
+                closeModal(modal);
             }
+        });
+
+        // 상세 모달
+        detailCloseBtn?.addEventListener('click', () => closeModal(detailModal));
+        detailModal?.addEventListener('click', function (event) {
+            if (event.target === detailModal) {
+                closeModal(detailModal);
+            }
+        });
+
+        // 수정 모달
+        editCloseBtn?.addEventListener('click', () => closeModal(editModal));
+        editModal?.addEventListener('click', function (event) {
+            if (event.target === editModal) {
+                closeModal(editModal);
+            }
+        });
+
+        editForm?.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // TODO: 수정 API 호출
+            closeModal(editModal);
+        });
+
+        // 삭제 모달
+        deleteCloseBtn?.addEventListener('click', () => closeModal(deleteModal));
+        deleteConfirmBtn?.addEventListener('click', function () {
+            // TODO: 삭제 API 호출
+            const adhocNo = deleteConfirmBtn.getAttribute('data-adhocno');
+            console.log('삭제할 공시번호:', adhocNo);
+            closeModal(deleteModal);
+            // 삭제 후 테이블 새로고침 또는 행 제거
+        });
+
+        deleteModal?.addEventListener('click', function (event) {
+            if (event.target === deleteModal) {
+                closeModal(deleteModal);
+            }
+        });
+
+        // 테이블 행의 버튼 이벤트 처리
+        const tableRows = document.querySelectorAll('.fund-table tbody tr');
+        tableRows.forEach(row => {
+            const buttons = row.querySelectorAll('[data-action]');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const action = this.getAttribute('data-action');
+                    const adhocNo = row.getAttribute('data-adhocno');
+                    const title = row.getAttribute('data-title');
+                    const type = row.getAttribute('data-type');
+                    const start = row.getAttribute('data-start');
+                    const end = row.getAttribute('data-end');
+                    const content = row.getAttribute('data-content');
+                    const status = row.getAttribute('data-status');
+
+                    if (action === 'detail') {
+                        // 상세 모달에 데이터 채우기
+                        document.getElementById('detailAdhocCode').textContent = adhocNo || '-';
+                        document.getElementById('detailAdhocTitle').textContent = title || '-';
+                        document.getElementById('detailAdhocType').textContent = type || '-';
+                        document.getElementById('detailAdhocStart').textContent = start ? start.replace('T', ' ') : '-';
+                        document.getElementById('detailAdhocEnd').textContent = end ? end.replace('T', ' ') : '-';
+                        document.getElementById('detailAdhocContent').textContent = content || '-';
+                        document.getElementById('detailAdhocStatus').textContent = status || '-';
+                        showModal(detailModal);
+                    } else if (action === 'edit') {
+                        // 수정 모달에 데이터 채우기
+                        document.getElementById('editAdhocNo').value = adhocNo || '';
+                        document.getElementById('editAdhocCode').value = adhocNo || '';
+                        document.getElementById('editAdhocTitle').value = title || '';
+                        document.getElementById('editAdhocType').value = type || '';
+                        document.getElementById('editAdhocStart').value = start || '';
+                        document.getElementById('editAdhocEnd').value = end || '';
+                        document.getElementById('editAdhocContent').value = content || '';
+                        showModal(editModal);
+                    } else if (action === 'delete') {
+                        // 삭제 모달에 데이터 채우기
+                        document.getElementById('deleteAdhocTitle').textContent = title || '';
+                        deleteConfirmBtn.setAttribute('data-adhocno', adhocNo || '');
+                        showModal(deleteModal);
+                    }
+                });
+            });
         });
     });
 </script>
-    <!-- 사이드바 스크립트 -->
-    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>

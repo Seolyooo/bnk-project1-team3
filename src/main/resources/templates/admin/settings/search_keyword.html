@@ -7,14 +7,15 @@
     <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
     <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
     <link rel="stylesheet" th:href="@{/css/admin/settings_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/info_disclosure.css}">
 </head>
 <body>
-    <!-- 사이드바 Fragment -->
-    <div th:replace="~{admin/_sidebar :: sidebar('settings-search-keyword')}"></div>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('settings-search-keyword')}"></div>
 
-    <div class="main-content">
-        <!-- 헤더 Fragment -->
-        <div th:replace="~{admin/_header :: header}"></div>
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
 
     <div class="main-content-body">
         <div class="container">
@@ -41,12 +42,20 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr
+                            data-id="1"
+                            data-keyword="해외주식형"
+                            data-date="2024-04-12"
+                            data-count="157"
+                            data-description="해외주식형 펀드 검색어입니다.">
                         <td>1</td>
                         <td class="text-left">해외주식형</td>
                         <td>2024-04-12</td>
                         <td>157</td>
-                        <td>수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -64,6 +73,7 @@
     </div>
 </div>
 
+<!-- 등록 모달 -->
 <div id="keywordModal" class="modal-overlay">
     <div class="modal-card">
         <h3>검색어 등록</h3>
@@ -84,38 +94,161 @@
     </div>
 </div>
 
+<!-- 수정 모달 -->
+<div id="keywordEditModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>검색어 수정</h3>
+        <form id="keywordEditForm" class="modal-form">
+            <input type="hidden" id="editKeywordId" name="id">
+            <div class="form-field">
+                <label for="editKeywordValue">검색어</label>
+                <input type="text" id="editKeywordValue" name="keyword" placeholder="검색어를 입력하세요" required>
+            </div>
+            <div class="form-field">
+                <label for="editKeywordDescription">설명</label>
+                <textarea id="editKeywordDescription" name="description" rows="6" placeholder="검색어에 대한 설명이나 노출 목적을 입력하세요"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">확인</button>
+                <button type="button" id="keywordEditModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div id="keywordDeleteModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>검색어 삭제</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <p style="margin: 0; color: #495057; font-size: 1rem;">
+                    정말로 <strong id="deleteKeywordValue" style="color: #cd1317;"></strong> 검색어를 삭제하시겠습니까?
+                </p>
+                <p style="margin: 10px 0 0 0; color: #868e96; font-size: 0.9rem;">
+                    삭제된 데이터는 복구할 수 없습니다.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="keywordDeleteConfirm" class="btn btn-primary">삭제</button>
+                <button type="button" id="keywordDeleteModalClose" class="btn btn-secondary">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // 등록 모달
         const form = document.getElementById('keywordForm');
         const modal = document.getElementById('keywordModal');
         const openBtn = document.getElementById('openKeywordModal');
         const closeBtn = document.getElementById('keywordModalClose');
 
-        function showModal() {
-            modal?.classList.add('show');
+        // 수정 모달
+        const editModal = document.getElementById('keywordEditModal');
+        const editForm = document.getElementById('keywordEditForm');
+        const editCloseBtn = document.getElementById('keywordEditModalClose');
+
+        // 삭제 모달
+        const deleteModal = document.getElementById('keywordDeleteModal');
+        const deleteCloseBtn = document.getElementById('keywordDeleteModalClose');
+        const deleteConfirmBtn = document.getElementById('keywordDeleteConfirm');
+
+        // 공통 모달 열기/닫기 함수
+        function showModal(modalElement) {
+            modalElement?.classList.add('show');
         }
 
-        function closeModal() {
-            modal?.classList.remove('show');
+        function closeModal(modalElement) {
+            modalElement?.classList.remove('show');
         }
 
-        openBtn?.addEventListener('click', showModal);
-        closeBtn?.addEventListener('click', closeModal);
+        // 등록 모달
+        openBtn?.addEventListener('click', () => showModal(modal));
+        closeBtn?.addEventListener('click', () => closeModal(modal));
 
         form?.addEventListener('submit', function (event) {
             event.preventDefault();
-            closeModal();
+            // TODO: 등록 API 호출
+            closeModal(modal);
         });
 
         modal?.addEventListener('click', function (event) {
             if (event.target === modal) {
-                closeModal();
+                closeModal(modal);
             }
+        });
+
+        // 수정 모달
+        editCloseBtn?.addEventListener('click', () => closeModal(editModal));
+        editModal?.addEventListener('click', function (event) {
+            if (event.target === editModal) {
+                closeModal(editModal);
+            }
+        });
+
+        editForm?.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // TODO: 수정 API 호출
+            closeModal(editModal);
+        });
+
+        // 삭제 모달
+        deleteCloseBtn?.addEventListener('click', () => closeModal(deleteModal));
+        deleteConfirmBtn?.addEventListener('click', function () {
+            // TODO: 삭제 API 호출
+            const id = deleteConfirmBtn.getAttribute('data-id');
+            console.log('삭제할 검색어 ID:', id);
+            closeModal(deleteModal);
+            // 삭제 후 테이블 새로고침 또는 행 제거
+        });
+
+        deleteModal?.addEventListener('click', function (event) {
+            if (event.target === deleteModal) {
+                closeModal(deleteModal);
+            }
+        });
+
+        // 테이블 행의 버튼 이벤트 처리
+        const tableRows = document.querySelectorAll('.fund-table tbody tr');
+        tableRows.forEach(row => {
+            const buttons = row.querySelectorAll('[data-action]');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const action = this.getAttribute('data-action');
+                    const id = row.getAttribute('data-id');
+                    const keyword = row.getAttribute('data-keyword');
+                    const date = row.getAttribute('data-date');
+                    const count = row.getAttribute('data-count');
+                    const description = row.getAttribute('data-description');
+
+                    if (action === 'detail') {
+                        // 상세 모달에 데이터 채우기
+                        document.getElementById('detailKeywordId').textContent = id || '-';
+                        document.getElementById('detailKeywordValue').textContent = keyword || '-';
+                        document.getElementById('detailKeywordDate').textContent = date || '-';
+                        document.getElementById('detailKeywordCount').textContent = count || '-';
+                        document.getElementById('detailKeywordDescription').textContent = description || '-';
+                        showModal(detailModal);
+                    } else if (action === 'edit') {
+                        // 수정 모달에 데이터 채우기
+                        document.getElementById('editKeywordId').value = id || '';
+                        document.getElementById('editKeywordValue').value = keyword || '';
+                        document.getElementById('editKeywordDescription').value = description || '';
+                        showModal(editModal);
+                    } else if (action === 'delete') {
+                        // 삭제 모달에 데이터 채우기
+                        document.getElementById('deleteKeywordValue').textContent = keyword || '';
+                        deleteConfirmBtn.setAttribute('data-id', id || '');
+                        showModal(deleteModal);
+                    }
+                });
+            });
         });
     });
 </script>
-    <!-- 사이드바 스크립트 -->
-    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>
-
