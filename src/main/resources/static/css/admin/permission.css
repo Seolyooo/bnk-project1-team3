@@ -1,0 +1,356 @@
+/* 권한 관리 페이지 스타일 */
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    padding: 8px 30px 0 0;
+    position: relative;
+}
+
+.section-title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25px;
+    height: 3px;
+    background: #cd1317;
+}
+
+/* 페이지 헤더 */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.page-header h1 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 6px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5568d3;
+}
+
+.btn-red {
+    background: #cd1317;
+    color: white;
+}
+
+.btn-red:hover {
+    background: #cd1317;
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+.btn-search {
+    background: #cd1317;
+    color: white;
+    padding: 6px 20px;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 6px;
+}
+
+.btn-search:hover {
+    background: #cd1317;
+}
+
+.btn-small {
+    padding: 4px 12px;
+    font-size: 0.85rem;
+}
+
+/* 검색 섹션 */
+.search-section {
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.search-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #333;
+}
+
+.search-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.search-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.search-label {
+    width: 120px;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: #333;
+    background: #f8f9fa;
+    vertical-align: middle;
+    text-align: left;
+    font-size: 15px;
+}
+
+.search-inputs {
+    padding: 15px 20px;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-input-large {
+    flex: 1;
+    min-width: 300px;
+}
+
+.search-select-small {
+    width: 120px;
+}
+
+.search-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* 폼 스타일 */
+.form-input,
+.form-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+    background: white;
+}
+
+.form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* 테이블 스타일 */
+.table-section {
+    background: white;
+    border-radius: 12px;
+}
+
+.table-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 0;
+}
+
+.table-info strong {
+    color: #cd1317;
+}
+
+.pagination-info {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.permission-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-top: 2px solid #333;
+}
+
+.permission-table thead {
+    background: #f8f9fa;
+}
+
+.permission-table th {
+    padding: 15px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+}
+
+.permission-table td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #eee;
+    color: #666;
+    font-size: 15px;
+    text-align: center;
+}
+
+.permission-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.permission-table tbody tr:hover {
+    background: #f8f9ff;
+}
+
+.permission-select {
+    min-width: 120px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+}
+
+.permission-select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #666;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: #f0f0f0;
+    border-color: #cd1317;
+    color: #cd1317;
+}
+
+/* 페이지네이션 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 30px;
+    padding: 20px 0;
+}
+
+.page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
+}
+
+.page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: white;
+    border-color: #ddd;
+    color: #999;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.page-number {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-number:hover {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
+}
+
+.page-number.active {
+    background: white;
+    border-color: #ddd;
+    color: #cd1317;
+    font-weight: 600;
+}
+
+.page-number.active:hover {
+    background: #cd1317;
+    border-color: #cd1317;
+    color: white;
+}
