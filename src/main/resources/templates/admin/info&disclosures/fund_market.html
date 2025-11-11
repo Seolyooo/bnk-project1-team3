@@ -9,12 +9,12 @@
     <link rel="stylesheet" th:href="@{/css/admin/info_disclosure.css}">
 </head>
 <body>
-    <!-- 사이드바 Fragment -->
-    <div th:replace="~{admin/_sidebar :: sidebar('info-fund-market')}"></div>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('info-fund-market')}"></div>
 
-    <div class="main-content">
-        <!-- 헤더 Fragment -->
-        <div th:replace="~{admin/_header :: header}"></div>
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
 
     <div class="main-content-body">
         <div class="container">
@@ -43,32 +43,65 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr
+                            data-id="3"
+                            data-title="5월 시장전망 라이브 방송 안내"
+                            data-type="영상"
+                            data-publish="2024-05-02T19:00"
+                            data-channel="웹"
+                            data-summary="5월 시장전망 라이브 방송 안내 내용입니다."
+                            data-status="예약">
                         <td>3</td>
                         <td class="text-left">5월 시장전망 라이브 방송 안내</td>
                         <td>영상</td>
                         <td>2024-05-02 19:00</td>
                         <td>웹</td>
                         <td>예약</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-id="2"
+                            data-title="4월 4주차 글로벌 시장 리포트"
+                            data-type="주간리포트"
+                            data-publish="2024-04-22T09:00"
+                            data-channel="웹/모바일"
+                            data-summary="4월 4주차 글로벌 시장 리포트 내용입니다."
+                            data-status="게시중">
                         <td>2</td>
                         <td class="text-left">4월 4주차 글로벌 시장 리포트</td>
                         <td>주간리포트</td>
                         <td>2024-04-22 09:00</td>
                         <td>웹/모바일</td>
                         <td>게시중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-id="1"
+                            data-title="긴급 시장속보: 미국 금리 인상"
+                            data-type="시장속보"
+                            data-publish="2024-04-18T14:30"
+                            data-channel="웹/모바일"
+                            data-summary="긴급 시장속보: 미국 금리 인상 내용입니다."
+                            data-status="게시중">
                         <td>1</td>
                         <td class="text-left">긴급 시장속보: 미국 금리 인상</td>
                         <td>시장속보</td>
                         <td>2024-04-18 14:30</td>
                         <td>웹/모바일</td>
                         <td>게시중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -86,6 +119,7 @@
     </div>
 </div>
 
+<!-- 등록 모달 -->
 <div id="marketModal" class="modal-overlay">
     <div class="modal-card">
         <h3>시황 등록</h3>
@@ -109,6 +143,15 @@
                 <input type="datetime-local" id="marketPublishAt" name="publish_at" required>
             </div>
             <div class="form-field">
+                <label for="marketChannel">채널</label>
+                <select id="marketChannel" name="channel" required>
+                    <option value="">선택하세요</option>
+                    <option value="웹">웹</option>
+                    <option value="모바일">모바일</option>
+                    <option value="웹/모바일">웹/모바일</option>
+                </select>
+            </div>
+            <div class="form-field">
                 <label for="marketSummary">요약</label>
                 <textarea id="marketSummary" name="summary" rows="6" placeholder="요약 내용을 입력하세요" required></textarea>
             </div>
@@ -125,38 +168,248 @@
     </div>
 </div>
 
+<!-- 상세 모달 -->
+<div id="marketDetailModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>시황 상세</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <label>번호</label>
+                <div class="detail-value" id="detailMarketId"></div>
+            </div>
+            <div class="form-field">
+                <label>제목</label>
+                <div class="detail-value" id="detailMarketTitle"></div>
+            </div>
+            <div class="form-field">
+                <label>유형</label>
+                <div class="detail-value" id="detailMarketType"></div>
+            </div>
+            <div class="form-field">
+                <label>게시일</label>
+                <div class="detail-value" id="detailMarketPublish"></div>
+            </div>
+            <div class="form-field">
+                <label>채널</label>
+                <div class="detail-value" id="detailMarketChannel"></div>
+            </div>
+            <div class="form-field">
+                <label>요약</label>
+                <div class="detail-value detail-content" id="detailMarketSummary"></div>
+            </div>
+            <div class="form-field">
+                <label>상태</label>
+                <div class="detail-value" id="detailMarketStatus"></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="marketDetailModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 수정 모달 -->
+<div id="marketEditModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>시황 수정</h3>
+        <form id="marketEditForm" class="modal-form">
+            <input type="hidden" id="editMarketId" name="id">
+            <div class="form-field">
+                <label for="editMarketTitle">제목</label>
+                <input type="text" id="editMarketTitle" name="title" placeholder="시황 제목을 입력하세요" required>
+            </div>
+            <div class="form-field">
+                <label for="editMarketType">유형</label>
+                <select id="editMarketType" name="type" required>
+                    <option value="">선택하세요</option>
+                    <option value="주간리포트">주간리포트</option>
+                    <option value="월간전망">월간전망</option>
+                    <option value="시장속보">시장속보</option>
+                    <option value="영상">영상</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="editMarketPublishAt">게시일</label>
+                <input type="datetime-local" id="editMarketPublishAt" name="publish_at" required>
+            </div>
+            <div class="form-field">
+                <label for="editMarketChannel">채널</label>
+                <select id="editMarketChannel" name="channel" required>
+                    <option value="">선택하세요</option>
+                    <option value="웹">웹</option>
+                    <option value="모바일">모바일</option>
+                    <option value="웹/모바일">웹/모바일</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="editMarketSummary">요약</label>
+                <textarea id="editMarketSummary" name="summary" rows="6" placeholder="요약 내용을 입력하세요" required></textarea>
+            </div>
+            <div class="form-field file-field">
+                <label for="editMarketFile">첨부파일</label>
+                <input type="file" id="editMarketFile" name="attachment">
+                <span class="field-hint">영상 또는 자료 파일을 첨부할 수 있습니다.</span>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">확인</button>
+                <button type="button" id="marketEditModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div id="marketDeleteModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>시황 삭제</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <p style="margin: 0; color: #495057; font-size: 1rem;">
+                    정말로 <strong id="deleteMarketTitle" style="color: #cd1317;"></strong> 시황을 삭제하시겠습니까?
+                </p>
+                <p style="margin: 10px 0 0 0; color: #868e96; font-size: 0.9rem;">
+                    삭제된 데이터는 복구할 수 없습니다.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="marketDeleteConfirm" class="btn btn-primary">삭제</button>
+                <button type="button" id="marketDeleteModalClose" class="btn btn-secondary">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // 등록 모달
         const form = document.getElementById('marketForm');
         const modal = document.getElementById('marketModal');
         const closeBtn = document.getElementById('marketModalClose');
         const openBtn = document.getElementById('openMarketModal');
 
-        function showModal() {
-            modal?.classList.add('show');
+        // 상세 모달
+        const detailModal = document.getElementById('marketDetailModal');
+        const detailCloseBtn = document.getElementById('marketDetailModalClose');
+
+        // 수정 모달
+        const editModal = document.getElementById('marketEditModal');
+        const editForm = document.getElementById('marketEditForm');
+        const editCloseBtn = document.getElementById('marketEditModalClose');
+
+        // 삭제 모달
+        const deleteModal = document.getElementById('marketDeleteModal');
+        const deleteCloseBtn = document.getElementById('marketDeleteModalClose');
+        const deleteConfirmBtn = document.getElementById('marketDeleteConfirm');
+
+        // 공통 모달 열기/닫기 함수
+        function showModal(modalElement) {
+            modalElement?.classList.add('show');
         }
 
-        function closeModal() {
-            modal?.classList.remove('show');
+        function closeModal(modalElement) {
+            modalElement?.classList.remove('show');
         }
 
-        openBtn?.addEventListener('click', showModal);
-        closeBtn?.addEventListener('click', closeModal);
+        // 등록 모달
+        openBtn?.addEventListener('click', () => showModal(modal));
+        closeBtn?.addEventListener('click', () => closeModal(modal));
 
         form?.addEventListener('submit', function (event) {
             event.preventDefault();
-            closeModal();
+            // TODO: 등록 API 호출
+            closeModal(modal);
         });
 
         modal?.addEventListener('click', function (event) {
             if (event.target === modal) {
-                closeModal();
+                closeModal(modal);
             }
+        });
+
+        // 상세 모달
+        detailCloseBtn?.addEventListener('click', () => closeModal(detailModal));
+        detailModal?.addEventListener('click', function (event) {
+            if (event.target === detailModal) {
+                closeModal(detailModal);
+            }
+        });
+
+        // 수정 모달
+        editCloseBtn?.addEventListener('click', () => closeModal(editModal));
+        editModal?.addEventListener('click', function (event) {
+            if (event.target === editModal) {
+                closeModal(editModal);
+            }
+        });
+
+        editForm?.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // TODO: 수정 API 호출
+            closeModal(editModal);
+        });
+
+        // 삭제 모달
+        deleteCloseBtn?.addEventListener('click', () => closeModal(deleteModal));
+        deleteConfirmBtn?.addEventListener('click', function () {
+            // TODO: 삭제 API 호출
+            const id = deleteConfirmBtn.getAttribute('data-id');
+            console.log('삭제할 ID:', id);
+            closeModal(deleteModal);
+            // 삭제 후 테이블 새로고침 또는 행 제거
+        });
+
+        deleteModal?.addEventListener('click', function (event) {
+            if (event.target === deleteModal) {
+                closeModal(deleteModal);
+            }
+        });
+
+        // 테이블 행의 버튼 이벤트 처리
+        const tableRows = document.querySelectorAll('.fund-table tbody tr');
+        tableRows.forEach(row => {
+            const buttons = row.querySelectorAll('[data-action]');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const action = this.getAttribute('data-action');
+                    const id = row.getAttribute('data-id');
+                    const title = row.getAttribute('data-title');
+                    const type = row.getAttribute('data-type');
+                    const publish = row.getAttribute('data-publish');
+                    const channel = row.getAttribute('data-channel');
+                    const summary = row.getAttribute('data-summary');
+                    const status = row.getAttribute('data-status');
+
+                    if (action === 'detail') {
+                        // 상세 모달에 데이터 채우기
+                        document.getElementById('detailMarketId').textContent = id || '-';
+                        document.getElementById('detailMarketTitle').textContent = title || '-';
+                        document.getElementById('detailMarketType').textContent = type || '-';
+                        document.getElementById('detailMarketPublish').textContent = publish ? publish.replace('T', ' ') : '-';
+                        document.getElementById('detailMarketChannel').textContent = channel || '-';
+                        document.getElementById('detailMarketSummary').textContent = summary || '-';
+                        document.getElementById('detailMarketStatus').textContent = status || '-';
+                        showModal(detailModal);
+                    } else if (action === 'edit') {
+                        // 수정 모달에 데이터 채우기
+                        document.getElementById('editMarketId').value = id || '';
+                        document.getElementById('editMarketTitle').value = title || '';
+                        document.getElementById('editMarketType').value = type || '';
+                        document.getElementById('editMarketPublishAt').value = publish || '';
+                        document.getElementById('editMarketChannel').value = channel || '';
+                        document.getElementById('editMarketSummary').value = summary || '';
+                        showModal(editModal);
+                    } else if (action === 'delete') {
+                        // 삭제 모달에 데이터 채우기
+                        document.getElementById('deleteMarketTitle').textContent = title || '';
+                        deleteConfirmBtn.setAttribute('data-id', id || '');
+                        showModal(deleteModal);
+                    }
+                });
+            });
         });
     });
 </script>
-    <!-- 사이드바 스크립트 -->
-    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>
-

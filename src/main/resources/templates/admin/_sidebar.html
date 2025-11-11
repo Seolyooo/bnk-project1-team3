@@ -69,6 +69,10 @@
                     <a th:href="@{/admin/approval}" 
                        th:classappend="${activeMenu == 'approval' ? 'active' : ''}">결재(승인) 관리</a>
                 </li>
+                <li class="menu-item">
+                    <a th:href="@{/admin/permission}" 
+                       th:classappend="${activeMenu == 'permission' ? 'active' : ''}">권한 관리</a>
+                </li>
             </ul>
         </nav>
     </aside>

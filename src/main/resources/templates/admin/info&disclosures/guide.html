@@ -9,12 +9,12 @@
     <link rel="stylesheet" th:href="@{/css/admin/info_disclosure.css}">
 </head>
 <body>
-    <!-- 사이드바 Fragment -->
-    <div th:replace="~{admin/_sidebar :: sidebar('info-guide')}"></div>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('info-guide')}"></div>
 
-    <div class="main-content">
-        <!-- 헤더 Fragment -->
-        <div th:replace="~{admin/_header :: header}"></div>
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
 
     <div class="main-content-body">
         <div class="container">
@@ -42,29 +42,59 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr
+                            data-id="3"
+                            data-title="비대면 가입 절차 안내"
+                            data-category="이용안내"
+                            data-date="2024-04-25"
+                            data-content="비대면 가입 절차 안내 내용입니다."
+                            data-status="노출중">
                         <td>3</td>
                         <td class="text-left">비대면 가입 절차 안내</td>
                         <td>이용안내</td>
                         <td>2024-04-25</td>
                         <td>노출중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-id="2"
+                            data-title="모바일 펀드 거래 가이드"
+                            data-category="상품안내"
+                            data-date="2024-04-18"
+                            data-content="모바일 펀드 거래 가이드 내용입니다."
+                            data-status="노출중">
                         <td>2</td>
                         <td class="text-left">모바일 펀드 거래 가이드</td>
                         <td>상품안내</td>
                         <td>2024-04-18</td>
                         <td>노출중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-id="1"
+                            data-title="펀드 가입 절차 안내"
+                            data-category="이용안내"
+                            data-date="2024-04-10"
+                            data-content="펀드 가입 절차 안내 내용입니다."
+                            data-status="노출중">
                         <td>1</td>
                         <td class="text-left">펀드 가입 절차 안내</td>
                         <td>이용안내</td>
                         <td>2024-04-10</td>
                         <td>노출중</td>
-                        <td>상세 · 수정 · 삭제</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -82,6 +112,7 @@
     </div>
 </div>
 
+<!-- 등록 모달 -->
 <div id="guideModal" class="modal-overlay">
     <div class="modal-card">
         <h3>가이드 등록</h3>
@@ -117,38 +148,227 @@
     </div>
 </div>
 
+<!-- 상세 모달 -->
+<div id="guideDetailModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>가이드 상세</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <label>번호</label>
+                <div class="detail-value" id="detailGuideId"></div>
+            </div>
+            <div class="form-field">
+                <label>가이드명</label>
+                <div class="detail-value" id="detailGuideTitle"></div>
+            </div>
+            <div class="form-field">
+                <label>카테고리</label>
+                <div class="detail-value" id="detailGuideCategory"></div>
+            </div>
+            <div class="form-field">
+                <label>등록일</label>
+                <div class="detail-value" id="detailGuideDate"></div>
+            </div>
+            <div class="form-field">
+                <label>내용</label>
+                <div class="detail-value detail-content" id="detailGuideContent"></div>
+            </div>
+            <div class="form-field">
+                <label>상태</label>
+                <div class="detail-value" id="detailGuideStatus"></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="guideDetailModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 수정 모달 -->
+<div id="guideEditModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>가이드 수정</h3>
+        <form id="guideEditForm" class="modal-form">
+            <input type="hidden" id="editGuideId" name="id">
+            <div class="form-field">
+                <label for="editGuideTitle">가이드명</label>
+                <input type="text" id="editGuideTitle" name="title" placeholder="가이드명을 입력하세요" required>
+            </div>
+            <div class="form-field">
+                <label for="editGuideCategory">카테고리</label>
+                <select id="editGuideCategory" name="category" required>
+                    <option value="">선택하세요</option>
+                    <option value="투자안내">투자안내</option>
+                    <option value="상품안내">상품안내</option>
+                    <option value="이용안내">이용안내</option>
+                    <option value="내부프로세스">내부프로세스</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="editGuideContent">내용</label>
+                <textarea id="editGuideContent" name="content" rows="6" placeholder="가이드 내용을 입력하세요" required></textarea>
+            </div>
+            <div class="form-field file-field">
+                <label for="editGuideFile">첨부파일</label>
+                <input type="file" id="editGuideFile" name="attachment">
+                <span class="field-hint">필요 시 참고 자료를 첨부해 주세요.</span>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">확인</button>
+                <button type="button" id="guideEditModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div id="guideDeleteModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>가이드 삭제</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <p style="margin: 0; color: #495057; font-size: 1rem;">
+                    정말로 <strong id="deleteGuideTitle" style="color: #cd1317;"></strong> 가이드를 삭제하시겠습니까?
+                </p>
+                <p style="margin: 10px 0 0 0; color: #868e96; font-size: 0.9rem;">
+                    삭제된 데이터는 복구할 수 없습니다.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="guideDeleteConfirm" class="btn btn-primary">삭제</button>
+                <button type="button" id="guideDeleteModalClose" class="btn btn-secondary">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // 등록 모달
         const form = document.getElementById('guideForm');
         const modal = document.getElementById('guideModal');
         const closeBtn = document.getElementById('guideModalClose');
         const openBtn = document.getElementById('openGuideModal');
 
-        function showModal() {
-            modal?.classList.add('show');
+        // 상세 모달
+        const detailModal = document.getElementById('guideDetailModal');
+        const detailCloseBtn = document.getElementById('guideDetailModalClose');
+
+        // 수정 모달
+        const editModal = document.getElementById('guideEditModal');
+        const editForm = document.getElementById('guideEditForm');
+        const editCloseBtn = document.getElementById('guideEditModalClose');
+
+        // 삭제 모달
+        const deleteModal = document.getElementById('guideDeleteModal');
+        const deleteCloseBtn = document.getElementById('guideDeleteModalClose');
+        const deleteConfirmBtn = document.getElementById('guideDeleteConfirm');
+
+        // 공통 모달 열기/닫기 함수
+        function showModal(modalElement) {
+            modalElement?.classList.add('show');
         }
 
-        function closeModal() {
-            modal?.classList.remove('show');
+        function closeModal(modalElement) {
+            modalElement?.classList.remove('show');
         }
 
-        openBtn?.addEventListener('click', showModal);
-        closeBtn?.addEventListener('click', closeModal);
+        // 등록 모달
+        openBtn?.addEventListener('click', () => showModal(modal));
+        closeBtn?.addEventListener('click', () => closeModal(modal));
 
         form?.addEventListener('submit', function (event) {
             event.preventDefault();
-            closeModal();
+            // TODO: 등록 API 호출
+            closeModal(modal);
         });
 
         modal?.addEventListener('click', function (event) {
             if (event.target === modal) {
-                closeModal();
+                closeModal(modal);
             }
+        });
+
+        // 상세 모달
+        detailCloseBtn?.addEventListener('click', () => closeModal(detailModal));
+        detailModal?.addEventListener('click', function (event) {
+            if (event.target === detailModal) {
+                closeModal(detailModal);
+            }
+        });
+
+        // 수정 모달
+        editCloseBtn?.addEventListener('click', () => closeModal(editModal));
+        editModal?.addEventListener('click', function (event) {
+            if (event.target === editModal) {
+                closeModal(editModal);
+            }
+        });
+
+        editForm?.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // TODO: 수정 API 호출
+            closeModal(editModal);
+        });
+
+        // 삭제 모달
+        deleteCloseBtn?.addEventListener('click', () => closeModal(deleteModal));
+        deleteConfirmBtn?.addEventListener('click', function () {
+            // TODO: 삭제 API 호출
+            const id = deleteConfirmBtn.getAttribute('data-id');
+            console.log('삭제할 ID:', id);
+            closeModal(deleteModal);
+            // 삭제 후 테이블 새로고침 또는 행 제거
+        });
+
+        deleteModal?.addEventListener('click', function (event) {
+            if (event.target === deleteModal) {
+                closeModal(deleteModal);
+            }
+        });
+
+        // 테이블 행의 버튼 이벤트 처리
+        const tableRows = document.querySelectorAll('.fund-table tbody tr');
+        tableRows.forEach(row => {
+            const buttons = row.querySelectorAll('[data-action]');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const action = this.getAttribute('data-action');
+                    const id = row.getAttribute('data-id');
+                    const title = row.getAttribute('data-title');
+                    const category = row.getAttribute('data-category');
+                    const date = row.getAttribute('data-date');
+                    const content = row.getAttribute('data-content');
+                    const status = row.getAttribute('data-status');
+
+                    if (action === 'detail') {
+                        // 상세 모달에 데이터 채우기
+                        document.getElementById('detailGuideId').textContent = id || '-';
+                        document.getElementById('detailGuideTitle').textContent = title || '-';
+                        document.getElementById('detailGuideCategory').textContent = category || '-';
+                        document.getElementById('detailGuideDate').textContent = date || '-';
+                        document.getElementById('detailGuideContent').textContent = content || '-';
+                        document.getElementById('detailGuideStatus').textContent = status || '-';
+                        showModal(detailModal);
+                    } else if (action === 'edit') {
+                        // 수정 모달에 데이터 채우기
+                        document.getElementById('editGuideId').value = id || '';
+                        document.getElementById('editGuideTitle').value = title || '';
+                        document.getElementById('editGuideCategory').value = category || '';
+                        document.getElementById('editGuideContent').value = content || '';
+                        showModal(editModal);
+                    } else if (action === 'delete') {
+                        // 삭제 모달에 데이터 채우기
+                        document.getElementById('deleteGuideTitle').textContent = title || '';
+                        deleteConfirmBtn.setAttribute('data-id', id || '');
+                        showModal(deleteModal);
+                    }
+                });
+            });
         });
     });
 </script>
-    <!-- 사이드바 스크립트 -->
-    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>
-

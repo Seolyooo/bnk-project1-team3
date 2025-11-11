@@ -9,12 +9,12 @@
     <link rel="stylesheet" th:href="@{/css/admin/info_disclosure.css}">
 </head>
 <body>
-    <!-- 사이드바 Fragment -->
-    <div th:replace="~{admin/_sidebar :: sidebar('info-fund-info')}"></div>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('info-fund-info')}"></div>
 
-    <div class="main-content">
-        <!-- 헤더 Fragment -->
-        <div th:replace="~{admin/_header :: header}"></div>
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
 
     <div class="main-content-body">
         <div class="container">
@@ -43,32 +43,68 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr
+                            data-id="FND-1035"
+                            data-code="FND-1035"
+                            data-name="글로벌 혁신 테크 펀드"
+                            data-type="주식형"
+                            data-company="BNK자산운용"
+                            data-start-date="2024-02-14"
+                            data-description="글로벌 혁신 테크 펀드 상세 설명입니다."
+                            data-status="판매중">
                         <td>FND-1035</td>
                         <td class="text-left">글로벌 혁신 테크 펀드</td>
                         <td>주식형</td>
                         <td>BNK자산운용</td>
                         <td>2024-02-14</td>
                         <td>판매중</td>
-                        <td>상세 · 수정 · 판매중지</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-id="FND-1028"
+                            data-code="FND-1028"
+                            data-name="안정 채권 플러스"
+                            data-type="채권형"
+                            data-company="ABC자산운용"
+                            data-start-date="2023-12-01"
+                            data-description="안정 채권 플러스 상세 설명입니다."
+                            data-status="등록대기">
                         <td>FND-1028</td>
                         <td class="text-left">안정 채권 플러스</td>
                         <td>채권형</td>
                         <td>ABC자산운용</td>
                         <td>2023-12-01</td>
                         <td>등록대기</td>
-                        <td>상세 · 수정 · 승인</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
-                    <tr>
+                    <tr
+                            data-id="FND-1001"
+                            data-code="FND-1001"
+                            data-name="글로벌 성장 펀드"
+                            data-type="주식형"
+                            data-company="ABC자산운용"
+                            data-start-date="2023-11-30"
+                            data-description="글로벌 성장 펀드 상세 설명입니다."
+                            data-status="판매중">
                         <td>FND-1001</td>
                         <td class="text-left">글로벌 성장 펀드</td>
                         <td>주식형</td>
                         <td>ABC자산운용</td>
                         <td>2023-11-30</td>
                         <td>판매중</td>
-                        <td>상세 · 수정 · 판매중지</td>
+                        <td class="cell-actions">
+                            <button type="button" class="btn-action" data-action="detail">상세</button>
+                            <button type="button" class="btn-action" data-action="edit">수정</button>
+                            <button type="button" class="btn-action" data-action="delete">삭제</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -86,6 +122,7 @@
     </div>
 </div>
 
+<!-- 등록 모달 -->
 <div id="fundModal" class="modal-overlay">
     <div class="modal-card">
         <h3>펀드정보 등록</h3>
@@ -132,38 +169,250 @@
     </div>
 </div>
 
+<!-- 상세 모달 -->
+<div id="fundDetailModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>펀드정보 상세</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <label>상품코드</label>
+                <div class="detail-value" id="detailFundCode"></div>
+            </div>
+            <div class="form-field">
+                <label>펀드명</label>
+                <div class="detail-value" id="detailFundName"></div>
+            </div>
+            <div class="field-row">
+                <div class="form-field">
+                    <label>유형</label>
+                    <div class="detail-value" id="detailFundType"></div>
+                </div>
+                <div class="form-field">
+                    <label>운용사</label>
+                    <div class="detail-value" id="detailFundCompany"></div>
+                </div>
+            </div>
+            <div class="form-field">
+                <label>설정일</label>
+                <div class="detail-value" id="detailFundStartDate"></div>
+            </div>
+            <div class="form-field">
+                <label>설명</label>
+                <div class="detail-value detail-content" id="detailFundDescription"></div>
+            </div>
+            <div class="form-field">
+                <label>상태</label>
+                <div class="detail-value" id="detailFundStatus"></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="fundDetailModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 수정 모달 -->
+<div id="fundEditModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>펀드정보 수정</h3>
+        <form id="fundEditForm" class="modal-form">
+            <input type="hidden" id="editFundId" name="id">
+            <div class="field-row">
+                <div class="form-field">
+                    <label for="editFundCode">상품코드</label>
+                    <input type="text" id="editFundCode" name="code" placeholder="상품코드를 입력하세요" required>
+                </div>
+                <div class="form-field">
+                    <label for="editFundType">유형</label>
+                    <select id="editFundType" name="type" required>
+                        <option value="">선택하세요</option>
+                        <option value="주식형">주식형</option>
+                        <option value="채권형">채권형</option>
+                        <option value="혼합형">혼합형</option>
+                        <option value="MMF">MMF</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-field">
+                <label for="editFundName">펀드명</label>
+                <input type="text" id="editFundName" name="name" placeholder="펀드명을 입력하세요" required>
+            </div>
+            <div class="field-row">
+                <div class="form-field">
+                    <label for="editFundCompany">운용사</label>
+                    <input type="text" id="editFundCompany" name="company" placeholder="운용사명을 입력하세요" required>
+                </div>
+                <div class="form-field">
+                    <label for="editFundStartDate">설정일</label>
+                    <input type="date" id="editFundStartDate" name="start_date" required>
+                </div>
+            </div>
+            <div class="form-field">
+                <label for="editFundDescription">설명</label>
+                <textarea id="editFundDescription" name="description" rows="6" placeholder="상품 상세 설명을 입력하세요" required></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">확인</button>
+                <button type="button" id="fundEditModalClose" class="btn btn-secondary">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div id="fundDeleteModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>펀드정보 삭제</h3>
+        <div class="modal-form">
+            <div class="form-field">
+                <p style="margin: 0; color: #495057; font-size: 1rem;">
+                    정말로 <strong id="deleteFundName" style="color: #cd1317;"></strong> 펀드를 삭제하시겠습니까?
+                </p>
+                <p style="margin: 10px 0 0 0; color: #868e96; font-size: 0.9rem;">
+                    삭제된 데이터는 복구할 수 없습니다.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="fundDeleteConfirm" class="btn btn-primary">삭제</button>
+                <button type="button" id="fundDeleteModalClose" class="btn btn-secondary">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // 등록 모달
         const form = document.getElementById('fundForm');
         const modal = document.getElementById('fundModal');
         const openBtn = document.getElementById('openFundModal');
         const closeBtn = document.getElementById('fundModalClose');
 
-        function showModal() {
-            modal?.classList.add('show');
+        // 상세 모달
+        const detailModal = document.getElementById('fundDetailModal');
+        const detailCloseBtn = document.getElementById('fundDetailModalClose');
+
+        // 수정 모달
+        const editModal = document.getElementById('fundEditModal');
+        const editForm = document.getElementById('fundEditForm');
+        const editCloseBtn = document.getElementById('fundEditModalClose');
+
+        // 삭제 모달
+        const deleteModal = document.getElementById('fundDeleteModal');
+        const deleteCloseBtn = document.getElementById('fundDeleteModalClose');
+        const deleteConfirmBtn = document.getElementById('fundDeleteConfirm');
+
+        // 공통 모달 열기/닫기 함수
+        function showModal(modalElement) {
+            modalElement?.classList.add('show');
         }
 
-        function closeModal() {
-            modal?.classList.remove('show');
+        function closeModal(modalElement) {
+            modalElement?.classList.remove('show');
         }
 
-        openBtn?.addEventListener('click', showModal);
-        closeBtn?.addEventListener('click', closeModal);
+        // 등록 모달
+        openBtn?.addEventListener('click', () => showModal(modal));
+        closeBtn?.addEventListener('click', () => closeModal(modal));
 
         form?.addEventListener('submit', function (event) {
             event.preventDefault();
-            closeModal();
+            // TODO: 등록 API 호출
+            closeModal(modal);
         });
 
         modal?.addEventListener('click', function (event) {
             if (event.target === modal) {
-                closeModal();
+                closeModal(modal);
             }
+        });
+
+        // 상세 모달
+        detailCloseBtn?.addEventListener('click', () => closeModal(detailModal));
+        detailModal?.addEventListener('click', function (event) {
+            if (event.target === detailModal) {
+                closeModal(detailModal);
+            }
+        });
+
+        // 수정 모달
+        editCloseBtn?.addEventListener('click', () => closeModal(editModal));
+        editModal?.addEventListener('click', function (event) {
+            if (event.target === editModal) {
+                closeModal(editModal);
+            }
+        });
+
+        editForm?.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // TODO: 수정 API 호출
+            closeModal(editModal);
+        });
+
+        // 삭제 모달
+        deleteCloseBtn?.addEventListener('click', () => closeModal(deleteModal));
+        deleteConfirmBtn?.addEventListener('click', function () {
+            // TODO: 삭제 API 호출
+            const id = deleteConfirmBtn.getAttribute('data-id');
+            console.log('삭제할 펀드 ID:', id);
+            closeModal(deleteModal);
+            // 삭제 후 테이블 새로고침 또는 행 제거
+        });
+
+        deleteModal?.addEventListener('click', function (event) {
+            if (event.target === deleteModal) {
+                closeModal(deleteModal);
+            }
+        });
+
+        // 테이블 행의 버튼 이벤트 처리
+        const tableRows = document.querySelectorAll('.fund-table tbody tr');
+        tableRows.forEach(row => {
+            const buttons = row.querySelectorAll('[data-action]');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const action = this.getAttribute('data-action');
+                    const id = row.getAttribute('data-id');
+                    const code = row.getAttribute('data-code');
+                    const name = row.getAttribute('data-name');
+                    const type = row.getAttribute('data-type');
+                    const company = row.getAttribute('data-company');
+                    const startDate = row.getAttribute('data-start-date');
+                    const description = row.getAttribute('data-description');
+                    const status = row.getAttribute('data-status');
+
+                    if (action === 'detail') {
+                        // 상세 모달에 데이터 채우기
+                        document.getElementById('detailFundCode').textContent = code || '-';
+                        document.getElementById('detailFundName').textContent = name || '-';
+                        document.getElementById('detailFundType').textContent = type || '-';
+                        document.getElementById('detailFundCompany').textContent = company || '-';
+                        document.getElementById('detailFundStartDate').textContent = startDate || '-';
+                        document.getElementById('detailFundDescription').textContent = description || '-';
+                        document.getElementById('detailFundStatus').textContent = status || '-';
+                        showModal(detailModal);
+                    } else if (action === 'edit') {
+                        // 수정 모달에 데이터 채우기
+                        document.getElementById('editFundId').value = id || '';
+                        document.getElementById('editFundCode').value = code || '';
+                        document.getElementById('editFundName').value = name || '';
+                        document.getElementById('editFundType').value = type || '';
+                        document.getElementById('editFundCompany').value = company || '';
+                        document.getElementById('editFundStartDate').value = startDate || '';
+                        document.getElementById('editFundDescription').value = description || '';
+                        showModal(editModal);
+                    } else if (action === 'delete') {
+                        // 삭제 모달에 데이터 채우기
+                        document.getElementById('deleteFundName').textContent = name || '';
+                        deleteConfirmBtn.setAttribute('data-id', id || '');
+                        showModal(deleteModal);
+                    }
+                });
+            });
         });
     });
 </script>
-    <!-- 사이드바 스크립트 -->
-    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>
-
