@@ -20,9 +20,10 @@
                 <header class="page-header">
                     <h1>권한 관리</h1>
                 </header>
+                <h2 class="section-title">관리자 목록</h2>
 
                 <!-- 안내 메시지 -->
-                <div style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #cd1317; border-radius: 4px;">
+                <div style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 4px;">
                     <p style="margin: 0; color: #666; font-size: 15px;">
                         추가할 관리자 계정을 검색하시기 바랍니다.
                     </p>
@@ -116,22 +117,41 @@
                 <!-- 권한 관리 목록 -->
                 <div class="table-section">
                     <h2 class="section-title">관리자 목록</h2>
-                    
+                    <!-- 안내 메시지 -->
+                    <div style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 4px;">
+                        <p style="margin: 0; color: #666; font-size: 15px;">
+                            관리자 계정을 조회하고 관리할 수 있습니다.
+                        </p>
+                    </div>
+
+
                     <!-- 관리자 목록 검색 섹션 -->
                     <div class="search-section">
+                        <!-- 같은 /admin/permission 으로 GET -->
                         <form th:action="@{/admin/permission}" method="get" style="margin: 0;">
                             <table class="search-table">
                                 <tbody>
-                                    <tr>
-                                        <td class="search-label">검색조건</td>
-                                        <td class="search-inputs">
-                                            <select class="form-select search-select-small" name="adminSearchType">
-                                                <option value="userId">아이디</option>
-                                                <option value="name">이름</option>
-                                            </select>
-                                            <input type="text" class="form-input search-input-large" name="adminKeyword" placeholder="관리자를 검색하세요" value="">
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td class="search-label">검색조건</td>
+                                    <td class="search-inputs">
+                                        <!-- 아래 검색도 pageRequestDTO.searchType / keyword 공유 -->
+                                        <select class="form-select search-select-small" name="searchType">
+                                            <option value="adminId"
+                                                    th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'adminId'}">
+                                                아이디
+                                            </option>
+                                            <option value="adminName"
+                                                    th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'adminName'}">
+                                                이름
+                                            </option>
+                                        </select>
+                                        <input type="text"
+                                               class="form-input search-input-large"
+                                               name="keyword"
+                                               placeholder="관리자를 검색하세요"
+                                               th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                             <div class="search-actions">
@@ -142,160 +162,162 @@
                     </div>
 
                     <div class="table-info">
-                        <span>총 <strong id="totalCount">0</strong>개</span>
-                        <span class="pagination-info"><span id="currentPage">1</span> / <span id="totalPages">1</span> page</span>
+                        <span>
+                            총
+                            <strong th:text="${adminPage != null ? adminPage.total : 0}">0</strong>개
+                        </span>
+                        <span class="pagination-info"
+                              th:if="${adminPage != null and adminPage.total > 0}">
+                            <span th:text="${adminPage.pg}">1</span>
+                            /
+                            <span th:text="${(adminPage.total + adminPage.size - 1) / adminPage.size}">1</span>
+                            page
+                        </span>
                     </div>
+
                     <table class="permission-table">
                         <thead>
-                            <tr>
-                                <th>번호</th>
-                                <th>아이디</th>
-                                <th>이름</th>
-                                <th>전화번호</th>
-                                <th>이메일</th>
-                                <th>가입일</th>
-                                <th>권한</th>
-                                <th>관리</th>
-                            </tr>
+                        <tr>
+                            <th>번호</th>
+                            <th>아이디</th>
+                            <th>이름</th>
+                            <th>전화번호</th>
+                            <th>이메일</th>
+                            <th>가입일</th>
+                            <th>권한</th>
+                            <th>관리</th>
+                        </tr>
                         </thead>
-                        <tbody id="permissionTableBody">
+                        <tbody>
+                        <!-- 관리자 없음 -->
+                        <tr th:if="${adminPage == null or #lists.isEmpty(adminPage.dtoList)}">
+                            <td colspan="8" style="text-align: center; padding: 40px;">
+                                등록된 관리자가 없습니다.
+                            </td>
+                        </tr>
+
+                        <!-- 관리자 목록 -->
+                        <tr th:each="admin, stat : ${adminPage != null ? adminPage.dtoList : {}}">
+                            <!-- 역순 번호 -->
+                            <td th:text="${adminPage.startNo - stat.index}">1</td>
+
+                            <td th:text="${admin.adminId}">admin01</td>
+                            <td th:text="${admin.adminName}">홍길동</td>
+
+                            <!-- AdminListDTO 필드명에 맞춰서 작성 (custHp / custEmail / joinDate 라고 가정) -->
+                            <td th:text="${admin.custHp}">010-1234-5678</td>
+                            <td th:text="${admin.custEmail}">admin01@example.com</td>
+                            <td th:text="${#temporals.format(admin.joinDate, 'yyyy-MM-dd')}">2024-01-15</td>
+                            <!-- joinDate가 String이면 위 대신 그냥 admin.joinDate 쓰면 됨 -->
+
+                            <td>
+                                <select class="form-select permission-select"
+                                        th:data-admin-no="${admin.adminNo}"
+                                        onchange="onChangeRole(this)">
+                                    <option value="SAD"
+                                            th:selected="${admin.role == 'SAD'}">최고관리자</option>
+                                    <option value="ADM"
+                                            th:selected="${admin.role == 'ADM'}">일반 관리자</option>
+                                    <option value="CS"
+                                            th:selected="${admin.role == 'CS'}">상담원</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn btn-secondary btn-small"
+                                        th:onclick="|updateAdminRole(${admin.adminNo})|">
+                                    수정
+                                </button>
+                                <button class="btn btn-secondary btn-small"
+                                        th:onclick="|deleteAdmin(${admin.adminNo})|">
+                                    삭제
+                                </button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
-                    <div class="pagination">
-                        <button class="page-btn prev" onclick="prevPage()">&lt;</button>
-                        <div class="page-numbers" id="pageNumbers">
-                            <button class="page-number active">1</button>
-                            <button class="page-number">2</button>
-                            <button class="page-number">3</button>
-                            <button class="page-number">4</button>
-                            <button class="page-number">5</button>
+
+                    <!-- 페이징 -->
+                    <div class="pagination"
+                         th:if="${adminPage != null and adminPage.total > 0}">
+                        <!-- 이전 -->
+                        <button class="page-btn prev"
+                                th:if="${adminPage.prev}"
+                                th:onclick="|location.href='@{/admin/permission(pg=${adminPage.start - 1}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
+                            &lt;
+                        </button>
+
+                        <!-- 페이지 번호 -->
+                        <div class="page-numbers">
+                            <button class="page-number"
+                                    th:each="p : ${#numbers.sequence(adminPage.start, adminPage.end)}"
+                                    th:text="${p}"
+                                    th:classappend="${p == adminPage.pg} ? ' active'"
+                                    th:onclick="|location.href='@{/admin/permission(pg=${p}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
+                                1
+                            </button>
                         </div>
-                        <button class="page-btn next" onclick="nextPage()">&gt;</button>
+
+                        <!-- 다음 -->
+                        <button class="page-btn next"
+                                th:if="${adminPage.next}"
+                                th:onclick="|location.href='@{/admin/permission(pg=${adminPage.end + 1}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
+                            &gt;
+                        </button>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-        // 샘플 데이터 (실제로는 서버에서 데이터를 가져와야 함)
-        const allUsers = [
-            { id: 1, userId: 'admin01', name: '홍길동', phone: '010-1234-5678', email: 'admin01@example.com', joinDate: '2024-01-15', permission: '최고관리자' },
-            { id: 2, userId: 'admin02', name: '김철수', phone: '010-2345-6789', email: 'admin02@example.com', joinDate: '2024-02-20', permission: '일반 관리자' },
-            { id: 3, userId: 'user01', name: '이영희', phone: '010-3456-7890', email: 'user01@example.com', joinDate: '2024-03-10', permission: '상담원' },
-            { id: 4, userId: 'user02', name: '박민수', phone: '010-4567-8901', email: 'user02@example.com', joinDate: '2024-03-15', permission: '회원' },
-            { id: 5, userId: 'user03', name: '최지영', phone: '010-5678-9012', email: 'user03@example.com', joinDate: '2024-04-01', permission: '회원' }
-        ];
 
-        function updatePermission(id, permission) {
-            console.log('권한 업데이트:', id, permission);
-            // 권한 업데이트 로직 구현
-        }
-
-        // 관리자 목록 표시 (회원 제외)
-        function displayAdminList() {
-            const tableBody = document.getElementById('permissionTableBody');
-            const adminUsers = allUsers.filter(user => user.permission !== '회원');
-            const totalCountElement = document.getElementById('totalCount');
-            
-            tableBody.innerHTML = '';
-            totalCountElement.textContent = adminUsers.length;
-            
-            adminUsers.forEach((user, index) => {
-                const row = document.createElement('tr');
-                const permissionOptions = ['회원', '상담원', '일반 관리자', '최고관리자'];
-                const permissionSelect = permissionOptions.map(opt => 
-                    `<option value="${opt}" ${user.permission === opt ? 'selected' : ''}>${opt}</option>`
-                ).join('');
-                
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${user.userId}</td>
-                    <td>${user.name}</td>
-                    <td>${user.phone}</td>
-                    <td>${user.email}</td>
-                    <td>${user.joinDate}</td>
-                    <td>
-                        <select class="form-select permission-select" onchange="updatePermission(${user.id}, this.value)">
-                            ${permissionSelect}
-                        </select>
-                    </td>
-                    <td>
-                        <button class="btn btn-secondary btn-small" onclick="managePermission(${user.id}, this)">수정</button>
-                        <button class="btn btn-secondary btn-small" onclick="deleteAdmin(${user.id})">삭제</button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        function managePermission(id, button) {
-            // 사용자 정보 찾기
-            const user = allUsers.find(u => u.id === id);
-            if (!user) {
-                alert('사용자 정보를 찾을 수 없습니다.');
-                return;
-            }
-            
-            // 현재 선택된 권한 가져오기
-            const row = button.closest('tr');
-            const selectElement = row.querySelector('.permission-select');
-            const currentPermission = selectElement ? selectElement.value : user.permission;
-            
-            // 확인 팝업
-            if (confirm(`사용자 "${user.name}" (${user.userId})의 권한을 변경하시겠습니까?\n\n현재 권한: ${currentPermission}`)) {
-                console.log('권한 변경 확인:', id, currentPermission);
-                // 권한 변경 로직 구현
-                // 실제로는 서버에 권한 변경 요청을 보내야 함
-                alert('권한이 변경되었습니다.');
-            }
-        }
-
-        // 페이지 로드 시 관리자 목록 표시
-        document.addEventListener('DOMContentLoaded', function() {
-            displayAdminList();
-        });
-
-        function prevPage() {
-            console.log('이전 페이지');
-            // 페이지네이션 로직 구현
-        }
-
-        function nextPage() {
-            console.log('다음 페이지');
-            // 페이지네이션 로직 구현
-        }
-
-        function deleteAdmin(id) {
-            const user = allUsers.find(u => u.id === id);
-            if (!user) {
-                alert('사용자 정보를 찾을 수 없습니다.');
-                return;
-            }
-            
-            if (confirm(`정말 "${user.name}" (${user.userId}) 관리자를 삭제하시겠습니까?`)) {
-                console.log('관리자 삭제:', id);
-                // 실제로는 서버에 삭제 요청을 보내야 함
-                alert('관리자가 삭제되었습니다.');
-                // 목록 새로고침
-                displayAdminList();
-            }
-        }
-
+        // 검색 결과에서 "관리자 추가" 버튼
         function addAdmin(custNo) {
             if (confirm('이 계정을 관리자로 추가하시겠습니까?')) {
-                console.log('관리자 추가:', custNo);
                 // TODO: 실제 추가 처리 (POST 요청)
-                alert('관리자가 추가되었습니다.');
             }
         }
 
+        // 관리자 목록 검색 초기화
         function resetAdminSearch() {
-            document.querySelector('input[name="adminKeyword"]').value = '';
-            // 관리자 목록 새로고침
-            displayAdminList();
+            const input = document.querySelector('input[name="adminKeyword"]');
+            if (input) {
+                input.value = '';
+            }
+            // 단순히 페이지 리로드
+            location.href = /*[[@{/admin/permission}]]*/ '/admin/permission';
         }
+
+        // 셀렉트 박스에서 권한 선택 변경 시(미리보기 용)
+        function onChangeRole(selectEl) {
+            const adminNo = selectEl.getAttribute('data-admin-no');
+            const role = selectEl.value;
+            console.log('선택된 권한 미리보기 => ADMIN_NO:', adminNo, 'ROLE:', role);
+        }
+
+        // "수정" 버튼 클릭 시 - 실제 권한 변경 요청 자리
+        function updateAdminRole(adminNo) {
+            const selectEl = document.querySelector('.permission-select[data-admin-no="' + adminNo + '"]');
+            if (!selectEl) {
+                alert('권한 정보를 찾을 수 없습니다.');
+                return;
+            }
+            const role = selectEl.value;
+
+            if (confirm('이 관리자의 권한을 "' + role + '"(으)로 변경하시겠습니까?')) {
+                // TODO: 실제 권한 변경 POST 요청
+            }
+        }
+
+        // "삭제" 버튼 클릭 시
+        function deleteAdmin(adminNo) {
+            if (confirm('정말 이 관리자를 삭제하시겠습니까?')) {
+                // TODO: 실제 삭제 요청 (POST/DELETE)
+            }
+        }
+
         /*]]>*/
     </script>
     <!-- 사이드바 스크립트 -->

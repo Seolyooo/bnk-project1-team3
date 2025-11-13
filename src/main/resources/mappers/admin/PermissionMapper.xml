@@ -81,4 +81,49 @@
 
     </select>
 
+
+    <!-- 관리자 ResultMap -->
+    <resultMap id="AdminListResultMap"
+               type="kr.co.bnk.bnk_project.dto.admin.AdminListDTO">
+        <id     property="adminNo"    column="ADMIN_NO"/>
+        <result property="adminId"    column="ADMIN_ID"/>
+        <result property="adminName"  column="ADMIN_NAME"/>
+        <result property="role"       column="ROLE"/>
+
+        <result property="custHp"     column="CUST_HP"/>
+        <result property="custEmail"  column="CUST_EMAIL"/>
+        <result property="joinDate"   column="JOIN_DATE"/>
+    </resultMap>
+
+    <!-- 관리자 목록 -->
+    <select id="selectAdminList"
+            parameterType="kr.co.bnk.bnk_project.dto.PageRequestDTO"
+            resultMap="AdminListResultMap">
+
+        SELECT
+            a.ADMIN_NO,
+            a.ADMIN_ID,
+            a.ADMIN_NAME,
+            a.ROLE,
+            u.CUST_HP,
+            u.CUST_EMAIL,
+            u.JOIN_DATE
+        FROM ADMIN.BNK_ADMIN a
+                 LEFT JOIN ADMIN.BNK_USER u
+                           ON a.ADMIN_ID = u.CUST_ID
+        ORDER BY a.ADMIN_NO ASC
+        OFFSET #{pageRequestDTO.startRow} ROWS
+            FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+
+    <!-- 관리자 총 인원 -->
+    <select id="selectAdminTotal"
+            parameterType="kr.co.bnk.bnk_project.dto.PageRequestDTO"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM ADMIN.BNK_ADMIN
+    </select>
+
+
+
 </mapper>
