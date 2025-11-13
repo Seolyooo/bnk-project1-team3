@@ -43,66 +43,28 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr
-                            data-id="3"
-                            data-title="월간 운용보고서 4월호"
-                            data-category="연간보고서"
-                            data-author="이수정"
-                            data-date="2024-04-20"
-                            data-content="월간 운용보고서 4월호 내용입니다."
-                            data-status="공시중">
-                        <td>3</td>
-                        <td class="text-left">월간 운용보고서 4월호</td>
-                        <td>연간보고서</td>
-                        <td>이수정</td>
-                        <td>2024-04-20</td>
-                        <td>공시중</td>
+                    <tr th:each="post : ${dtoList}"
+                        th:attr="
+                            data-id=${post.postId},
+                            data-title=${post.title},
+                            data-category=${post.disclosureType},
+                            data-author=${post.createdBy},
+                            data-date=${post.createdAt},
+                            data-content=${post.content},
+                            data-status=${post.status}">
+                        <td th:text="${post.postId}"></td>
+                        <td th:text="${post.title}" class="text-left"></td>
+                        <td th:text="${post.disclosureType}"></td>
+                        <td th:text="${post.createdBy}"></td>
+                        <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${post.status}"></td>
                         <td class="cell-actions">
                             <button type="button" class="btn-action" data-action="detail">상세</button>
                             <button type="button" class="btn-action" data-action="edit">수정</button>
                             <button type="button" class="btn-action" data-action="delete">삭제</button>
                         </td>
                     </tr>
-                    <tr
-                            data-id="2"
-                            data-title="펀드 약관 개정 안내"
-                            data-category="안내사항"
-                            data-author="박지훈"
-                            data-date="2024-04-10"
-                            data-content="펀드 약관 개정 안내 내용입니다."
-                            data-status="대기중">
-                        <td>2</td>
-                        <td class="text-left">펀드 약관 개정 안내</td>
-                        <td>안내사항</td>
-                        <td>박지훈</td>
-                        <td>2024-04-10</td>
-                        <td>대기중</td>
-                        <td class="cell-actions">
-                            <button type="button" class="btn-action" data-action="detail">상세</button>
-                            <button type="button" class="btn-action" data-action="edit">수정</button>
-                            <button type="button" class="btn-action" data-action="delete">삭제</button>
-                        </td>
-                    </tr>
-                    <tr
-                            data-id="1"
-                            data-title="2024년 1분기 운용보고서"
-                            data-category="운용보고서"
-                            data-author="홍길동"
-                            data-date="2024-04-01"
-                            data-content="2024년 1분기 운용보고서 내용입니다."
-                            data-status="공시중">
-                        <td>1</td>
-                        <td class="text-left">2024년 1분기 운용보고서</td>
-                        <td>운용보고서</td>
-                        <td>홍길동</td>
-                        <td>2024-04-01</td>
-                        <td>공시중</td>
-                        <td class="cell-actions">
-                            <button type="button" class="btn-action" data-action="detail">상세</button>
-                            <button type="button" class="btn-action" data-action="edit">수정</button>
-                            <button type="button" class="btn-action" data-action="delete">삭제</button>
-                        </td>
-                    </tr>
+
                     </tbody>
                 </table>
                 <div class="pagination">
@@ -128,14 +90,18 @@
 <div id="announcementModal" class="modal-overlay">
     <div class="modal-card">
         <h3>공시자료 등록</h3>
-        <form id="announcementForm" class="modal-form">
+        <form id="announcementForm" class="modal-form"
+        th:action="@{/admin/info/disclosures}"
+        th:object="${postForm}"
+        method="post"
+        enctype="multipart/form-data">
             <div class="form-field">
                 <label for="announcementTitle">제목</label>
-                <input type="text" id="announcementTitle" name="title" placeholder="제목을 입력하세요" required>
+                <input type="text" id="announcementTitle" th:field="*{title}" placeholder="제목을 입력하세요" required>
             </div>
             <div class="form-field">
                 <label for="announcementCategory">분류</label>
-                <select id="announcementCategory" name="category" required>
+                <select id="announcementCategory" th:field="*{disclosureType}" required>
                     <option value="">선택하세요</option>
                     <option value="운용보고서">운용보고서</option>
                     <option value="연간보고서">연간보고서</option>
@@ -144,7 +110,7 @@
             </div>
             <div class="form-field">
                 <label for="announcementContent">내용</label>
-                <textarea id="announcementContent" name="content" rows="6" placeholder="공시 내용을 입력하세요" required></textarea>
+                <textarea id="announcementContent" th:field="*{content}" placeholder="공시 내용을 입력하세요" required></textarea>
             </div>
             <div class="form-field file-field">
                 <label for="announcementFile">첨부파일</label>
@@ -292,9 +258,10 @@
         closeBtn?.addEventListener('click', () => closeModal(modal));
 
         form?.addEventListener('submit', function (event) {
-            event.preventDefault();
+            //event.preventDefault();
             // TODO: 등록 API 호출
-            closeModal(modal);
+            //closeModal(modal);
+            console.log('공시자료 등록!');
         });
 
         modal?.addEventListener('click', function (event) {
