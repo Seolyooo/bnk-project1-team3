@@ -268,6 +268,17 @@
           AND CATEGORY_ID = 9
     </update>
 
-
+    <!-- FAQ 삭제 -->
+    <delete id="deleteFaq" parameterType="long">
+        DELETE FROM ADMIN.CS
+        WHERE CS_ID = #{csId}
+          AND CATEGORY_ID = 8
+    </delete>
+    <!-- QnA 삭제 -->
+    <delete id="deleteQna" parameterType="long">
+        DELETE FROM ADMIN.CS
+        WHERE CS_ID = #{csId}
+          AND CATEGORY_ID = 9
+    </delete>
 
 </mapper>

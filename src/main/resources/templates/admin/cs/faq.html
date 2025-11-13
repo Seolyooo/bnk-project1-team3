@@ -8,191 +8,211 @@
     <link rel="stylesheet" th:href="@{/css/admin/admincs.css}">
 </head>
 <body>
-    <!-- 사이드바 Fragment -->
-    <div th:replace="~{admin/_sidebar :: sidebar('faq')}"></div>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('faq')}"></div>
 
-    <div class="main-content">
-        <!-- 헤더 Fragment -->
-        <div th:replace="~{admin/_header :: header}"></div>
-        <div class="main-content-body">
-            <div class="container">
-                <!-- 페이지 헤더 -->
-                <header class="page-header">
-                    <h1>FAQ 관리</h1>
-                    <div class="header-actions">
-                        <a th:href="@{/admin/cs/faq/register}" class="btn btn-red">FAQ 등록</a>
-                    </div>
-                </header>
-
-                <!-- FAQ 검색 -->
-                <div class="search-section">
-                    <form th:action="@{/admin/cs/faq}" method="get" style="margin: 0;">
-                        <table class="search-table">
-                            <tbody>
-                                <tr>
-                                    <td class="search-label">FAQ 검색</td>
-                                    <td class="search-inputs">
-                                        <input type="text"
-                                               class="form-input search-input-large"
-                                               id="faqSearchInput"
-                                               name="keyword"
-                                               placeholder="질문이나 답변내용을 입력하세요."
-                                               th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="search-actions">
-                            <button class="btn btn-red" type="submit">검색</button>
-                            <button class="btn btn-secondary" type="button"
-                                    th:onclick="|location.href='@{/admin/cs/faq}'|">초기화</button>
-                        </div>
-                    </form>
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
+    <div class="main-content-body">
+        <div class="container">
+            <!-- 페이지 헤더 -->
+            <header class="page-header">
+                <h1>FAQ 관리</h1>
+                <div class="header-actions">
+                    <a th:href="@{/admin/cs/faq/register}" class="btn btn-red">FAQ 등록</a>
                 </div>
+            </header>
 
-                <!-- FAQ 목록 -->
-                <div class="table-section">
-                    <div class="table-info" id="faqTableInfo">
+            <!-- FAQ 검색 -->
+            <div class="search-section">
+                <form th:action="@{/admin/cs/faq}" method="get" style="margin: 0;">
+                    <table class="search-table">
+                        <tbody>
+                        <tr>
+                            <td class="search-label">FAQ 검색</td>
+                            <td class="search-inputs">
+                                <input type="text"
+                                       class="form-input search-input-large"
+                                       id="faqSearchInput"
+                                       name="keyword"
+                                       placeholder="질문이나 답변내용을 입력하세요."
+                                       th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="search-actions">
+                        <button class="btn btn-red" type="submit">검색</button>
+                        <button class="btn btn-secondary" type="button"
+                                th:onclick="|location.href='@{/admin/cs/faq}'|">초기화</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- FAQ 목록 -->
+            <div class="table-section">
+                <div class="table-info" id="faqTableInfo">
                         <span>
                             총
                             <strong th:text="${pageResponse != null ? pageResponse.total : 0}">0</strong>건
                         </span>
-                        <span class="pagination-info" th:if="${pageResponse != null and pageResponse.total > 0}">
+                    <span class="pagination-info"
+                          th:if="${pageResponse != null and pageResponse.total > 0}">
                             현재:
                             <span th:text="${pageRequestDTO.pg}">1</span> /
                             <span th:text="${(pageResponse.total + pageRequestDTO.size - 1) / pageRequestDTO.size}">1</span>
                             페이지
                         </span>
-                    </div>
-                    <div class="product-table">
-                        <table class="faq-table">
-                            <thead>
-                                <tr>
-                                    <th>번호</th>
-                                    <th colspan="2">질문</th>
-                                    <th>관리</th>
-                                </tr>
-                            </thead>
-                            <tbody id="faqTableBody">
-                                <!-- 데이터 없을 때 -->
-                                <tr th:if="${pageResponse == null or #lists.isEmpty(pageResponse.dtoList)}">
-                                    <td colspan="4" style="text-align: center; padding: 40px;">등록된 FAQ가 없습니다.</td>
-                                </tr>
-                                <!-- FAQ 목록 -->
-                                <tr th:each="faq, stat : ${pageResponse != null ? pageResponse.dtoList : {}}">
-                                    <!-- 번호: startNo - index (역순) -->
-                                    <td th:text="${pageResponse.startNo - stat.index}">1</td>
-                                    <td colspan="2">
-                                        <div class="faq-item">
-                                            <div class="faq-question-row"
-                                                 th:onclick="|toggleFaqAnswer(${faq.csId})|">
-                                                <span class="faq-q-icon">Q</span>
-                                                <span class="faq-question-text"
-                                                      th:text="${faq.question}">질문</span>
-                                            </div>
-                                            <!-- 답변 영역 (있을 때만 표시, 기본은 접힘) -->
-                                            <div class="faq-answer-row"
-                                                 th:id="|faq-answer-${faq.csId}|"
-                                                 style="display:none;"
-                                                 th:if="${faq.answer != null and faq.answer != ''}">
-                                                <div class="faq-answer-container">
-                                                    <span class="faq-a-icon">A</span>
-                                                    <div class="faq-answer-content">
-                                                        <p th:text="${faq.answer}">답변 내용</p>
-                                                    </div>
-                                                </div>
+                </div>
+                <div class="product-table">
+                    <table class="faq-table">
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th colspan="2">질문</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+                        <tbody id="faqTableBody">
+                        <!-- 데이터 없을 때 -->
+                        <tr th:if="${pageResponse == null or #lists.isEmpty(pageResponse.dtoList)}">
+                            <td colspan="4" style="text-align: center; padding: 40px;">
+                                등록된 FAQ가 없습니다.
+                            </td>
+                        </tr>
+
+                        <!-- FAQ 목록 -->
+                        <tr th:each="faq, stat : ${pageResponse != null ? pageResponse.dtoList : {}}">
+                            <!-- 번호: startNo - index (역순) -->
+                            <td th:text="${pageResponse.startNo - stat.index}">1</td>
+                            <td colspan="2">
+                                <div class="faq-item">
+                                    <div class="faq-question-row"
+                                         th:onclick="|toggleFaqAnswer(${faq.csId})|">
+                                        <span class="faq-q-icon">Q</span>
+                                        <span class="faq-question-text"
+                                              th:text="${faq.question}">질문</span>
+                                    </div>
+                                    <!-- 답변 영역 (있을 때만 표시, 기본은 접힘) -->
+                                    <div class="faq-answer-row"
+                                         th:id="|faq-answer-${faq.csId}|"
+                                         style="display:none;"
+                                         th:if="${faq.answer != null and faq.answer != ''}">
+                                        <div class="faq-answer-container">
+                                            <span class="faq-a-icon">A</span>
+                                            <div class="faq-answer-content">
+                                                <p th:text="${faq.answer}">답변 내용</p>
                                             </div>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="faq-action-buttons">
-                                            <button class="btn btn-secondary btn-small"
-                                                    th:onclick="|location.href='@{/admin/cs/faq/edit(id=${faq.csId})}'|">
-                                                수정
-                                            </button>
-                                            <button class="btn btn-secondary btn-small"
-                                                    th:onclick="|deleteFaq(${faq.csId})|">
-                                                삭제
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- 페이징 -->
-                    <div class="faq-pagination" id="faqPagination" th:if="${pageResponse != null and pageResponse.total > 0}">
-                        <!-- 이전 버튼 -->
-                        <button class="page-btn prev"
-                                th:if="${pageResponse.prev}"
-                                th:onclick="|location.href='@{/admin/cs/faq(pg=${pageResponse.start - 1}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
-                            &lt;
-                        </button>
-                        <!-- 페이지 번호 -->
-                        <div class="page-numbers">
-                            <button class="page-number"
-                                    th:each="p : ${#numbers.sequence(pageResponse.start, pageResponse.end)}"
-                                    th:text="${p}"
-                                    th:classappend="${p == (pageRequestDTO != null ? pageRequestDTO.pg : 1)} ? ' active'"
-                                    th:onclick="|location.href='@{/admin/cs/faq(pg=${p}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
-                                1
-                            </button>
-                        </div>
-                        <!-- 다음 버튼 -->
-                        <button class="page-btn next"
-                                th:if="${pageResponse.next}"
-                                th:onclick="|location.href='@{/admin/cs/faq(pg=${pageResponse.end + 1}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
-                            &gt;
-                        </button>
-                    </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="faq-action-buttons">
+                                    <button class="btn btn-secondary btn-small"
+                                            type="button"
+                                            th:onclick="|location.href='@{/admin/cs/faq/edit(id=${faq.csId})}'|">
+                                        수정
+                                    </button>
+                                    <button class="btn btn-secondary btn-small"
+                                            type="button"
+                                            th:onclick="|deleteFaq(${faq.csId})|">
+                                        삭제
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <!-- 푸터 영역 -->
-                <footer class="admin-footer"></footer>
+                <!-- 페이징 -->
+                <div class="faq-pagination" id="faqPagination"
+                     th:if="${pageResponse != null and pageResponse.total > 0}">
+                    <!-- 이전 버튼 -->
+                    <button class="page-btn prev"
+                            th:if="${pageResponse.prev}"
+                            th:onclick="|location.href='@{/admin/cs/faq(pg=${pageResponse.start - 1}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
+                        &lt;
+                    </button>
+
+                    <!-- 페이지 번호 -->
+                    <div class="page-numbers">
+                        <button class="page-number"
+                                th:each="p : ${#numbers.sequence(pageResponse.start, pageResponse.end)}"
+                                th:text="${p}"
+                                th:classappend="${p == (pageRequestDTO != null ? pageRequestDTO.pg : 1)} ? ' active'"
+                                th:onclick="|location.href='@{/admin/cs/faq(pg=${p}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
+                            1
+                        </button>
+                    </div>
+
+                    <!-- 다음 버튼 -->
+                    <button class="page-btn next"
+                            th:if="${pageResponse.next}"
+                            th:onclick="|location.href='@{/admin/cs/faq(pg=${pageResponse.end + 1}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
+                        &gt;
+                    </button>
+                </div>
             </div>
+
+            <!-- 푸터 영역 -->
+            <footer class="admin-footer"></footer>
         </div>
     </div>
-    <!-- 사이드바 스크립트 -->
-    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
-    
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        var editUrl = /*[[@{/admin/cs/faq/edit}]]*/ '/admin/cs/faq/edit';
-        
-        function toggleFaqAnswer(id) {
-            const answerRow = document.getElementById('faq-answer-' + id);
-            if (!answerRow) return;
-            
-            if (answerRow.style.display === 'none' || answerRow.style.display === '') {
-                answerRow.style.display = 'block';
-            } else {
-                answerRow.style.display = 'none';
-            }
+</div>
+
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+
+<!-- FAQ 삭제용 폼 -->
+<form id="faqDeleteForm"
+      th:action="@{/admin/cs/faq/delete}"
+      method="post"
+      style="display:none;">
+    <input type="hidden" name="id" id="faqDeleteId">
+</form>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var editUrl = /*[[@{/admin/cs/faq/edit}]]*/ '/admin/cs/faq/edit';
+
+    function toggleFaqAnswer(id) {
+        const answerRow = document.getElementById('faq-answer-' + id);
+        if (!answerRow) return;
+
+        if (answerRow.style.display === 'none' || answerRow.style.display === '') {
+            answerRow.style.display = 'block';
+        } else {
+            answerRow.style.display = 'none';
+        }
+    }
+
+
+    function deleteFaq(id) {
+        if (!id) {
+            alert('FAQ ID가 없습니다.');
+            return;
         }
 
-        function editFaq(id) {
-            if (id) {
-                location.href = editUrl + '?id=' + id;
-            } else {
-                alert('FAQ ID가 없습니다.');
-            }
+        if (confirm('정말 삭제하시겠습니까?')) {
+            document.getElementById('faqDeleteId').value = id;
+            document.getElementById('faqDeleteForm').submit();
         }
+    }
 
-        function deleteFaq(id) {
-            if (confirm('정말 삭제하시겠습니까?')) {
-                alert('FAQ 삭제 기능: ID ' + id);
-                // TODO: 실제 삭제 처리 (POST/DELETE 요청)
-            }
-        }
-
-        // Enter 키로 검색
-        document.getElementById('faqSearchInput').addEventListener('keypress', function(e) {
+    // Enter 키로 검색
+    const faqSearchInput = document.getElementById('faqSearchInput');
+    if (faqSearchInput) {
+        faqSearchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 this.closest('form').submit();
             }
         });
-        /*]]>*/
-    </script>
+    }
+    /*]]>*/
+</script>
 </body>
 </html>

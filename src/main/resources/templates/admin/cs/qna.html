@@ -8,193 +8,209 @@
     <link rel="stylesheet" th:href="@{/css/admin/admincs.css}">
 </head>
 <body>
-    <!-- 사이드바 Fragment -->
-    <div th:replace="~{admin/_sidebar :: sidebar('qna')}"></div>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('qna')}"></div>
 
-    <div class="main-content">
-        <!-- 헤더 Fragment -->
-        <div th:replace="~{admin/_header :: header}"></div>
-        <div class="main-content-body">
-            <div class="container">
-                <!-- 페이지 헤더 -->
-                <header class="page-header">
-                    <h1>QnA 관리</h1>
-                </header>
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
+    <div class="main-content-body">
+        <div class="container">
+            <!-- 페이지 헤더 -->
+            <header class="page-header">
+                <h1>QnA 관리</h1>
+            </header>
 
-                <!-- QnA 검색 -->
-                <div class="search-section">
-                    <form th:action="@{/admin/cs/qna}" method="get" style="margin: 0;">
-                        <table class="search-table">
-                            <tbody>
-                                <tr>
-                                    <td class="search-label">QnA 검색</td>
-                                    <td class="search-inputs">
-                                        <select class="form-select search-select-small"
-                                                id="qnaSearchType"
-                                                name="searchType">
-                                            <option value="">전체</option>
-                                            <option value="userId"
-                                                    th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'userId'}">아이디</option>
-                                            <option value="title"
-                                                    th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'title'}">제목</option>
-                                            <option value="content"
-                                                    th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'content'}">내용</option>
-                                        </select>
-                                        <input type="text"
-                                               class="form-input search-input-large"
-                                               id="qnaSearchInput"
-                                               name="keyword"
-                                               placeholder="질문이나 답변내용을 입력하세요."
-                                               th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="search-label">상태</td>
-                                    <td class="search-inputs">
-                                        <div class="qna-status-radio">
-                                            <label>
-                                                <input type="radio" name="status" value=""
-                                                       th:checked="${pageRequestDTO == null or pageRequestDTO.status == null or pageRequestDTO.status == ''}">
-                                                전체
-                                            </label>
-                                            <label>
-                                                <input type="radio" name="status" value="답변대기"
-                                                       th:checked="${pageRequestDTO != null and pageRequestDTO.status == '답변대기'}">
-                                                답변대기
-                                            </label>
-                                            <label>
-                                                <input type="radio" name="status" value="답변완료"
-                                                       th:checked="${pageRequestDTO != null and pageRequestDTO.status == '답변완료'}">
-                                                답변완료
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="search-actions">
-                            <button class="btn btn-red" type="submit">검색</button>
-                            <button class="btn btn-secondary" type="button"
-                                    th:onclick="|location.href='@{/admin/cs/qna}'|">초기화</button>
-                        </div>
-                    </form>
-                </div>
+            <!-- QnA 검색 -->
+            <div class="search-section">
+                <form th:action="@{/admin/cs/qna}" method="get" style="margin: 0;">
+                    <table class="search-table">
+                        <tbody>
+                        <tr>
+                            <td class="search-label">QnA 검색</td>
+                            <td class="search-inputs">
+                                <select class="form-select search-select-small"
+                                        id="qnaSearchType"
+                                        name="searchType">
+                                    <option value="">전체</option>
+                                    <option value="userId"
+                                            th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'userId'}">아이디</option>
+                                    <option value="title"
+                                            th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'title'}">제목</option>
+                                    <option value="content"
+                                            th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'content'}">내용</option>
+                                </select>
+                                <input type="text"
+                                       class="form-input search-input-large"
+                                       id="qnaSearchInput"
+                                       name="keyword"
+                                       placeholder="질문이나 답변내용을 입력하세요."
+                                       th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="search-label">상태</td>
+                            <td class="search-inputs">
+                                <div class="qna-status-radio">
+                                    <label>
+                                        <input type="radio" name="status" value=""
+                                               th:checked="${pageRequestDTO == null or pageRequestDTO.status == null or pageRequestDTO.status == ''}">
+                                        전체
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="status" value="답변대기"
+                                               th:checked="${pageRequestDTO != null and pageRequestDTO.status == '답변대기'}">
+                                        답변대기
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="status" value="답변완료"
+                                               th:checked="${pageRequestDTO != null and pageRequestDTO.status == '답변완료'}">
+                                        답변완료
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="search-actions">
+                        <button class="btn btn-red" type="submit">검색</button>
+                        <button class="btn btn-secondary" type="button"
+                                th:onclick="|location.href='@{/admin/cs/qna}'|">초기화</button>
+                    </div>
+                </form>
+            </div>
 
-                <!-- QnA 목록 -->
-                <div class="table-section">
-                    <div class="table-info" id="qnaTableInfo">
+            <!-- QnA 목록 -->
+            <div class="table-section">
+                <div class="table-info" id="qnaTableInfo">
                         <span>
                             총 <strong th:text="${pageResponse != null ? pageResponse.total : 0}">0</strong>건
                         </span>
-                        <span class="pagination-info" th:if="${pageResponse != null and pageResponse.total > 0}">
+                    <span class="pagination-info" th:if="${pageResponse != null and pageResponse.total > 0}">
                             현재:
                             <span th:text="${pageRequestDTO.pg}">1</span> /
                             <span th:text="${(pageResponse.total + pageRequestDTO.size - 1) / pageRequestDTO.size}">1</span>
                             페이지
                         </span>
-                    </div>
-                    <div class="product-table">
-                        <table class="qna-table">
-                            <thead>
-                                <tr>
-                                    <th>번호</th>
-                                    <th>질문</th>
-                                    <th>아이디</th>
-                                    <th>상태</th>
-                                    <th>관리</th>
-                                </tr>
-                            </thead>
-                            <tbody id="qnaTableBody">
-                                <!-- 데이터 없을 때 -->
-                                <tr th:if="${pageResponse == null or #lists.isEmpty(pageResponse.dtoList)}">
-                                    <td colspan="5" class="faq-no-results-cell" style="text-align: center; padding: 40px;">
-                                        등록된 QnA가 없습니다.
-                                    </td>
-                                </tr>
-                                <!-- QnA 목록 -->
-                                <tr th:each="qna, stat : ${pageResponse != null ? pageResponse.dtoList : {}}">
-                                    <!-- 번호: 역순 -->
-                                    <td th:text="${pageResponse.startNo - stat.index}">1</td>
-                                    <td>
+                </div>
+                <div class="product-table">
+                    <table class="qna-table">
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>질문</th>
+                            <th>아이디</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+                        <tbody id="qnaTableBody">
+                        <!-- 데이터 없을 때 -->
+                        <tr th:if="${pageResponse == null or #lists.isEmpty(pageResponse.dtoList)}">
+                            <td colspan="5" class="faq-no-results-cell" style="text-align: center; padding: 40px;">
+                                등록된 QnA가 없습니다.
+                            </td>
+                        </tr>
+                        <!-- QnA 목록 -->
+                        <tr th:each="qna, stat : ${pageResponse != null ? pageResponse.dtoList : {}}">
+                            <!-- 번호: 역순 -->
+                            <td th:text="${pageResponse.startNo - stat.index}">1</td>
+                            <td>
                                         <span style="cursor: pointer;"
                                               th:onclick="|location.href='@{/admin/cs/qna/detail(id=${qna.csId})}'|"
                                               th:text="${qna.title}">
                                             질문 제목
                                         </span>
-                                    </td>
-                                    <td th:text="${qna.userId}">user123</td>
-                                    <td th:text="${qna.status}">답변대기</td>
-                                    <td>
-                                        <div class="faq-action-buttons">
-                                            <button class="btn btn-secondary btn-small"
-                                                    th:onclick="|location.href='@{/admin/cs/qna/edit(id=${qna.csId})}'|">
-                                                답변
-                                            </button>
-                                            <button class="btn btn-secondary btn-small"
-                                                    th:onclick="|deleteQna(${qna.csId})|">
-                                                삭제
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- 페이징 -->
-                    <div class="qna-pagination" id="qnaPagination"
-                         th:if="${pageResponse != null and pageResponse.total > 0}">
-                        <!-- 이전 -->
-                        <button class="page-btn prev"
-                                th:if="${pageResponse.prev}"
-                                th:onclick="|location.href='@{/admin/cs/qna(pg=${pageResponse.start - 1}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}, status=${pageRequestDTO != null and pageRequestDTO.status != null ? pageRequestDTO.status : ''})}'|">
-                            &lt;
-                        </button>
-                        <!-- 페이지 번호 -->
-                        <div class="page-numbers">
-                            <button class="page-number"
-                                    th:each="p : ${#numbers.sequence(pageResponse.start, pageResponse.end)}"
-                                    th:text="${p}"
-                                    th:classappend="${p == (pageRequestDTO != null ? pageRequestDTO.pg : 1)} ? ' active'"
-                                    th:onclick="|location.href='@{/admin/cs/qna(pg=${p}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}, status=${pageRequestDTO != null and pageRequestDTO.status != null ? pageRequestDTO.status : ''})}'|">
-                                1
-                            </button>
-                        </div>
-                        <!-- 다음 -->
-                        <button class="page-btn next"
-                                th:if="${pageResponse.next}"
-                                th:onclick="|location.href='@{/admin/cs/qna(pg=${pageResponse.end + 1}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}, status=${pageRequestDTO != null and pageRequestDTO.status != null ? pageRequestDTO.status : ''})}'|">
-                            &gt;
-                        </button>
-                    </div>
+                            </td>
+                            <td th:text="${qna.userId}">user123</td>
+                            <td th:text="${qna.status}">답변대기</td>
+                            <td>
+                                <div class="faq-action-buttons">
+                                    <button class="btn btn-secondary btn-small"
+                                            type="button"
+                                            th:onclick="|location.href='@{/admin/cs/qna/edit(id=${qna.csId})}'|">
+                                        답변
+                                    </button>
+                                    <button class="btn btn-secondary btn-small"
+                                            type="button"
+                                            th:onclick="|deleteQna(${qna.csId})|">
+                                        삭제
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <!-- 푸터 영역 -->
-                <footer class="admin-footer"></footer>
+                <!-- 페이징 -->
+                <div class="qna-pagination" id="qnaPagination"
+                     th:if="${pageResponse != null and pageResponse.total > 0}">
+                    <!-- 이전 -->
+                    <button class="page-btn prev"
+                            th:if="${pageResponse.prev}"
+                            th:onclick="|location.href='@{/admin/cs/qna(pg=${pageResponse.start - 1}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}, status=${pageRequestDTO != null and pageRequestDTO.status != null ? pageRequestDTO.status : ''})}'|">
+                        &lt;
+                    </button>
+                    <!-- 페이지 번호 -->
+                    <div class="page-numbers">
+                        <button class="page-number"
+                                th:each="p : ${#numbers.sequence(pageResponse.start, pageResponse.end)}"
+                                th:text="${p}"
+                                th:classappend="${p == (pageRequestDTO != null ? pageRequestDTO.pg : 1)} ? ' active'"
+                                th:onclick="|location.href='@{/admin/cs/qna(pg=${p}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}, status=${pageRequestDTO != null and pageRequestDTO.status != null ? pageRequestDTO.status : ''})}'|">
+                            1
+                        </button>
+                    </div>
+                    <!-- 다음 -->
+                    <button class="page-btn next"
+                            th:if="${pageResponse.next}"
+                            th:onclick="|location.href='@{/admin/cs/qna(pg=${pageResponse.end + 1}, size=${pageRequestDTO != null ? pageRequestDTO.size : 10}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}, status=${pageRequestDTO != null and pageRequestDTO.status != null ? pageRequestDTO.status : ''})}'|">
+                        &gt;
+                    </button>
+                </div>
             </div>
+
+            <!-- 푸터 영역 -->
+            <footer class="admin-footer"></footer>
         </div>
     </div>
-    <!-- 사이드바 스크립트 -->
-    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
-    
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        var editUrl = /*[[@{/admin/cs/qna/edit}]]*/ '/admin/cs/qna/edit';
+</div>
 
-        function deleteQna(id) {
-            if (confirm('정말 삭제하시겠습니까?')) {
-                alert('QnA 삭제 기능: ID ' + id);
-                // TODO: 실제 삭제 로직 (AJAX or form submit)
-            }
+<!-- QnA 삭제용 숨겨진 폼 -->
+<form id="qnaDeleteForm"
+      th:action="@{/admin/cs/qna/delete}"
+      method="post"
+      style="display:none;">
+    <input type="hidden" name="id" id="qnaDeleteId">
+</form>
+
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var editUrl = /*[[@{/admin/cs/qna/edit}]]*/ '/admin/cs/qna/edit';
+
+    function deleteQna(id) {
+        if (!id) {
+            alert('QnA ID가 없습니다.');
+            return;
         }
 
-        // Enter 키로 검색
-        document.getElementById('qnaSearchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                this.closest('form').submit();
-            }
-        });
-        /*]]>*/
-    </script>
+        if (confirm('정말 삭제하시겠습니까?')) {
+            document.getElementById('qnaDeleteId').value = id;
+            document.getElementById('qnaDeleteForm').submit();
+        }
+    }
+
+    // Enter 키로 검색
+    document.getElementById('qnaSearchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            this.closest('form').submit();
+        }
+    });
+    /*]]>*/
+</script>
 </body>
 </html>

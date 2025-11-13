@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
@@ -132,6 +133,35 @@ public class AdminCsController {
     public String qnaAnswerSubmit(CsDTO csDTO) {
 
         csService.updateQnaAnswer(csDTO);
+        return "redirect:/admin/cs/qna";
+    }
+
+
+
+    /*-------------------------삭제-------------------------*/
+
+    @PostMapping("/faq/delete")
+    public String deleteFaq(@RequestParam("id") Long csId,
+                            PageRequestDTO pageRequestDTO,
+                            RedirectAttributes ra) {
+
+        csService.deleteFaq(csId);
+        ra.addFlashAttribute("msg", "FAQ가 삭제되었습니다.");
+
+        // 현재 검색조건/페이지 유지하려면 쿼리스트링 붙여도 됨
+        return "redirect:/admin/cs/faq";
+    }
+
+    // QnA 삭제
+    @PostMapping("/qna/delete")
+    public String deleteQna(@RequestParam("id") Long csId,
+                            PageRequestDTO pageRequestDTO,
+                            RedirectAttributes ra) {
+
+        csService.deleteQna(csId);
+        ra.addFlashAttribute("msg", "QnA가 삭제되었습니다.");
+
+        // 검색 + 페이징 유지하려면 쿼리스트링 붙여도 됨
         return "redirect:/admin/cs/qna";
     }
 

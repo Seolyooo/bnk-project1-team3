@@ -6,6 +6,7 @@ import kr.co.bnk.bnk_project.dto.PageResponseDTO;
 import kr.co.bnk.bnk_project.mapper.CsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,8 +49,18 @@ public class CsService {
         csDTO.setStatus("답변완료");   // 수정 후에도 완료 상태 유지
         csMapper.updateFaq(csDTO);
     }
+    /* FAQ 삭제 */
+    @Transactional
+    public void deleteFaq(Long csId) {
+        csMapper.deleteFaq(csId);
+    }
 
 
+
+
+
+
+    /**---------------- QNA---------------------- **/
     /** QNA 목록 **/
     public PageResponseDTO<CsDTO> getQnaPage(PageRequestDTO pageRequestDTO) {
         if (pageRequestDTO.getPg() <= 0) pageRequestDTO.setPg(1);
@@ -81,6 +92,12 @@ public class CsService {
 
         csDTO.setStatus("답변완료");  // 혹시라도 파라미터 조작 방지
         csMapper.updateQnaAnswer(csDTO);
+    }
+
+    /* qna 삭제 */
+    @Transactional
+    public void deleteQna(Long csId) {
+        csMapper.deleteQna(csId);
     }
 
 }

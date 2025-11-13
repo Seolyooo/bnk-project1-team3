@@ -207,6 +207,7 @@
     border-collapse: collapse;
     margin-bottom: 20px;
     border-top: 2px solid #333;
+    table-layout: auto;
 }
 
 .permission-table thead {
@@ -228,6 +229,25 @@
     color: #666;
     font-size: 15px;
     text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* 검색 결과 없을 때 셀 전체 너비 사용 */
+.permission-table tbody tr td[colspan] {
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* 수정/삭제 버튼 컨테이너 */
+.permission-table td:last-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }
 
 .permission-table tbody tr {
@@ -307,12 +327,14 @@
     color: white;
 }
 
-.page-btn:disabled {
+.page-btn:disabled,
+.page-btn.disabled {
     opacity: 0.4;
     cursor: not-allowed;
     background: white;
     border-color: #ddd;
     color: #999;
+    pointer-events: none;
 }
 
 .page-numbers {

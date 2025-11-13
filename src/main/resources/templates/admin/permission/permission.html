@@ -21,22 +21,43 @@
                     <h1>권한 관리</h1>
                 </header>
 
+                <!-- 안내 메시지 -->
+                <div style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #cd1317; border-radius: 4px;">
+                    <p style="margin: 0; color: #666; font-size: 15px;">
+                        추가할 관리자 계정을 검색하시기 바랍니다.
+                    </p>
+                </div>
+
                 <!-- 검색 섹션 -->
                 <div class="search-section">
                     <form th:action="@{/admin/permission}" method="get" style="margin: 0;">
                         <table class="search-table">
                             <tbody>
-                                <tr>
-                                    <td class="search-label">검색조건</td>
-                                    <td class="search-inputs">
-                                        <select class="form-select search-select-small" id="permissionSearchSelect" name="searchType">
-                                            <option value="userId">아이디</option>
-                                            <option value="name">이름</option>
-                                            <option value="email">이메일</option>
-                                        </select>
-                                        <input type="text" class="form-input search-input-large" id="permissionSearchInput" name="keyword" placeholder="입력하세요" th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td class="search-label">검색조건</td>
+                                <td class="search-inputs">
+                                    <select class="form-select search-select-small"
+                                            id="permissionSearchSelect"
+                                            name="searchType">
+                                        <option value="custId"
+                                                th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'custId'}">
+                                            아이디
+                                        </option>
+                                        <option value="custName"
+                                                th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'custName'}">
+                                            이름
+                                        </option>
+                                    </select>
+
+                                    <input type="text"
+                                           class="form-input search-input-large"
+                                           id="permissionSearchInput"
+                                           name="keyword"
+                                           placeholder="추가할 관리자 계정을 검색하시기 바랍니다."
+                                           th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                                </td>
+                            </tr>
+
                             </tbody>
                         </table>
                         <div class="search-actions">
@@ -47,9 +68,12 @@
                 </div>
 
                 <!-- 검색 결과 목록 -->
-                <div class="table-section" id="searchResultSection" style="display: none;">
+                <div class="table-section" th:if="${pageRequestDTO != null and pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''}">
                     <div class="table-info">
-                        <span>총 <strong id="searchResultCount">0</strong>개</span>
+                        <span>
+                            총
+                            <strong th:text="${pageResponse != null ? pageResponse.total : 0}">0</strong>개
+                        </span>
                     </div>
                     <table class="permission-table">
                         <thead>
@@ -60,11 +84,31 @@
                                 <th>전화번호</th>
                                 <th>이메일</th>
                                 <th>가입일</th>
-                                <th>권한</th>
-                                <th>수정</th>
+                                <th>관리</th>
                             </tr>
                         </thead>
-                        <tbody id="searchResultBody">
+                        <tbody>
+                        <!-- 데이터 없을 때 -->
+                        <tr th:if="${pageResponse == null or #lists.isEmpty(pageResponse.dtoList)}">
+                            <td colspan="7" style="text-align: center; padding: 40px; display: table-cell; width: 100%;">검색 결과가 없습니다.</td>
+                        </tr>
+                        <!-- 데이터 있을 때 -->
+                        <tr th:each="user, stat : ${pageResponse != null ? pageResponse.dtoList : {}}">
+                            <!-- 역순 번호 : startNo - index -->
+                            <td th:text="${pageResponse.startNo - stat.index}">1</td>
+                            <td th:text="${user.custId}">admin01</td>
+                            <td th:text="${user.custName}">홍길동</td>
+                            <td th:text="${user.custHp}">010-1234-5678</td>
+                            <td th:text="${user.custEmail}">admin01@example.com</td>
+                            <td th:text="${#temporals.format(user.joinDate, 'yyyy-MM-dd')}">2024-01-15</td>
+                            <td>
+                                <button type="button"
+                                        class="btn btn-secondary btn-small"
+                                        th:onclick="|addAdmin(${user.custNo})|">
+                                    추가
+                                </button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -72,6 +116,31 @@
                 <!-- 권한 관리 목록 -->
                 <div class="table-section">
                     <h2 class="section-title">관리자 목록</h2>
+                    
+                    <!-- 관리자 목록 검색 섹션 -->
+                    <div class="search-section">
+                        <form th:action="@{/admin/permission}" method="get" style="margin: 0;">
+                            <table class="search-table">
+                                <tbody>
+                                    <tr>
+                                        <td class="search-label">검색조건</td>
+                                        <td class="search-inputs">
+                                            <select class="form-select search-select-small" name="adminSearchType">
+                                                <option value="userId">아이디</option>
+                                                <option value="name">이름</option>
+                                            </select>
+                                            <input type="text" class="form-input search-input-large" name="adminKeyword" placeholder="관리자를 검색하세요" value="">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="search-actions">
+                                <button class="btn btn-search" type="submit">조회</button>
+                                <button class="btn btn-secondary" type="button" onclick="resetAdminSearch()">초기화</button>
+                            </div>
+                        </form>
+                    </div>
+
                     <div class="table-info">
                         <span>총 <strong id="totalCount">0</strong>개</span>
                         <span class="pagination-info"><span id="currentPage">1</span> / <span id="totalPages">1</span> page</span>
@@ -86,7 +155,7 @@
                                 <th>이메일</th>
                                 <th>가입일</th>
                                 <th>권한</th>
-                                <th>수정</th>
+                                <th>관리</th>
                             </tr>
                         </thead>
                         <tbody id="permissionTableBody">
@@ -118,72 +187,6 @@
             { id: 4, userId: 'user02', name: '박민수', phone: '010-4567-8901', email: 'user02@example.com', joinDate: '2024-03-15', permission: '회원' },
             { id: 5, userId: 'user03', name: '최지영', phone: '010-5678-9012', email: 'user03@example.com', joinDate: '2024-04-01', permission: '회원' }
         ];
-
-        function performSearch() {
-            const searchSelect = document.getElementById('permissionSearchSelect');
-            const searchInput = document.getElementById('permissionSearchInput').value.trim();
-            const searchType = searchSelect.options[searchSelect.selectedIndex].text;
-            const searchResultSection = document.getElementById('searchResultSection');
-            const searchResultBody = document.getElementById('searchResultBody');
-            const searchResultCount = document.getElementById('searchResultCount');
-            
-            // 검색어가 없으면 목록 숨기기
-            if (!searchInput) {
-                searchResultSection.style.display = 'none';
-                return;
-            }
-            
-            // 검색어로 필터링
-            let filteredData = [];
-            if (searchType === '아이디') {
-                filteredData = allUsers.filter(item => item.userId.includes(searchInput));
-            } else if (searchType === '이름') {
-                filteredData = allUsers.filter(item => item.name.includes(searchInput));
-            } else if (searchType === '이메일') {
-                filteredData = allUsers.filter(item => item.email.includes(searchInput));
-            }
-            
-            // 검색 결과 표시
-            if (filteredData.length > 0) {
-                searchResultBody.innerHTML = '';
-                filteredData.forEach((item, index) => {
-                    const row = document.createElement('tr');
-                    const permissionOptions = ['회원', '상담원', '일반 관리자', '최고관리자'];
-                    const permissionSelect = permissionOptions.map(opt => 
-                        `<option value="${opt}" ${item.permission === opt ? 'selected' : ''}>${opt}</option>`
-                    ).join('');
-                    
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${item.userId}</td>
-                        <td>${item.name}</td>
-                        <td>${item.phone}</td>
-                        <td>${item.email}</td>
-                        <td>${item.joinDate}</td>
-                        <td>
-                            <select class="form-select permission-select" onchange="updatePermission(${item.id}, this.value)">
-                                ${permissionSelect}
-                            </select>
-                        </td>
-                        <td>
-                            <button class="btn btn-secondary btn-small" onclick="managePermission(${item.id}, this)">수정</button>
-                        </td>
-                    `;
-                    searchResultBody.appendChild(row);
-                });
-                searchResultCount.textContent = filteredData.length;
-                searchResultSection.style.display = 'block';
-            } else {
-                searchResultBody.innerHTML = '<tr><td colspan="8" style="text-align: center;">검색 결과가 없습니다.</td></tr>';
-                searchResultCount.textContent = '0';
-                searchResultSection.style.display = 'block';
-            }
-        }
-
-        function resetSearch() {
-            document.getElementById('permissionSearchInput').value = '';
-            performSearch();
-        }
 
         function updatePermission(id, permission) {
             console.log('권한 업데이트:', id, permission);
@@ -220,6 +223,7 @@
                     </td>
                     <td>
                         <button class="btn btn-secondary btn-small" onclick="managePermission(${user.id}, this)">수정</button>
+                        <button class="btn btn-secondary btn-small" onclick="deleteAdmin(${user.id})">삭제</button>
                     </td>
                 `;
                 tableBody.appendChild(row);
@@ -261,6 +265,36 @@
         function nextPage() {
             console.log('다음 페이지');
             // 페이지네이션 로직 구현
+        }
+
+        function deleteAdmin(id) {
+            const user = allUsers.find(u => u.id === id);
+            if (!user) {
+                alert('사용자 정보를 찾을 수 없습니다.');
+                return;
+            }
+            
+            if (confirm(`정말 "${user.name}" (${user.userId}) 관리자를 삭제하시겠습니까?`)) {
+                console.log('관리자 삭제:', id);
+                // 실제로는 서버에 삭제 요청을 보내야 함
+                alert('관리자가 삭제되었습니다.');
+                // 목록 새로고침
+                displayAdminList();
+            }
+        }
+
+        function addAdmin(custNo) {
+            if (confirm('이 계정을 관리자로 추가하시겠습니까?')) {
+                console.log('관리자 추가:', custNo);
+                // TODO: 실제 추가 처리 (POST 요청)
+                alert('관리자가 추가되었습니다.');
+            }
+        }
+
+        function resetAdminSearch() {
+            document.querySelector('input[name="adminKeyword"]').value = '';
+            // 관리자 목록 새로고침
+            displayAdminList();
         }
         /*]]>*/
     </script>
