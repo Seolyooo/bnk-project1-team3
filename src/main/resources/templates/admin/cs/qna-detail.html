@@ -9,123 +9,113 @@
     <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
 </head>
 <body>
-    <!-- 사이드바 Fragment -->
-    <div th:replace="~{admin/_sidebar :: sidebar('qna')}"></div>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('qna')}"></div>
 
-    <div class="main-content">
-        <!-- 헤더 Fragment -->
-        <div th:replace="~{admin/_header :: header}"></div>
-        <div class="main-content-body">
-            <div class="container">
-                <!-- 페이지 헤더 -->
-                <header class="page-header">
-                    <h1>QnA 상세</h1>
-                </header>
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
 
-                <!-- QnA 상세 내용 -->
-                <div class="form-section">
-                    <div class="form-table">
-                        <div class="form-row">
-                            <div class="form-label">아이디</div>
-                            <div class="form-input-wrapper">
-                                <div class="qna-detail-user" id="qnaDetailUser">
-                                    user123
-                                </div>
+    <div class="main-content-body">
+        <div class="container">
+            <!-- 페이지 헤더 -->
+            <header class="page-header">
+                <h1>QnA 상세</h1>
+            </header>
+
+            <!-- QnA 상세 내용 -->
+            <div class="form-section">
+                <div class="form-table">
+                    <div class="form-row">
+                        <div class="form-label">아이디</div>
+                        <div class="form-input-wrapper">
+                            <div class="qna-detail-user"
+                                 id="qnaDetailUser"
+                                 th:text="${qna.userId}">
+                                user123
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-label">제목</div>
-                            <div class="form-input-wrapper">
-                                <div class="qna-detail-question" id="qnaDetailQuestion">
-                                    펀드 투자 시 세금은 어떻게 되나요?
-                                </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-label">제목</div>
+                        <div class="form-input-wrapper">
+                            <div class="qna-detail-question"
+                                 id="qnaDetailQuestion"
+                                 th:text="${qna.title}">
+                                펀드 투자 시 세금은 어떻게 되나요?
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-label">질문</div>
-                            <div class="form-input-wrapper">
-                                <div class="qna-detail-question-content" id="qnaDetailQuestionContent">
-                                    펀드 투자 시 세금은 어떻게 되나요?
-                                </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-label">질문</div>
+                        <div class="form-input-wrapper">
+                            <div class="qna-detail-question-content"
+                                 id="qnaDetailQuestionContent"
+                                 th:text="${qna.question}">
+                                펀드 투자 시 세금은 어떻게 되나요?
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-label">상태</div>
-                            <div class="form-input-wrapper">
-                                <div class="qna-detail-status" id="qnaDetailStatus">
-                                    답변대기
-                                </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-label">상태</div>
+                        <div class="form-input-wrapper">
+                            <div class="qna-detail-status"
+                                 id="qnaDetailStatus"
+                                 th:text="${qna.status}">
+                                답변대기
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-label">답변</div>
-                            <div class="form-input-wrapper">
-                                <div class="qna-detail-answer" id="qnaDetailAnswer">
-                                    아직 답변이 등록되지 않았습니다.
-                                </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-label">답변</div>
+                        <div class="form-input-wrapper">
+                            <div class="qna-detail-answer" id="qnaDetailAnswer">
+                                    <span th:if="${qna.answer != null and #strings.trim(qna.answer) != ''}"
+                                          th:text="${qna.answer}">
+                                        등록된 답변 내용
+                                    </span>
+                                <span th:if="${qna.answer == null or #strings.trim(qna.answer) == ''}">
+                                        아직 답변이 등록되지 않았습니다.
+                                    </span>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- 버튼 영역 -->
-                <div class="form-actions">
-                    <a th:href="@{/admin/cs/qna}" class="btn btn-secondary">목록</a>
-                    <button type="button" class="btn btn-red" onclick="editQna()">답변</button>
-                    <button type="button" class="btn btn-secondary" onclick="deleteQna()">삭제</button>
-                </div>
-
-                <!-- 푸터 영역 -->
-                <footer class="admin-footer"></footer>
             </div>
+
+            <!-- 버튼 영역 -->
+            <div class="form-actions">
+                <a th:href="@{/admin/cs/qna}" class="btn btn-secondary">목록</a>
+
+                <!-- 답변 등록/수정 페이지 이동 -->
+                <a th:href="@{/admin/cs/qna/edit(id=${qna.csId})}"
+                   class="btn btn-red">
+                    답변
+                </a>
+
+                <!-- 삭제 -->
+                <form th:action="@{/admin/cs/qna/delete(id=${qna.csId})}"
+                      method="post"
+                      style="display:inline;">
+                    <button type="submit"
+                            class="btn btn-secondary"
+                            onclick="return confirm('정말 삭제하시겠습니까?');">
+                        삭제
+                    </button>
+                </form>
+            </div>
+
+            <!-- 푸터 영역 -->
+            <footer class="admin-footer"></footer>
         </div>
     </div>
-    <!-- 사이드바 스크립트 -->
-    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
-    
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        var editUrl = /*[[@{/admin/cs/qna/edit}]]*/ '/admin/cs/qna/edit';
-        
-        // URL 파라미터에서 QnA ID 가져오기
-        const urlParams = new URLSearchParams(window.location.search);
-        const qnaId = urlParams.get('id');
+</div>
 
-        // TODO: 서버에서 QnA 데이터 가져오기
-        // 현재는 하드코딩된 데이터 사용
-        const qnaData = {
-            id: qnaId || '9',
-            userId: 'user123',
-            question: '펀드 투자 시 세금은 어떻게 되나요?',
-            questionContent: '펀드 투자 시 세금은 어떻게 되나요?',
-            status: 'pending',
-            answer: '아직 답변이 등록되지 않았습니다.'
-        };
-
-        // QnA 데이터 표시
-        document.getElementById('qnaDetailUser').textContent = qnaData.userId;
-        document.getElementById('qnaDetailQuestion').textContent = qnaData.question;
-        document.getElementById('qnaDetailQuestionContent').textContent = qnaData.questionContent;
-        document.getElementById('qnaDetailStatus').textContent = qnaData.status === 'pending' ? '답변대기' : '답변완료';
-        document.getElementById('qnaDetailAnswer').textContent = qnaData.answer;
-
-        function editQna() {
-            if (qnaId) {
-                location.href = editUrl + '?id=' + qnaId;
-            } else {
-                alert('QnA ID가 없습니다.');
-            }
-        }
-
-        function deleteQna() {
-            if (confirm('정말 삭제하시겠습니까?')) {
-                // TODO: 서버로 삭제 요청
-                alert('QnA가 삭제되었습니다.');
-                window.location.href = /*[[@{/admin/cs/qna}]]*/ '/admin/cs/qna';
-            }
-        }
-        /*]]>*/
-    </script>
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
 </body>
 </html>
-

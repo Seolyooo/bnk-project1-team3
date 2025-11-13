@@ -54,35 +54,38 @@
 
             <!-- 검색 섹션 -->
             <div class="search-section">
-                <table class="search-table">
-                    <tbody>
-                        <tr>
-                            <td class="search-label">검색</td>
-                            <td class="search-inputs">
-                                <input type="text" class="form-input search-input-large" id="filterKeyword" placeholder="예: 주식형 / CAT-010 / equity">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="search-label">유형</td>
-                            <td class="search-inputs">
-                                <select class="form-select search-select-medium" id="filterType">
-                                    <option value="">전체</option>
-                                </select>
-                                <label style="display: flex; align-items: center; gap: 8px; margin-left: 20px;">
-                                    <input type="checkbox" id="filterActiveOnly" style="width: auto; margin: 0;">
-                                    노출만 보기
-                                </label>
-                                <label style="display: flex; align-items: center; gap: 8px; margin-left: 20px;">
-                                    <input type="checkbox" id="filterUsageZero" style="width: auto; margin: 0;">
-                                    사용 수 0만 보기
-                                </label>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="search-actions">
-                    <button class="btn btn-search" onclick="filterCategories()">조회</button>
-                </div>
+                <form th:action="@{/admin/settings/category}" method="get" style="margin: 0;">
+                    <table class="search-table">
+                        <tbody>
+                            <tr>
+                                <td class="search-label">검색</td>
+                                <td class="search-inputs">
+                                    <input type="text" class="form-input search-input-large" id="filterKeyword" name="keyword" placeholder="예: 주식형 / CAT-010 / equity" th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="search-label">유형</td>
+                                <td class="search-inputs">
+                                    <select class="form-select search-select-medium" id="filterType" name="type">
+                                        <option value="">전체</option>
+                                    </select>
+                                    <label style="display: flex; align-items: center; gap: 8px; margin-left: 20px;">
+                                        <input type="checkbox" id="filterActiveOnly" name="activeOnly" style="width: auto; margin: 0;" th:checked="${pageRequestDTO != null and pageRequestDTO.activeOnly}">
+                                        노출만 보기
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; margin-left: 20px;">
+                                        <input type="checkbox" id="filterUsageZero" name="usageZero" style="width: auto; margin: 0;" th:checked="${pageRequestDTO != null and pageRequestDTO.usageZero}">
+                                        사용 수 0만 보기
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="search-actions">
+                        <button class="btn btn-search" type="submit">조회</button>
+                        <button class="btn btn-secondary" type="button" th:onclick="|location.href='@{/admin/settings/category}'|">초기화</button>
+                    </div>
+                </form>
             </div>
 
             <section class="category-table-wrap">

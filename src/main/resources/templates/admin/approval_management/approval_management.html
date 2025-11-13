@@ -52,45 +52,47 @@
             <section class="section-block approval-filter">
                 <h2 class="section-title">결재 요청 검색</h2>
                 <div class="search-section">
-                    <table class="search-table">
-                        <tbody>
-                            <tr>
-                                <td class="search-label">검색어</td>
-                                <td class="search-inputs">
-                                    <input type="text" class="form-input search-input-large" id="filterKeyword" placeholder="결재 ID 또는 요청자를 입력하세요">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="search-label">상태</td>
-                                <td class="search-inputs">
-                                    <select class="form-select search-select-medium" id="filterStatus">
-                                        <option>전체</option>
-                                        <option>대기</option>
-                                        <option>승인</option>
-                                        <option>반려</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="search-label">요청자</td>
-                                <td class="search-inputs">
-                                    <input type="text" class="form-input search-input-large" id="filterRequester" placeholder="요청자 이름을 입력하세요">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="search-label">기간</td>
-                                <td class="search-inputs">
-                                    <input type="date" class="form-input search-select-medium" id="filterDateFrom">
-                                    <span style="margin: 0 10px;">~</span>
-                                    <input type="date" class="form-input search-select-medium" id="filterDateTo">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="search-actions">
-                        <button type="button" class="btn btn-secondary">초기화</button>
-                        <button type="button" class="btn btn-search">조회</button>
-                    </div>
+                    <form th:action="@{/admin/approval}" method="get" style="margin: 0;">
+                        <table class="search-table">
+                            <tbody>
+                                <tr>
+                                    <td class="search-label">검색어</td>
+                                    <td class="search-inputs">
+                                        <input type="text" class="form-input search-input-large" id="filterKeyword" name="keyword" placeholder="결재 ID 또는 요청자를 입력하세요" th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="search-label">상태</td>
+                                    <td class="search-inputs">
+                                        <select class="form-select search-select-medium" id="filterStatus" name="status">
+                                            <option value="">전체</option>
+                                            <option value="대기">대기</option>
+                                            <option value="승인">승인</option>
+                                            <option value="반려">반려</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="search-label">요청자</td>
+                                    <td class="search-inputs">
+                                        <input type="text" class="form-input search-input-large" id="filterRequester" name="requester" placeholder="요청자 이름을 입력하세요" th:value="${pageRequestDTO != null ? pageRequestDTO.requester : ''}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="search-label">기간</td>
+                                    <td class="search-inputs">
+                                        <input type="date" class="form-input search-select-medium" id="filterDateFrom" name="dateFrom" th:value="${pageRequestDTO != null ? pageRequestDTO.dateFrom : ''}">
+                                        <span style="margin: 0 10px;">~</span>
+                                        <input type="date" class="form-input search-select-medium" id="filterDateTo" name="dateTo" th:value="${pageRequestDTO != null ? pageRequestDTO.dateTo : ''}">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="search-actions">
+                            <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/admin/approval}'|">초기화</button>
+                            <button type="submit" class="btn btn-search">조회</button>
+                        </div>
+                    </form>
                 </div>
             </section>
 

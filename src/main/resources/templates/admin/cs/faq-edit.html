@@ -23,28 +23,36 @@
                 </header>
 
                 <!-- FAQ 수정 폼 -->
-                <form id="faqEditForm" class="form-section">
-                    <h2 class="section-title">FAQ 정보</h2>
-                    <div class="form-table">
-                        <div class="form-row">
-                            <div class="form-label">질문</div>
-                            <div class="form-input-wrapper">
-                                <input type="text" class="form-input" id="faqEditQuestion" placeholder="질문을 입력하세요" required>
-                            </div>
+                <div class="form-section">
+                    <form th:action="@{/admin/cs/faq/edit}" method="post">
+                        <!-- PK hidden -->
+                        <input type="hidden" name="csId" th:value="${faq.csId}"/>
+                        
+                        <table class="form-table">
+                            <tr>
+                                <th>질문</th>
+                                <td>
+                                    <input type="text"
+                                           name="question"
+                                           placeholder="질문을 입력하세요"
+                                           th:value="${faq.question}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>답변</th>
+                                <td>
+                                    <textarea name="answer"
+                                              placeholder="답변을 입력하세요"
+                                              th:text="${faq.answer}"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <div class="form-actions">
+                            <a th:href="@{/admin/cs/faq}" class="btn btn-secondary">취소</a>
+                            <button type="submit" class="btn btn-red">저장</button>
                         </div>
-                        <div class="form-row">
-                            <div class="form-label">답변</div>
-                            <div class="form-input-wrapper">
-                                <textarea class="form-textarea" id="faqEditAnswer" rows="10" placeholder="답변을 입력하세요" required></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-                <!-- 버튼 영역 -->
-                <div class="form-actions">
-                    <a th:href="@{/admin/cs/faq}" class="btn btn-secondary">취소</a>
-                    <button type="button" class="btn btn-red" onclick="saveFaq()">저장</button>
+                    </form>
                 </div>
 
                 <!-- 푸터 영역 -->
@@ -54,58 +62,5 @@
     </div>
     <!-- 사이드바 스크립트 -->
     <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
-    
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        // URL 파라미터에서 FAQ ID 가져오기
-        const urlParams = new URLSearchParams(window.location.search);
-        const faqId = urlParams.get('id');
-
-        // TODO: 서버에서 FAQ 데이터 가져오기
-        // 현재는 하드코딩된 데이터 사용
-        const faqData = {
-            id: faqId || '9',
-            question: '가계대출 신청 시 DSR 규제가 무엇인가요?',
-            answer: 'DSR(총부채원리금상환비율)은 연소득 대비 연간 원리금 상환액의 비율을 의미합니다. 금융당국에서 정한 기준을 초과하면 대출이 제한될 수 있습니다.'
-        };
-
-        // FAQ 데이터를 폼에 표시
-        document.getElementById('faqEditQuestion').value = faqData.question;
-        document.getElementById('faqEditAnswer').value = faqData.answer;
-
-        function saveFaq() {
-            const form = document.getElementById('faqEditForm');
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-
-            const question = document.getElementById('faqEditQuestion').value.trim();
-            const answer = document.getElementById('faqEditAnswer').value.trim();
-
-            if (question === '') {
-                alert('질문을 입력해주세요.');
-                return;
-            }
-
-            if (answer === '') {
-                alert('답변을 입력해주세요.');
-                return;
-            }
-
-            const formData = {
-                id: faqId,
-                question: question,
-                answer: answer
-            };
-
-            // TODO: 서버로 수정 요청
-            console.log('FAQ 수정 데이터:', formData);
-            alert('FAQ가 수정되었습니다.');
-            window.location.href = /*[[@{/admin/cs/faq}]]*/ '/admin/cs/faq';
-        }
-        /*]]>*/
-    </script>
 </body>
 </html>
-

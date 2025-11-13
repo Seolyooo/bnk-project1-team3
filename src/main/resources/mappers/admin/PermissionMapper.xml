@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bnk.bnk_project.mapper.admin.PermissionMapper">
+
+    <!-- 회원 ResultMap -->
+    <resultMap id="BnkUserResultMap" type="kr.co.bnk.bnk_project.dto.admin.UserSearchDTO">
+        <id     property="custNo"    column="CUST_NO"/>
+        <result property="custId"    column="CUST_ID"/>
+        <result property="custName"  column="CUST_NAME"/>
+        <result property="custHp"    column="CUST_HP"/>
+        <result property="custEmail" column="CUST_EMAIL"/>
+        <result property="statusCode" column="STATUS_CODE"/>
+        <result property="joinDate"  column="JOIN_DATE"/>
+    </resultMap>
+
+    <!-- 검색 where 절 -->
+    <sql id="userSearchWhere">
+        <where>
+
+            <if test="pageRequestDTO.keyword != null
+                  and pageRequestDTO.keyword != ''">
+                <choose>
+                    <!-- 아이디 -->
+                    <when test="pageRequestDTO.searchType == 'custId'">
+                        AND bu.CUST_ID LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    </when>
+
+                    <!-- 이름 -->
+                    <when test="pageRequestDTO.searchType == 'custName'">
+                        AND bu.CUST_NAME LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    </when>
+
+
+                    <!-- 기본: 아이디 + 이름 + 이메일 통합 검색 -->
+                    <otherwise>
+                        AND (
+                        bu.CUST_ID    LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                        OR bu.CUST_NAME  LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+
+        </where>
+    </sql>
+
+
+    <!-- 검색 목록 -->
+    <select id="selectUserSearchList"
+            parameterType="kr.co.bnk.bnk_project.dto.PageRequestDTO"
+            resultMap="BnkUserResultMap">
+
+        SELECT
+        bu.CUST_NO,
+        bu.CUST_ID,
+        bu.CUST_NAME,
+        bu.CUST_HP,
+        bu.CUST_EMAIL,
+        bu.STATUS_CODE,
+        bu.JOIN_DATE
+        FROM ADMIN.BNK_USER bu
+
+        <include refid="userSearchWhere"/>
+
+        ORDER BY bu.CUST_NO DESC
+        OFFSET #{pageRequestDTO.startRow} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+
+    <!-- 검색 총 개수 -->
+    <select id="selectUserSearchTotal"
+            parameterType="kr.co.bnk.bnk_project.dto.PageRequestDTO"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM ADMIN.BNK_USER bu
+        <include refid="userSearchWhere"/>
+
+    </select>
+
+
+    <!-- 관리자 ResultMap -->
+    <resultMap id="AdminListResultMap"
+               type="kr.co.bnk.bnk_project.dto.admin.AdminListDTO">
+        <id     property="adminNo"    column="ADMIN_NO"/>
+        <result property="adminId"    column="ADMIN_ID"/>
+        <result property="adminName"  column="ADMIN_NAME"/>
+        <result property="role"       column="ROLE"/>
+
+        <result property="custHp"     column="CUST_HP"/>
+        <result property="custEmail"  column="CUST_EMAIL"/>
+        <result property="joinDate"   column="JOIN_DATE"/>
+    </resultMap>
+
+    <!-- 관리자 목록 -->
+    <select id="selectAdminList"
+            parameterType="kr.co.bnk.bnk_project.dto.PageRequestDTO"
+            resultMap="AdminListResultMap">
+
+        SELECT
+            a.ADMIN_NO,
+            a.ADMIN_ID,
+            a.ADMIN_NAME,
+            a.ROLE,
+            u.CUST_HP,
+            u.CUST_EMAIL,
+            u.JOIN_DATE
+        FROM ADMIN.BNK_ADMIN a
+                 LEFT JOIN ADMIN.BNK_USER u
+                           ON a.ADMIN_ID = u.CUST_ID
+        ORDER BY a.ADMIN_NO ASC
+        OFFSET #{pageRequestDTO.startRow} ROWS
+            FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+
+    <!-- 관리자 총 인원 -->
+    <select id="selectAdminTotal"
+            parameterType="kr.co.bnk.bnk_project.dto.PageRequestDTO"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM ADMIN.BNK_ADMIN
+    </select>
+
+
+
+</mapper>

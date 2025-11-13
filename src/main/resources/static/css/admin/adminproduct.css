@@ -231,6 +231,7 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    gap: 10px;
 }
 
 /* 폼 스타일 */
@@ -634,6 +635,86 @@
     margin: 0 0 20px 0;
 }
 
+/* table 태그를 사용하는 form-table */
+table.form-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #333;
+    margin: 0 0 20px 0;
+}
+
+table.form-table tr {
+    border-bottom: 1px solid #ddd;
+}
+
+table.form-table tr:last-child {
+    border-bottom: none;
+}
+
+table.form-table th {
+    width: 200px;
+    padding: 15px 20px;
+    text-align: left;
+    background: #f5f5f5;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    vertical-align: middle;
+    border-right: 1px solid #ddd;
+}
+
+table.form-table td {
+    padding: 15px 20px;
+    vertical-align: top;
+    background: white;
+}
+
+table.form-table td input[type="text"],
+table.form-table td input[type="number"],
+table.form-table td input[type="date"],
+table.form-table td input[type="email"],
+table.form-table td input[type="tel"],
+table.form-table td select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+    background: white;
+}
+
+table.form-table td textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+    text-align: left;
+    vertical-align: top;
+    box-sizing: border-box;
+}
+
+table.form-table td input:focus,
+table.form-table td textarea:focus,
+table.form-table td select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* table.form-table 내부의 읽기 전용 div 스타일 */
+table.form-table td > div {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+    padding: 8px 0;
+}
+
 .form-table .form-row {
     display: grid;
     grid-template-columns: 256.2px 1fr;
@@ -661,11 +742,19 @@
 
 .form-input-wrapper {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     flex: 1;
     padding: 8px 20px;
     background: white;
     flex-wrap: wrap;
+}
+
+/* form-input-wrapper 내부의 div 요소들 왼쪽 정렬 강제 */
+.form-input-wrapper > div {
+    text-align: left !important;
+    align-self: flex-start !important;
+    width: 100%;
 }
 
 .form-input-wrapper > .file-upload {

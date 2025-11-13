@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bnk.bnk_project.mapper.CsMapper">
+
+    <!-- CS 공용 ResultMap -->
+    <resultMap id="CsResultMap" type="kr.co.bnk.bnk_project.dto.CsDTO">
+        <id     property="csId"       column="CS_ID"/>
+        <result property="categoryId" column="CATEGORY_ID"/>
+        <result property="title"      column="TITLE"/>
+        <result property="question"   column="QUESTION"/>
+        <result property="answer"     column="ANSWER"/>
+        <result property="status"     column="STATUS"/>
+        <result property="userId"     column="USER_ID"/>
+        <result property="createdAt"  column="CREATED_AT"/>
+        <result property="answeredAt" column="ANSWERED_AT"/>
+        <result property="categoryName" column="CATEGORY_NAME"/>
+    </resultMap>
+
+    <!-- FAQ 검색 where 공통 -->
+    <sql id="faqWhere">
+        <where>
+            cs.CATEGORY_ID = 8   <!-- FAQ 카테고리 ID -->
+
+            <!-- 통합 검색: 질문 + 답변 -->
+            <if test="pageRequestDTO.keyword != null
+                  and pageRequestDTO.keyword != ''">
+                AND (
+                cs.QUESTION LIKE '%' || #{pageRequestDTO.keyword} || '%' OR
+                cs.ANSWER   LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                )
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- FAQ 목록 -->
+    <select id="selectFaqList"
+            parameterType="map"
+            resultMap="CsResultMap">
+
+        SELECT
+        cs.CS_ID,
+        cs.CATEGORY_ID,
+        cs.TITLE,
+        cs.QUESTION,
+        cs.ANSWER,
+        cs.STATUS,
+        cs.USER_ID,
+        cs.CREATED_AT,
+        cs.ANSWERED_AT
+        FROM ADMIN.CS cs
+
+        <include refid="faqWhere"/>
+
+        ORDER BY cs.CS_ID DESC
+        OFFSET #{pageRequestDTO.startRow} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+
+    </select>
+
+    <!-- FAQ 총 개수 -->
+    <select id="selectFaqTotal"
+            parameterType="map"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM ADMIN.CS cs
+
+        <include refid="faqWhere"/>
+
+    </select>
+
+
+
+    <sql id="qnaWhere">
+        <where>
+            cs.CATEGORY_ID = 9
+
+            <!-- 상태 필터: (전체 = 빈값이면 조건 없음) -->
+            <if test="pageRequestDTO.status != null and pageRequestDTO.status != ''">
+                AND cs.STATUS = #{pageRequestDTO.status}
+            </if>
+
+            <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                <choose>
+                    <when test="pageRequestDTO.searchType == 'title'">
+                        AND cs.TITLE LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    </when>
+
+                    <when test="pageRequestDTO.searchType == 'question'">
+                        AND cs.QUESTION LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    </when>
+
+                    <when test="pageRequestDTO.searchType == 'answer'">
+                        AND cs.ANSWER LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    </when>
+
+                    <otherwise>
+                        AND (
+                        cs.TITLE LIKE '%' || #{pageRequestDTO.keyword} || '%' OR
+                        cs.QUESTION LIKE '%' || #{pageRequestDTO.keyword} || '%' OR
+                        cs.ANSWER LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+
+        </where>
+    </sql>
+
+
+    <select id="selectQnaList"
+            parameterType="map"
+            resultMap="CsResultMap">
+
+        SELECT
+        cs.CS_ID,
+        cs.CATEGORY_ID,
+        cs.TITLE,
+        cs.QUESTION,
+        cs.ANSWER,
+        cs.STATUS,
+        cs.USER_ID,
+        cs.CREATED_AT,
+        cs.ANSWERED_AT
+        FROM ADMIN.CS cs
+
+        <include refid="qnaWhere"/>
+
+        ORDER BY cs.CS_ID DESC
+        OFFSET #{pageRequestDTO.startRow} ROWS
+        FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
+    </select>
+
+    <select id="selectQnaTotal"
+            parameterType="map"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM ADMIN.CS cs
+
+        <include refid="qnaWhere"/>
+
+    </select>
+
+
+
+
+
+    <!-- QNA 상세 -->
+    <select id="selectQnaDetail"
+            parameterType="long"
+            resultMap="CsResultMap">
+
+        SELECT
+        cs.CS_ID,
+        cs.CATEGORY_ID,
+        cs.TITLE,
+        cs.QUESTION,
+        cs.ANSWER,
+        cs.STATUS,
+        cs.USER_ID,
+        cs.CREATED_AT,
+        cs.ANSWERED_AT
+        FROM ADMIN.CS cs
+        WHERE cs.CS_ID = #{csId}
+        AND cs.CATEGORY_ID = 9   <!-- QnA 카테고리 ID로 맞춰서 사용 -->
+    </select>
+
+    <insert id="insertFaq"
+            parameterType="kr.co.bnk.bnk_project.dto.CsDTO">
+
+        INSERT INTO ADMIN.CS
+        (CS_ID,
+         CATEGORY_ID,
+         TITLE,
+         QUESTION,
+         ANSWER,
+         STATUS,
+         USER_ID,
+         CREATED_AT,
+         ANSWERED_AT)
+        VALUES
+            (
+                NULL,
+                #{categoryId, jdbcType=NUMERIC},
+                '제목',
+                #{question, jdbcType=VARCHAR},
+                #{answer,   jdbcType=CLOB},
+                '답변완료',
+                'admin',
+                SYSDATE,
+                SYSDATE
+            )
+    </insert>
+
+
+    <!-- FAQ 단건 조회 -->
+    <select id="selectFaqById"
+            parameterType="long"
+            resultMap="CsResultMap">
+
+        SELECT
+        cs.CS_ID,
+        cs.CATEGORY_ID,
+        cs.TITLE,
+        cs.QUESTION,
+        cs.ANSWER,
+        cs.STATUS,
+        cs.USER_ID,
+        cs.CREATED_AT,
+        cs.ANSWERED_AT
+        FROM ADMIN.CS cs
+        WHERE cs.CS_ID = #{csId}
+        AND cs.CATEGORY_ID = 8   <!-- FAQ 카테고리 고정 -->
+    </select>
+
+
+    <!-- FAQ 수정 -->
+    <update id="updateFaq"
+            parameterType="kr.co.bnk.bnk_project.dto.CsDTO">
+
+        UPDATE ADMIN.CS
+        SET
+            QUESTION    = #{question, jdbcType=VARCHAR},
+            ANSWER      = #{answer,   jdbcType=CLOB},
+            STATUS      = '답변완료',
+            ANSWERED_AT = SYSDATE
+        WHERE CS_ID       = #{csId}
+          AND CATEGORY_ID = 8
+    </update>
+
+
+    <!-- QNA 단건 조회 -->
+    <select id="selectQnaById"
+            parameterType="long"
+            resultMap="CsResultMap">
+
+        SELECT
+            cs.CS_ID,
+            cs.CATEGORY_ID,
+            cs.TITLE,
+            cs.QUESTION,
+            cs.ANSWER,
+            cs.STATUS,
+            cs.USER_ID,
+            cs.CREATED_AT,
+            cs.ANSWERED_AT
+        FROM ADMIN.CS cs
+        WHERE cs.CS_ID = #{csId}
+          AND cs.CATEGORY_ID = 9
+    </select>
+
+
+    <!-- QNA 답변 저장 -->
+    <update id="updateQnaAnswer"
+            parameterType="kr.co.bnk.bnk_project.dto.CsDTO">
+
+        UPDATE ADMIN.CS
+        SET
+            ANSWER      = #{answer, jdbcType=CLOB},
+            STATUS      = '답변완료',
+            ANSWERED_AT = SYSDATE
+        WHERE CS_ID = #{csId}
+          AND CATEGORY_ID = 9
+    </update>
+
+    <!-- FAQ 삭제 -->
+    <delete id="deleteFaq" parameterType="long">
+        DELETE FROM ADMIN.CS
+        WHERE CS_ID = #{csId}
+          AND CATEGORY_ID = 8
+    </delete>
+    <!-- QnA 삭제 -->
+    <delete id="deleteQna" parameterType="long">
+        DELETE FROM ADMIN.CS
+        WHERE CS_ID = #{csId}
+          AND CATEGORY_ID = 9
+    </delete>
+
+</mapper>

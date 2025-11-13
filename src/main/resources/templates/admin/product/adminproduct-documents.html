@@ -30,10 +30,13 @@
                 <div class="product-classification-bar">
                     <div class="classification-label">펀드 검색</div>
                     <div class="classification-inputs">
-                        <div class="search-input-wrapper-inline">
-                            <input type="text" class="form-input search-input-large" id="searchFund" placeholder="입력하세요" onkeypress="if(event.key === 'Enter') searchFunds()">
-                            <button class="btn btn-search-inline" onclick="searchFunds()">검색</button>
-                        </div>
+                        <form th:action="@{/admin/product/documents}" method="get" style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                            <div class="search-input-wrapper-inline" style="flex: 1;">
+                                <input type="text" class="form-input search-input-large" id="searchFund" name="keyword" placeholder="입력하세요" th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                            </div>
+                            <button class="btn btn-search-inline" type="submit">검색</button>
+                            <button class="btn btn-secondary" type="button" th:onclick="|location.href='@{/admin/product/documents}'|">초기화</button>
+                        </form>
                     </div>
                 </div>
 

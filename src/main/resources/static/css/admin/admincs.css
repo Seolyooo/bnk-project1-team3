@@ -248,11 +248,16 @@
 /* QnA 상세 페이지 */
 .qna-detail-user,
 .qna-detail-question,
-.qna-detail-question-content {
+.qna-detail-question-content,
+.qna-detail-answer {
     font-size: 15px;
     color: #333;
     line-height: 1.6;
     padding: 10px 0;
+    text-align: left;
+    width: 100%;
+    display: block;
+    margin: 0;
 }
 
 .qna-detail-question {
@@ -263,14 +268,32 @@
     font-size: 15px;
     color: #666;
     padding: 10px 0;
+    text-align: left;
+    width: 100%;
+    display: block;
+    margin: 0;
 }
 
 .qna-detail-answer {
-    font-size: 15px;
-    color: #666;
-    line-height: 1.8;
-    padding: 10px 0;
     white-space: pre-wrap;
+}
+
+/* form-input-wrapper 내부의 답변 필드 정렬 강제 */
+.form-input-wrapper .qna-detail-answer {
+    text-align: left !important;
+    align-self: flex-start !important;
+    justify-self: flex-start !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+}
+
+/* 답변 필드 내부의 span 태그도 왼쪽 정렬 */
+.qna-detail-answer span {
+    text-align: left !important;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 /* ============================================
@@ -642,7 +665,14 @@
     vertical-align: middle;
 }
 
-.qna-table td:nth-child(4) .faq-action-buttons {
+.qna-table td:nth-child(5) {
+    text-align: center;
+    width: 150px;
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+.qna-table td:nth-child(5) .faq-action-buttons {
     display: flex;
     justify-content: center;
     gap: 5px;

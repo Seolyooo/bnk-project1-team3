@@ -28,62 +28,65 @@
 
             <!-- 검색 섹션 -->
             <div class="search-section">
-                <table class="search-table">
-                    <tbody>
-                        <tr>
-                            <td class="search-label">검색조건</td>
-                            <td class="search-inputs">
-                                <select class="form-select search-select-small" id="searchNameSelect">
-                                    <option>펀드명</option>
-                                    <option>상품코드</option>
-                                    <option>유형</option>
-                                </select>
-                                <input type="text" class="form-input search-input-large" id="searchName" placeholder="입력하세요">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="search-label">펀드분류</td>
-                            <td class="search-inputs">
-                                <select class="form-select search-select-medium" id="searchCategory">
-                                    <option>전체</option>
-                                    <option>주식형</option>
-                                    <option>채권형</option>
-                                    <option>혼합형</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="search-label">상태</td>
-                            <td class="search-inputs">
-                                <div class="status-radio-group">
-                                    <label class="status-radio-label">
-                                        <input type="radio" name="searchStatus" value="" checked>
-                                        <span>전체</span>
-                                    </label>
-                                    <label class="status-radio-label">
-                                        <input type="radio" name="searchStatus" value="게시중">
-                                        <span>게시중</span>
-                                    </label>
-                                    <label class="status-radio-label">
-                                        <input type="radio" name="searchStatus" value="수정중">
-                                        <span>수정중</span>
-                                    </label>
-                                    <label class="status-radio-label">
-                                        <input type="radio" name="searchStatus" value="대기중">
-                                        <span>대기중</span>
-                                    </label>
-                                    <label class="status-radio-label">
-                                        <input type="radio" name="searchStatus" value="중단">
-                                        <span>중단</span>
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="search-actions">
-                    <button class="btn btn-search" onclick="searchProducts()">조회</button>
-                </div>
+                <form th:action="@{/admin/product}" method="get" style="margin: 0;">
+                    <table class="search-table">
+                        <tbody>
+                            <tr>
+                                <td class="search-label">검색조건</td>
+                                <td class="search-inputs">
+                                    <select class="form-select search-select-small" id="searchNameSelect" name="searchType">
+                                        <option value="name">펀드명</option>
+                                        <option value="code">상품코드</option>
+                                        <option value="type">유형</option>
+                                    </select>
+                                    <input type="text" class="form-input search-input-large" id="searchName" name="keyword" placeholder="입력하세요" th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="search-label">펀드분류</td>
+                                <td class="search-inputs">
+                                    <select class="form-select search-select-medium" id="searchCategory" name="category">
+                                        <option value="">전체</option>
+                                        <option value="주식형">주식형</option>
+                                        <option value="채권형">채권형</option>
+                                        <option value="혼합형">혼합형</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="search-label">상태</td>
+                                <td class="search-inputs">
+                                    <div class="status-radio-group">
+                                        <label class="status-radio-label">
+                                            <input type="radio" name="status" value="" checked>
+                                            <span>전체</span>
+                                        </label>
+                                        <label class="status-radio-label">
+                                            <input type="radio" name="status" value="게시중">
+                                            <span>게시중</span>
+                                        </label>
+                                        <label class="status-radio-label">
+                                            <input type="radio" name="status" value="수정중">
+                                            <span>수정중</span>
+                                        </label>
+                                        <label class="status-radio-label">
+                                            <input type="radio" name="status" value="대기중">
+                                            <span>대기중</span>
+                                        </label>
+                                        <label class="status-radio-label">
+                                            <input type="radio" name="status" value="중단">
+                                            <span>중단</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="search-actions">
+                        <button class="btn btn-search" type="submit">조회</button>
+                        <button class="btn btn-secondary" type="button" th:onclick="|location.href='@{/admin/product}'|">초기화</button>
+                    </div>
+                </form>
             </div>
 
             <!-- 상품 목록 테이블 -->
