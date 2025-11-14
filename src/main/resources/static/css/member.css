@@ -892,3 +892,20 @@
 .btn-confirm:hover {
     background: #a51f16;
 }
+
+/* ======================= 유효성 검사 (Validation) 스타일 ======================= */
+
+/* 유효성 검사 실패 시 입력창 스타일 */
+.input-error {
+    border-color: #c6281f !important; /* BNK 메인 컬러로 테두리 강조 */
+    outline: 1px solid #c6281f;
+}
+
+/* 동적으로 생성되는 에러 메시지 스타일 */
+.error-message {
+    color: #c6281f;       /* BNK 메인 컬러 */
+    font-size: 12px;
+    font-weight: 500;   /* 약간 굵게 */
+    margin-top: 6px;
+    display: block;
+}
