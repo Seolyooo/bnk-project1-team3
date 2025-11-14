@@ -201,7 +201,7 @@
                         <tbody>
                         <!-- 관리자 없음 -->
                         <tr th:if="${adminPage == null or #lists.isEmpty(adminPage.dtoList)}">
-                            <td colspan="8" style="text-align: center; padding: 40px; display: table-cell; width: 100%;">등록된 관리자가 없습니다.</td>
+                            <td colspan="8" class="empty-row">등록된 관리자가 없습니다.</td>
                         </tr>
 
                         <!-- 관리자 목록 -->
