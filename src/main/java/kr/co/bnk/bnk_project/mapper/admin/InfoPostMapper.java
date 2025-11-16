@@ -8,6 +8,7 @@ import java.util.List;
 @Mapper
 public interface InfoPostMapper {
 
+    // 정보/공시
     public void insertInfoPost(InfoPostDTO infoPostDTO);
 
     public InfoPostDTO selectInfoPostById(int postId);
@@ -16,6 +17,8 @@ public interface InfoPostMapper {
 
     public void updateInfoPost(InfoPostDTO infoPostDTO);
 
-    public void deleteInfoPost();
+    public void deleteInfoPost(int postId);
+
+
 
 }

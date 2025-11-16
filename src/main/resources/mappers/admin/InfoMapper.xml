@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bnk.bnk_project.mapper.admin.InfoPostMapper">
 
-    <!-- 등록 -->
+    <!-- 공시자료 등록 -->
     <insert id="insertInfoPost" parameterType="kr.co.bnk.bnk_project.dto.admin.InfoPostDTO">
     <selectKey keyProperty="postId" resultType="int" order="BEFORE">
         SELECT info_post_seq.NEXTVAL FROM dual
@@ -48,23 +48,20 @@
         ORDER BY post_id DESC
     </select>
 
-<!--    <select id="selectInfoPostById" parameterType="int" resultType="kr.co.bnk.bnk_project.dto.admin.InfoPostDTO">-->
-<!--        SELECT-->
-<!--            post_id         AS postId,-->
-<!--            title,-->
-<!--            disclosure_type AS disclosureType,-->
-<!--            created_by      AS createdBy,-->
-<!--            created_at      AS createdAt,-->
-<!--            content,-->
-<!--            status-->
-<!--        FROM-->
-<!--            info_post-->
-<!--        WHERE-->
-<!--            post_id = #{postId}-->
-<!--    </select>-->
+    <!-- 수정 -->
+    <update id="updateInfoPost" parameterType="kr.co.bnk.bnk_project.dto.admin.InfoPostDTO">
+        UPDATE info_post
+        SET
+            title = #{title},
+            disclosure_type = #{disclosureType},
+            content = #{content}
+        WHERE post_id = #{postId}
+    </update>
 
-
-
-
+    <!-- 삭제 -->
+    <delete id="deleteInfoPost" parameterType="int">
+        DELETE FROM info_post
+        WHERE post_id = #{postId}
+    </delete>
 
 </mapper>
