@@ -116,4 +116,13 @@
 
     </select>
 
+
+    <!-- 회원 상태-->
+    <update id="updateMemberStatus">
+        UPDATE ADMIN.BNK_USER
+        SET STATUS_CODE = #{statusCode}
+        WHERE CUST_NO = #{custNo}
+    </update>
+
+
 </mapper>
