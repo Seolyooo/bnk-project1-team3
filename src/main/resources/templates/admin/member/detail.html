@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 상세 / 수정 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/permission.css}">
+</head>
+<body>
+<!-- 사이드바 Fragment -->
+<div th:replace="~{admin/_sidebar :: sidebar('member')}"></div>
+
+<div class="main-content">
+    <!-- 헤더 Fragment -->
+    <div th:replace="~{admin/_header :: header}"></div>
+    <div class="main-content-body">
+        <div class="container">
+
+            <!-- 페이지 헤더 -->
+            <header class="page-header">
+                <h1>회원 상세 / 수정</h1>
+            </header>
+
+            <!-- 회원 정보 수정 폼 -->
+            <div class="form-section">
+                <form th:action="@{/admin/member/update}" method="post" id="memberEditForm">
+
+                    <input type="hidden" name="custNo" th:value="${member.custNo}">
+
+                    <div class="form-table">
+
+                        <!-- 아이디 -->
+                        <div class="form-row">
+                            <div class="form-label">아이디</div>
+                            <div class="form-input-wrapper">
+                                <input type="text" class="form-input"
+                                       th:value="${member.custId}"
+                                       readonly
+                                       style="background-color: #f5f5f5;">
+                            </div>
+                        </div>
+
+                        <!-- 이름 -->
+                        <div class="form-row">
+                            <div class="form-label">이름</div>
+                            <div class="form-input-wrapper">
+                                <input type="text" class="form-input"
+                                       name="custName"
+                                       th:value="${member.custName}"
+                                       placeholder="이름을 입력하세요" required>
+                            </div>
+                        </div>
+
+                        <!-- 전화번호 -->
+                        <div class="form-row">
+                            <div class="form-label">전화번호</div>
+                            <div class="form-input-wrapper">
+                                <input type="text" class="form-input"
+                                       name="custHp"
+                                       th:value="${member.custHp}"
+                                       placeholder="010-0000-0000" required>
+                            </div>
+                        </div>
+
+                        <!-- 이메일 -->
+                        <div class="form-row">
+                            <div class="form-label">이메일</div>
+                            <div class="form-input-wrapper">
+                                <input type="email" class="form-input"
+                                       name="custEmail"
+                                       th:value="${member.custEmail}"
+                                       placeholder="이메일을 입력하세요" required>
+                            </div>
+                        </div>
+
+                        <!-- 주소 -->
+                        <div class="form-row">
+                            <div class="form-label">주소</div>
+                            <div class="form-input-wrapper">
+                                <input type="text" class="form-input"
+                                       name="address"
+                                       th:value="${member.address}"
+                                       placeholder="주소를 입력하세요">
+                            </div>
+                        </div>
+
+                        <!-- 가입일 -->
+                        <div class="form-row">
+                            <div class="form-label">가입일</div>
+                            <div class="form-input-wrapper">
+                                <input type="text" class="form-input"
+                                       th:value="${#temporals.format(member.joinDate, 'yyyy-MM-dd')}"
+                                       readonly style="background-color: #f5f5f5;">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 버튼 영역 -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <a th:href="@{/admin/member/list}" class="btn btn-secondary">취소</a>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- 푸터 -->
+            <footer class="admin-footer"></footer>
+
+        </div>
+    </div>
+</div>
+
+<!-- 사이드바 스크립트 -->
+<div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // 폼 유효성 검사
+    document.getElementById('memberEditForm').addEventListener('submit', function(e) {
+
+        const name = document.querySelector('input[name="custName"]').value.trim();
+        const hp   = document.querySelector('input[name="custHp"]').value.trim();
+        const email= document.querySelector('input[name="custEmail"]').value.trim();
+
+        if (!name) {
+            alert("이름을 입력해주세요.");
+            e.preventDefault();
+            return;
+        }
+        if (!hp) {
+            alert("전화번호를 입력해주세요.");
+            e.preventDefault();
+            return;
+        }
+        if (!email) {
+            alert("이메일을 입력해주세요.");
+            e.preventDefault();
+            return;
+        }
+
+        // 이메일 형식
+        const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+        if (!emailPattern.test(email)) {
+            alert("올바른 이메일 형식을 입력해주세요.");
+            e.preventDefault();
+            return;
+        }
+    });
+    /*]]>*/
+</script>
+
+</body>
+</html>

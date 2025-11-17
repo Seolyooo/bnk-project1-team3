@@ -13,4 +13,5 @@ public class UserSearchDTO {
     private String custEmail;
     private String statusCode;
     private LocalDate joinDate;
+
 }

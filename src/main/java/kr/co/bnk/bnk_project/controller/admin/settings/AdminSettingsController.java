@@ -17,5 +17,10 @@ public class AdminSettingsController {
     public String searchKeyword() {
         return "admin/settings/search_keyword";
     }
+
+    @GetMapping("/terms")
+    public String termsManagement() {
+        return "admin/settings/terms_management";
+    }
 }
 

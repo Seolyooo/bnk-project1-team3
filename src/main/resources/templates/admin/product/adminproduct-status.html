@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>펀드 가입 현황 - 은행 펀드 상품 관리자</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_styles.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/adminproduct.css}">
+</head>
+<body>
+    <!-- 사이드바 Fragment -->
+    <div th:replace="~{admin/_sidebar :: sidebar('product-status')}"></div>
+
+    <div class="main-content">
+        <!-- 헤더 Fragment -->
+        <div th:replace="~{admin/_header :: header}"></div>
+        <div class="main-content-body">
+            <div class="container">
+            <!-- 페이지 헤더 -->
+            <header class="page-header">
+                <h1>펀드 가입 현황</h1>
+            </header>
+
+            <!-- 검색 섹션 -->
+            <div class="search-section">
+                <form th:action="@{/admin/product/status}" method="get" style="margin: 0;">
+                    <table class="search-table">
+                        <tbody>
+                            <tr>
+                                <td class="search-label">검색조건</td>
+                                <td class="search-inputs">
+                                    <select class="form-select search-select-small" id="searchTypeSelect" name="searchType">
+                                        <option value="id" th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'id'}">아이디</option>
+                                        <option value="name" th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'name'}">이름</option>
+                                        <option value="contact" th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'contact'}">연락처</option>
+                                    </select>
+                                    <input type="text" class="form-input search-input-large" id="searchKeyword" name="keyword" placeholder="입력하세요" th:value="${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="search-actions">
+                        <button class="btn btn-search" type="submit">검색</button>
+                        <button class="btn btn-secondary" type="button" th:onclick="|location.href='@{/admin/product/status}'|">초기화</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 상품 목록 테이블 -->
+            <div class="table-section">
+                <div class="table-info">
+                    <span>총 <strong id="totalCount">4</strong>개</span>
+                    <span class="pagination-info"><span id="currentPage">1</span> / <span id="totalPages">1</span> page</span>
+                </div>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>아이디</th>
+                            <th>이름</th>
+                            <th>연락처</th>
+                            <th>이메일</th>
+                            <th>가입날짜</th>
+                            <th>주소</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        <tr>
+                            <td>3</td>
+                            <td>user001</td>
+                            <td>홍길동</td>
+                            <td>010-1234-5678</td>
+                            <td>user001@example.com</td>
+                            <td>2024-01-15</td>
+                            <td>서울시 강남구 테헤란로 123</td>
+                            <td>정상</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn edit" onclick="editUser('user001')">수정</button>
+                                    <button class="action-btn stop" onclick="stopUser('user001')">정지</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>user002</td>
+                            <td>김철수</td>
+                            <td>010-2345-6789</td>
+                            <td>user002@example.com</td>
+                            <td>2024-02-20</td>
+                            <td>서울시 서초구 서초대로 456</td>
+                            <td>정상</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn edit" onclick="editUser('user002')">수정</button>
+                                    <button class="action-btn stop" onclick="stopUser('user002')">정지</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>user003</td>
+                            <td>이영희</td>
+                            <td>010-3456-7890</td>
+                            <td>user003@example.com</td>
+                            <td>2024-03-10</td>
+                            <td>서울시 송파구 올림픽로 789</td>
+                            <td>정지</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn edit" onclick="editUser('user003')">수정</button>
+                                    <button class="action-btn resume" onclick="resumeUser('user003')">재개</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>user004</td>
+                            <td>박민수</td>
+                            <td>010-4567-8901</td>
+                            <td>user004@example.com</td>
+                            <td>2024-04-05</td>
+                            <td>서울시 마포구 홍대로 321</td>
+                            <td>휴면</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn edit" onclick="editUser('user004')">수정</button>
+                                    <button class="action-btn resume" onclick="resumeUser('user004')">재개</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button class="page-btn prev" onclick="prevPage()">&lt;</button>
+                    <div class="page-numbers">
+                        <button class="page-number active">1</button>
+                        <button class="page-number">2</button>
+                        <button class="page-number">3</button>
+                        <button class="page-number">4</button>
+                        <button class="page-number">5</button>
+                    </div>
+                    <button class="page-btn next" onclick="nextPage()">&gt;</button>
+                </div>
+            </div>
+            <!-- 푸터 영역 -->
+            <footer class="admin-footer"></footer>
+        </div>
+        </div>
+    </div>
+    <!-- 사이드바 스크립트 -->
+    <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+</body>
+</html>
+
