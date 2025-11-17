@@ -22,8 +22,9 @@
             </header>
 
             <div class="table-section">
+                <!-- 검색 영역 -->
                 <div class="search-section">
-                    <form th:action="@{/admin/member}" method="get" style="margin: 0;">
+                    <form th:action="@{/admin/member/list}" method="get" style="margin: 0;">
                         <table class="search-table">
                             <tbody>
                             <tr>
@@ -42,6 +43,7 @@
                                     </select>
                                     <input type="text"
                                            class="form-input search-input-large"
+                                           id="memberSearchInput"
                                            name="keyword"
                                            placeholder="회원 아이디 또는 이름을 입력하세요."
                                            th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
@@ -52,26 +54,31 @@
                         <div class="search-actions">
                             <button class="btn btn-search" type="submit">조회</button>
                             <button class="btn btn-secondary" type="button"
-                                    th:onclick="|location.href='@{/admin/member}'|">초기화
+                                    th:onclick="|location.href='@{/admin/member/list}'|">초기화
                             </button>
                         </div>
                     </form>
                 </div>
 
+                <!-- 목록 정보 -->
                 <div class="table-info">
                     <span>
                         총
                         <strong th:text="${pageResponse != null ? pageResponse.total : 0}">0</strong>명
                     </span>
                     <span class="pagination-info"
-                          th:if="${pageResponse != null and pageResponse.total > 0}">
+                          th:if="${pageResponse != null && pageResponse.total > 0}">
                         <span th:text="${pageRequestDTO != null ? pageRequestDTO.pg : 1}">1</span>
                         /
-                        <span th:text="${(pageResponse.total + pageRequestDTO.size - 1) / pageRequestDTO.size}">1</span>
+                        <!-- 전체 페이지 수 = (total + size - 1) / size -->
+                        <span th:text="${(pageResponse.total + (pageRequestDTO != null ? pageRequestDTO.size : 10) - 1) / (pageRequestDTO != null ? pageRequestDTO.size : 10)}">
+                            1
+                        </span>
                         page
                     </span>
                 </div>
 
+                <!-- 회원 목록 테이블 -->
                 <table class="permission-table">
                     <thead>
                     <tr>
@@ -80,39 +87,145 @@
                         <th>이름</th>
                         <th>전화번호</th>
                         <th>이메일</th>
+                        <th>주소</th>
                         <th>가입일</th>
                         <th>상태</th>
+                        <th>가입상품</th>
+                        <th>관리</th>
                     </tr>
                     </thead>
                     <tbody>
+                    <!-- 데이터 없을 때 -->
                     <tr th:if="${pageResponse == null or #lists.isEmpty(pageResponse.dtoList)}">
-                        <td colspan="7" class="empty-row">
+                        <td colspan="10" class="empty-row">
                             등록된 회원이 없습니다.
                         </td>
                     </tr>
-                    <tr th:each="member, stat : ${pageResponse != null ? pageResponse.dtoList : {}}">
+
+                    <!-- 데이터 있을 때 -->
+                    <tr th:each="user, stat : ${pageResponse != null ? pageResponse.dtoList : {}}">
+                        <!-- 역순 번호: startNo - index -->
                         <td th:text="${pageResponse.startNo - stat.index}">1</td>
-                        <td th:text="${member.custId}">user01</td>
-                        <td th:text="${member.custName}">홍길동</td>
-                        <td th:text="${member.custHp}">010-1234-5678</td>
-                        <td th:text="${member.custEmail}">user01@example.com</td>
-                        <td th:text="${#temporals.format(member.joinDate, 'yyyy-MM-dd')}">2024-01-15</td>
-                        <td th:text="${member.statusCode != null ? member.statusCode : '정상'}">정상</td>
+                        <td th:text="${user.custId}">user01</td>
+                        <td th:text="${user.custName}">홍길동</td>
+                        <td th:text="${user.custHp}">010-0000-0000</td>
+                        <td th:text="${user.custEmail}">user01@example.com</td>
+
+                        <!-- 주소 (25자 초과 시 말줄임표, 마우스 오버 시 전체 주소 표시) -->
+                        <td th:attr="title=${user.address != null ? user.address : ''}">
+                            <span th:if="${user.address != null and #strings.length(user.address) > 25}"
+                                  th:text="${#strings.substring(user.address, 0, 25) + '...'}">부산광역시 ...</span>
+                            <span th:if="${user.address == null or #strings.length(user.address) <= 25}"
+                                  th:text="${user.address}">부산광역시 ...</span>
+                        </td>
+
+                        <td th:text="${#temporals.format(user.joinDate,'yyyy-MM-dd')}">2024-01-01</td>
+
+                        <!-- 상태 코드 → 한글 표시 -->
+                        <td>
+                            <span th:switch="${user.statusCode}">
+                                <span th:case="'A'">정상</span>
+                                <span th:case="'S'">휴면</span>
+                                <span th:case="'J'">정지</span>
+                                <span th:case="'D'">탈퇴</span>
+                                <span th:case="*"
+                                      th:text="${user.statusCode}">기타</span>
+                            </span>
+                        </td>
+
+                        <!-- 가입상품 -->
+                        <td>
+                            <button type="button"
+                                    class="btn btn-secondary btn-small"
+                                    th:onclick="|location.href='@{/admin/product/status(searchType='id', keyword=${user.custId})}'|">
+                                가입상품보기
+                            </button>
+                        </td>
+
+                        <!-- 관리 버튼:
+                             - 정상(A): 수정 / 정지
+                             - 휴면(S), 정지(J): 수정 / 재개
+                             - 탈퇴(D): 수정만(또는 비활성) -->
+                        <td>
+                            <div class="member-action-buttons" style="display:flex; gap:4px; justify-content:center;">
+                                <!-- 수정: 공통 -->
+                                <button type="button"
+                                        class="btn btn-secondary btn-small"
+                                        th:onclick="|location.href='@{/admin/member/detail(custNo=${user.custNo})}'|">
+                                    수정
+                                </button>
+
+                                <!-- 정상(A) → 정지 -->
+                                <button type="button"
+                                        class="btn btn-secondary btn-small"
+                                        th:if="${user.statusCode == 'A'}"
+                                        th:onclick="|changeStatus(${user.custNo}, 'J')|">
+                                    정지
+                                </button>
+
+                                <!-- 휴면(S) / 정지(J) → 재개(정상) -->
+                                <button type="button"
+                                        class="btn btn-secondary btn-small"
+                                        th:if="${user.statusCode == 'S' or user.statusCode == 'J'}"
+                                        th:onclick="|changeStatus(${user.custNo}, 'A')|">
+                                    재개
+                                </button>
+
+                                <!-- 탈퇴(D): 필요하면 별도 버튼 -->
+                                <button type="button"
+                                        class="btn btn-secondary btn-small"
+                                        th:if="${user.statusCode == 'D'}"
+                                        disabled>
+                                    탈퇴회원
+                                </button>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
 
-                <div class="pagination">
-                    <button class="page-btn prev" onclick="prevPage()">&lt;</button>
+                <!-- 페이지네이션 -->
+                <div class="pagination"
+                     th:if="${pageResponse != null and pageResponse.total > 0}">
+                    <!-- 이전 버튼 -->
+                    <button class="page-btn prev"
+                            th:if="${pageResponse.prev}"
+                            th:onclick="|location.href='@{/admin/member(
+                                pg=${pageResponse.start - 1},
+                                size=${pageRequestDTO != null ? pageRequestDTO.size : 10},
+                                searchType=${pageRequestDTO != null && pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''},
+                                keyword=${pageRequestDTO != null && pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}
+                            )}'|">
+                        &lt;
+                    </button>
+
+                    <!-- 페이지 번호들 -->
                     <div class="page-numbers">
-                        <button class="page-number active">1</button>
-                        <button class="page-number">2</button>
-                        <button class="page-number">3</button>
-                        <button class="page-number">4</button>
-                        <button class="page-number">5</button>
+                        <button class="page-number"
+                                th:each="p : ${#numbers.sequence(pageResponse.start, pageResponse.end)}"
+                                th:text="${p}"
+                                th:classappend="${p == (pageRequestDTO != null ? pageRequestDTO.pg : 1)} ? ' active'"
+                                th:onclick="|location.href='@{/admin/member(
+                                    pg=${p},
+                                    size=${pageRequestDTO != null ? pageRequestDTO.size : 10},
+                                    searchType=${pageRequestDTO != null && pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''},
+                                    keyword=${pageRequestDTO != null && pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}
+                                )}'|">
+                            1
+                        </button>
                     </div>
-                    <button class="page-btn next" onclick="nextPage()">&gt;</button>
-                </div>
+
+                    <!-- 다음 버튼 -->
+                    <button class="page-btn next"
+                            th:if="${pageResponse.next}"
+                            th:onclick="|location.href='@{/admin/member(
+                                pg=${pageResponse.end + 1},
+                                size=${pageRequestDTO != null ? pageRequestDTO.size : 10},
+                                searchType=${pageRequestDTO != null && pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''},
+                                keyword=${pageRequestDTO != null && pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}
+                            )}'|">
+                        &gt;
+                    </button>
                 </div>
             </div>
         </div>
@@ -121,7 +234,30 @@
 
 <!-- 사이드바 스크립트 -->
 <div th:replace="~{admin/_sidebar :: sidebar-script}"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Enter 키로 검색
+    const memberSearchInput = document.getElementById('memberSearchInput');
+    if (memberSearchInput) {
+        memberSearchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.closest('form').submit();
+            }
+        });
+    }
+
+    // 상태 변경 (정지 / 재개)
+    function changeStatus(custNo, targetStatus) {
+        if (!confirm('해당 회원의 상태를 변경하시겠습니까?')) {
+            return;
+        }
+        // TODO: 실제 상태 변경 요청 (AJAX 또는 form submit)
+        // 예시: location.href = '/admin/member/status?custNo=' + custNo + '&status=' + targetStatus;
+        console.log('changeStatus:', custNo, targetStatus);
+    }
+    /*]]>*/
+</script>
 </body>
 </html>
-
-

@@ -30,11 +30,11 @@
                                 <td class="search-label">검색조건</td>
                                 <td class="search-inputs">
                                     <select class="form-select search-select-small" id="searchTypeSelect" name="searchType">
-                                        <option value="id">아이디</option>
-                                        <option value="name">이름</option>
-                                        <option value="contact">연락처</option>
+                                        <option value="id" th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'id'}">아이디</option>
+                                        <option value="name" th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'name'}">이름</option>
+                                        <option value="contact" th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'contact'}">연락처</option>
                                     </select>
-                                    <input type="text" class="form-input search-input-large" id="searchKeyword" name="keyword" placeholder="입력하세요" th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                                    <input type="text" class="form-input search-input-large" id="searchKeyword" name="keyword" placeholder="입력하세요" th:value="${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''}">
                                 </td>
                             </tr>
                         </tbody>

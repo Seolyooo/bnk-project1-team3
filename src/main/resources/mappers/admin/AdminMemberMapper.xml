@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bnk.bnk_project.mapper.admin.AdminMemberMapper">
+
+    <!-- 회원 목록 ResultMap -->
+    <resultMap id="MemberListResultMap" type="kr.co.bnk.bnk_project.dto.admin.MemberListDTO">
+        <id     property="custNo"     column="CUST_NO"/>
+        <result property="custId"     column="CUST_ID"/>
+        <result property="custName"   column="CUST_NAME"/>
+        <result property="custHp"     column="CUST_HP"/>
+        <result property="custEmail"  column="CUST_EMAIL"/>
+        <result property="joinDate"   column="JOIN_DATE"/>
+        <result property="statusCode" column="STATUS_CODE"/>
+        <result property="zipCode" column="ZIP_CODE"/>
+
+        <!-- 화면용 -->
+        <result property="address"    column="ADDRESS"/>
+    </resultMap>
+
+    <!-- 검색 where 절 -->
+    <sql id="memberSearchWhere">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <!-- 아이디 검색 -->
+                    <when test="searchType == 'custId'">
+                        AND bu.CUST_ID LIKE '%' || #{keyword} || '%'
+                    </when>
+
+                    <!-- 이름 검색 -->
+                    <when test="searchType == 'custName'">
+                        AND bu.CUST_NAME LIKE '%' || #{keyword} || '%'
+                    </when>
+
+                    <!-- 기본: 아이디 + 이름 통합 -->
+                    <otherwise>
+                        AND (
+                            bu.CUST_ID   LIKE '%' || #{keyword} || '%' OR
+                            bu.CUST_NAME LIKE '%' || #{keyword} || '%'
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 회원 목록 조회 -->
+    <select id="selectMemberList"
+            parameterType="kr.co.bnk.bnk_project.dto.PageRequestDTO"
+            resultMap="MemberListResultMap">
+
+        SELECT
+            bu.CUST_NO,
+            bu.CUST_ID,
+            bu.CUST_NAME,
+            bu.CUST_HP,
+            bu.CUST_EMAIL,
+            bu.JOIN_DATE,
+            bu.STATUS_CODE,
+            (bu.ADDR1 || ' ' || bu.ADDR2) AS ADDRESS
+        FROM ADMIN.BNK_USER bu
+
+        <include refid="memberSearchWhere"/>
+
+        ORDER BY bu.CUST_NO DESC
+        OFFSET #{startRow} ROWS
+        FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectMemberByCustNo"
+            resultType="kr.co.bnk.bnk_project.dto.admin.MemberListDTO">
+
+        SELECT
+            CUST_NO,
+            CUST_ID,
+            CUST_NAME,
+            CUST_HP,
+            CUST_EMAIL,
+            ADDR1,
+            ADDR2,
+            ZIP_CODE,
+            (ADDR1 || ' ' || ADDR2) AS address,
+            JOIN_DATE,
+            STATUS_CODE
+        FROM ADMIN.BNK_USER
+        WHERE CUST_NO = #{custNo}
+    </select>
+
+
+    <update id="updateMember">
+        UPDATE ADMIN.BNK_USER
+        SET
+            CUST_NAME   = #{custName},
+            CUST_HP     = #{custHp},
+            CUST_EMAIL  = #{custEmail},
+            ADDR1       = #{addr1},
+            ADDR2       = #{addr2},
+            ZIP_CODE     = #{zipCode},
+            STATUS_CODE = #{statusCode}
+        WHERE CUST_NO = #{custNo}
+    </update>
+
+    <!-- 총 회원 수 -->
+    <select id="selectMemberTotal"
+            parameterType="kr.co.bnk.bnk_project.dto.PageRequestDTO"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM ADMIN.BNK_USER bu
+        <include refid="memberSearchWhere"/>
+
+    </select>
+
+</mapper>
