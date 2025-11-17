@@ -35,18 +35,17 @@ public class AdminMemberController {
     }
 
 
-    /** 회원 상세/수정 페이지 */
     /** 회원 수정 페이지 */
     @GetMapping("/detail")
     public String editMember(@RequestParam("custNo") int custNo, Model model) {
 
-        MemberListDTO member = adminMemberService.getMember(custNo);
+        MemberListDTO pageResponse = adminMemberService.getMember(custNo);
 
-        if (member == null) {
+        if (pageResponse == null) {
             return "redirect:/admin/member/list";
         }
 
-        model.addAttribute("member", member);
+        model.addAttribute("pageResponse", pageResponse);
 
         return "admin/member/detail";
     }
