@@ -36,11 +36,6 @@ public class AdminProductController {
         return "admin/product/adminproduct";
     }
 
-    @GetMapping("/register")
-    public String productRegister() {
-        return "admin/product/adminproduct-register";
-    }
-
     @GetMapping("/pending")
     public String productPending() {
         return "admin/product/adminproduct-pending";

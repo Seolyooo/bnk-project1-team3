@@ -2018,3 +2018,29 @@ table.form-table td > div {
     font-size: 1.1rem;
 }
 
+
+#searchSuggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    z-index: 1000;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item:hover {
+    background-color: #f0f4ff !important;
+    font-weight: 600;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
