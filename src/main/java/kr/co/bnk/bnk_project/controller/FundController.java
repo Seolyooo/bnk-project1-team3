@@ -1,7 +1,7 @@
 package kr.co.bnk.bnk_project.controller;
 
 import kr.co.bnk.bnk_project.dto.ProductDTO;
-import kr.co.bnk.bnk_project.service.productService;
+import kr.co.bnk.bnk_project.service.FundService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FundController {
 
-    private final productService productService;
+    private final FundService productService;
 
     @GetMapping("/depositGuide")
     public String depositGuide() {

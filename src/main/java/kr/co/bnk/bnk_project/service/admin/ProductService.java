@@ -19,13 +19,16 @@ public class ProductService {
     // 펀드 목록 페이지
     public PageResponseDTO<ProductListDTO> getProductPage(PageRequestDTO pageRequestDTO) {
 
+        // 방어 코드
         if (pageRequestDTO.getPg() <= 0) pageRequestDTO.setPg(1);
         if (pageRequestDTO.getSize() <= 0) pageRequestDTO.setSize(10);
 
-        pageRequestDTO.setCate("product");
-
+        // 목록
         List<ProductListDTO> list = productMapper.selectProductList(pageRequestDTO);
+
+        // 총 개수
         int total = productMapper.selectProductTotal(pageRequestDTO);
+
 
         return PageResponseDTO.of(pageRequestDTO, list, total);
 

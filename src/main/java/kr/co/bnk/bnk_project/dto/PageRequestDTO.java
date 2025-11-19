@@ -29,6 +29,11 @@ public class PageRequestDTO {
     private String searchType;
     private String keyword;
 
+    // 펀드 목록 검색 추가
+    private String category;
+    private String status;
+
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Builder.Default
     private LocalDate baseDate = LocalDate.now();
@@ -39,7 +44,6 @@ public class PageRequestDTO {
     @Builder.Default
     private String dir = "desc";
 
-    private String status;       // 배송상태 (ex. 상품준비중/배송중/배송완료)
     private String company;      // 택배사
     private String dateFrom;     // 'YYYY-MM-DD'
     private String dateTo;       // 'YYYY-MM-DD'
