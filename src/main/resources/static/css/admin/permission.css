@@ -339,6 +339,29 @@
     text-decoration: none;
 }
 
+.action-btn.light {
+    background: #f5f5f5;
+    border-color: #f5f5f5;
+    color: #333;
+}
+
+.action-btn.light:hover {
+    background: #e0e0e0;
+    border-color: #e0e0e0;
+}
+
+.action-btn.dark {
+    background: #333;
+    border-color: #333;
+    color: #fff;
+}
+
+.action-btn.dark:hover {
+    background: #222;
+    border-color: #222;
+    color: #fff;
+}
+
 /* 페이지네이션 */
 .pagination {
     display: flex;

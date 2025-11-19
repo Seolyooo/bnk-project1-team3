@@ -51,7 +51,7 @@
         cs.USER_ID,
         cs.CREATED_AT,
         cs.ANSWERED_AT
-        FROM ADMIN.CS cs
+        FROM CS cs
 
         <include refid="faqWhere"/>
 
@@ -67,7 +67,7 @@
             resultType="int">
 
         SELECT COUNT(*)
-        FROM ADMIN.CS cs
+        FROM CS cs
 
         <include refid="faqWhere"/>
 
@@ -126,7 +126,7 @@
         cs.USER_ID,
         cs.CREATED_AT,
         cs.ANSWERED_AT
-        FROM ADMIN.CS cs
+        FROM CS cs
 
         <include refid="qnaWhere"/>
 
@@ -140,7 +140,7 @@
             resultType="int">
 
         SELECT COUNT(*)
-        FROM ADMIN.CS cs
+        FROM CS cs
 
         <include refid="qnaWhere"/>
 
@@ -165,7 +165,7 @@
         cs.USER_ID,
         cs.CREATED_AT,
         cs.ANSWERED_AT
-        FROM ADMIN.CS cs
+        FROM CS cs
         WHERE cs.CS_ID = #{csId}
         AND cs.CATEGORY_ID = 9   <!-- QnA 카테고리 ID로 맞춰서 사용 -->
     </select>
@@ -173,7 +173,7 @@
     <insert id="insertFaq"
             parameterType="kr.co.bnk.bnk_project.dto.CsDTO">
 
-        INSERT INTO ADMIN.CS
+        INSERT INTO CS
         (CS_ID,
          CATEGORY_ID,
          TITLE,
@@ -213,7 +213,7 @@
         cs.USER_ID,
         cs.CREATED_AT,
         cs.ANSWERED_AT
-        FROM ADMIN.CS cs
+        FROM CS cs
         WHERE cs.CS_ID = #{csId}
         AND cs.CATEGORY_ID = 8   <!-- FAQ 카테고리 고정 -->
     </select>
@@ -223,7 +223,7 @@
     <update id="updateFaq"
             parameterType="kr.co.bnk.bnk_project.dto.CsDTO">
 
-        UPDATE ADMIN.CS
+        UPDATE CS
         SET
             QUESTION    = #{question, jdbcType=VARCHAR},
             ANSWER      = #{answer,   jdbcType=CLOB},
@@ -249,7 +249,7 @@
             cs.USER_ID,
             cs.CREATED_AT,
             cs.ANSWERED_AT
-        FROM ADMIN.CS cs
+        FROM CS cs
         WHERE cs.CS_ID = #{csId}
           AND cs.CATEGORY_ID = 9
     </select>
@@ -259,7 +259,7 @@
     <update id="updateQnaAnswer"
             parameterType="kr.co.bnk.bnk_project.dto.CsDTO">
 
-        UPDATE ADMIN.CS
+        UPDATE CS
         SET
             ANSWER      = #{answer, jdbcType=CLOB},
             STATUS      = '답변완료',
@@ -270,13 +270,13 @@
 
     <!-- FAQ 삭제 -->
     <delete id="deleteFaq" parameterType="long">
-        DELETE FROM ADMIN.CS
+        DELETE FROM CS
         WHERE CS_ID = #{csId}
           AND CATEGORY_ID = 8
     </delete>
     <!-- QnA 삭제 -->
     <delete id="deleteQna" parameterType="long">
-        DELETE FROM ADMIN.CS
+        DELETE FROM CS
         WHERE CS_ID = #{csId}
           AND CATEGORY_ID = 9
     </delete>

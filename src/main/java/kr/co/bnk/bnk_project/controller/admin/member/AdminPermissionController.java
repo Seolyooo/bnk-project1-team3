@@ -22,37 +22,64 @@ public class AdminPermissionController {
     private final PermissionService permissionService;
 
     @GetMapping("/permission")
-    public String permissionList(PageRequestDTO pageRequestDTO, Model model) {
+    public String permissionList(
+            @RequestParam(value = "userSearchType", required = false) String userSearchType,
+            @RequestParam(value = "userKeyword", required = false) String userKeyword,
+            @RequestParam(value = "userPg", defaultValue = "1") int userPg,
+            @RequestParam(value = "adminSearchType", required = false) String adminSearchType,
+            @RequestParam(value = "adminKeyword", required = false) String adminKeyword,
+            @RequestParam(value = "adminPg", defaultValue = "1") int adminPg,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            Model model
+    ) {
+        PageRequestDTO userRequest = new PageRequestDTO();
+        userRequest.setPg(userPg);
+        userRequest.setSize(size);
+        userRequest.setSearchType(userSearchType);
+        userRequest.setKeyword(userKeyword);
+
+        PageRequestDTO adminRequest = new PageRequestDTO();
+        adminRequest.setPg(adminPg);
+        adminRequest.setSize(size);
+        adminRequest.setSearchType(adminSearchType);
+        adminRequest.setKeyword(adminKeyword);
 
         PageResponseDTO<UserSearchDTO> pageResponse = null;
-        if (pageRequestDTO.getKeyword() != null &&
-                !pageRequestDTO.getKeyword().isBlank()) {
-            pageResponse = permissionService.getUserSearchPage(pageRequestDTO);
+        if (userKeyword != null && !userKeyword.isBlank()) {
+            pageResponse = permissionService.getUserSearchPage(userRequest);
         }
 
-        PageResponseDTO<AdminListDTO> adminPage =
-                permissionService.getAdminList(pageRequestDTO);
+        PageResponseDTO<AdminListDTO> adminPage = permissionService.getAdminList(adminRequest);
 
-        model.addAttribute("pageRequestDTO", pageRequestDTO);
+        model.addAttribute("userRequest", userRequest);
+        model.addAttribute("adminRequest", adminRequest);
         model.addAttribute("pageResponse", pageResponse);
         model.addAttribute("adminPage", adminPage);
-
         return "admin/member/permission";
     }
 
     @PostMapping("/permission/add")
     public String addAdmin(@RequestParam("custNo") Long custNo,
                            @RequestParam("role") String role,
-                           PageRequestDTO pageRequestDTO,
+                           @RequestParam(value = "userSearchType", required = false) String userSearchType,
+                           @RequestParam(value = "userKeyword", required = false) String userKeyword,
+                           @RequestParam(value = "userPg", defaultValue = "1") int userPg,
+                           @RequestParam(value = "adminSearchType", required = false) String adminSearchType,
+                           @RequestParam(value = "adminKeyword", required = false) String adminKeyword,
+                           @RequestParam(value = "adminPg", defaultValue = "1") int adminPg,
+                           @RequestParam(value = "size", defaultValue = "10") int size,
                            RedirectAttributes redirectAttributes) {
 
         permissionService.addAdmin(custNo, role);
 
         redirectAttributes.addFlashAttribute("msg", "관리자가 추가되었습니다.");
-        redirectAttributes.addAttribute("searchType", pageRequestDTO.getSearchType());
-        redirectAttributes.addAttribute("keyword", pageRequestDTO.getKeyword());
-        redirectAttributes.addAttribute("pg", pageRequestDTO.getPg());
-        redirectAttributes.addAttribute("size", pageRequestDTO.getSize());
+        redirectAttributes.addAttribute("userSearchType", userSearchType);
+        redirectAttributes.addAttribute("userKeyword", userKeyword);
+        redirectAttributes.addAttribute("userPg", userPg);
+        redirectAttributes.addAttribute("adminSearchType", adminSearchType);
+        redirectAttributes.addAttribute("adminKeyword", adminKeyword);
+        redirectAttributes.addAttribute("adminPg", adminPg);
+        redirectAttributes.addAttribute("size", size);
 
         return "redirect:/admin/member/permission";
     }
@@ -68,6 +95,19 @@ public class AdminPermissionController {
                 "success", true,
                 "adminNo", adminNo,
                 "role", role
+        ));
+    }
+
+
+    @PostMapping("/permission/delete")
+    @ResponseBody
+    public ResponseEntity<?> deleteAdmin(
+            @RequestParam("adminNo") Long adminNo
+    ) {
+        permissionService.deleteAdminRole(adminNo);
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "adminNo", adminNo
         ));
     }
 }

@@ -56,6 +56,12 @@ public class PermissionService {
     /*수정*/
     @Transactional
     public void updateAdminRole(Long adminNo, String role) {
+
         permissionMapper.updateAdminRole(adminNo, role);
+    }
+
+    @Transactional
+    public void deleteAdminRole(Long adminNo) {
+        permissionMapper.deleteAdminRole(adminNo);
     }
 }

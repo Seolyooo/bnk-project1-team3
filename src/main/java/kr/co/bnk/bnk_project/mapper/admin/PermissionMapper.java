@@ -33,4 +33,8 @@ public interface PermissionMapper {
     /*관리자 권한 수정*/
     void updateAdminRole(@Param("adminNo") Long adminNo,
                          @Param("role") String role);
+
+
+    /*관리자 권한 삭제*/
+    void deleteAdminRole(@Param("adminNo") Long adminNo);
 }

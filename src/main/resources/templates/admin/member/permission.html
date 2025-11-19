@@ -39,13 +39,13 @@
                                 <td class="search-inputs">
                                     <select class="form-select search-select-small"
                                             id="permissionSearchSelect"
-                                            name="searchType">
+                                            name="userSearchType">
                                         <option value="custId"
-                                                th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'custId'}">
+                                                th:selected="${userRequest != null and userRequest.searchType == 'custId'}">
                                             아이디
                                         </option>
                                         <option value="custName"
-                                                th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'custName'}">
+                                                th:selected="${userRequest != null and userRequest.searchType == 'custName'}">
                                             이름
                                         </option>
                                     </select>
@@ -53,9 +53,19 @@
                                     <input type="text"
                                            class="form-input search-input-large"
                                            id="permissionSearchInput"
-                                           name="keyword"
+                                           name="userKeyword"
                                            placeholder="추가할 관리자 계정을 검색하시기 바랍니다."
-                                           th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                                           th:value="${userRequest != null ? userRequest.keyword : ''}">
+                                    <input type="hidden" name="userPg"
+                                           th:value="${userRequest != null ? userRequest.pg : 1}">
+                                    <input type="hidden" name="adminSearchType"
+                                           th:value="${adminRequest != null ? adminRequest.searchType : ''}">
+                                    <input type="hidden" name="adminKeyword"
+                                           th:value="${adminRequest != null ? adminRequest.keyword : ''}">
+                                    <input type="hidden" name="adminPg"
+                                           th:value="${adminRequest != null ? adminRequest.pg : 1}">
+                                    <input type="hidden" name="size"
+                                           th:value="${adminRequest != null ? adminRequest.size : 10}">
                                 </td>
                             </tr>
 
@@ -63,13 +73,17 @@
                         </table>
                         <div class="search-actions">
                             <button class="btn btn-search" type="submit">조회</button>
-                            <button class="btn btn-secondary" type="button" th:onclick="|location.href='@{/admin/member/permission}'|">초기화</button>
+                            <button class="btn btn-secondary" type="button"
+                                    th:onclick="|location.href='@{/admin/member/permission(adminSearchType=${adminRequest != null ? adminRequest.searchType : ''}, adminKeyword=${adminRequest != null ? adminRequest.keyword : ''}, adminPg=${adminRequest != null ? adminRequest.pg : 1})}'|">
+                                초기화
+                            </button>
                         </div>
                     </form>
                 </div>
 
                 <!-- 검색 결과 목록 -->
-                <div class="table-section" th:if="${pageRequestDTO != null and pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''}">
+                <div class="table-section"
+                     th:if="${userRequest != null and userRequest.keyword != null and userRequest.keyword != ''}">
                     <div class="table-info">
                         <span>
                             총
@@ -113,7 +127,7 @@
                             </td>
                             <td>
                                 <button type="button"
-                                        class="btn btn-secondary btn-small"
+                                        class="action-btn light"
                                         th:onclick="|addAdmin(${user.custNo})|">
                                     추가
                                 </button>
@@ -144,22 +158,31 @@
                                 <tr>
                                     <td class="search-label">검색조건</td>
                                     <td class="search-inputs">
-                                        <!-- 아래 검색도 pageRequestDTO.searchType / keyword 공유 -->
-                                        <select class="form-select search-select-small" name="searchType">
+                                        <select class="form-select search-select-small" name="adminSearchType">
                                             <option value="adminId"
-                                                    th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'adminId'}">
+                                                    th:selected="${adminRequest != null and adminRequest.searchType == 'adminId'}">
                                                 아이디
                                             </option>
                                             <option value="adminName"
-                                                    th:selected="${pageRequestDTO != null and pageRequestDTO.searchType == 'adminName'}">
+                                                    th:selected="${adminRequest != null and adminRequest.searchType == 'adminName'}">
                                                 이름
                                             </option>
                                         </select>
                                         <input type="text"
                                                class="form-input search-input-large"
-                                               name="keyword"
+                                               name="adminKeyword"
                                                placeholder="관리자를 검색하세요"
-                                               th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
+                                               th:value="${adminRequest != null ? adminRequest.keyword : ''}">
+                                        <input type="hidden" name="adminPg"
+                                               th:value="${adminRequest != null ? adminRequest.pg : 1}">
+                                        <input type="hidden" name="userSearchType"
+                                               th:value="${userRequest != null ? userRequest.searchType : ''}">
+                                        <input type="hidden" name="userKeyword"
+                                               th:value="${userRequest != null ? userRequest.keyword : ''}">
+                                        <input type="hidden" name="userPg"
+                                               th:value="${userRequest != null ? userRequest.pg : 1}">
+                                        <input type="hidden" name="size"
+                                               th:value="${adminRequest != null ? adminRequest.size : 10}">
                                     </td>
                                 </tr>
                                 </tbody>
@@ -228,11 +251,11 @@
                                 </select>
                             </td>
                             <td>
-                                <button class="btn btn-secondary btn-small"
+                                <button class="action-btn edit"
                                         th:onclick="|updateAdminRole(${admin.adminNo})|">
                                     수정
                                 </button>
-                                <button class="btn btn-secondary btn-small"
+                                <button class="action-btn dark"
                                         th:onclick="|deleteAdmin(${admin.adminNo})|">
                                     삭제
                                 </button>
@@ -247,7 +270,7 @@
                         <!-- 이전 -->
                         <button class="page-btn prev"
                                 th:if="${adminPage.prev}"
-                                th:onclick="|location.href='@{/admin/member/permission(pg=${adminPage.start - 1}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
+                                th:onclick="|location.href='@{/admin/member/permission(adminPg=${adminPage.start - 1}, adminSearchType=${adminRequest != null ? adminRequest.searchType : ''}, adminKeyword=${adminRequest != null ? adminRequest.keyword : ''}, userSearchType=${userRequest != null ? userRequest.searchType : ''}, userKeyword=${userRequest != null ? userRequest.keyword : ''}, userPg=${userRequest != null ? userRequest.pg : 1}, size=${adminRequest != null ? adminRequest.size : 10})}'|">
                             &lt;
                         </button>
 
@@ -257,7 +280,7 @@
                                     th:each="p : ${#numbers.sequence(adminPage.start, adminPage.end)}"
                                     th:text="${p}"
                                     th:classappend="${p == adminPage.pg} ? ' active'"
-                                    th:onclick="|location.href='@{/admin/member/permission(pg=${p}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
+                                    th:onclick="|location.href='@{/admin/member/permission(adminPg=${p}, adminSearchType=${adminRequest != null ? adminRequest.searchType : ''}, adminKeyword=${adminRequest != null ? adminRequest.keyword : ''}, userSearchType=${userRequest != null ? userRequest.searchType : ''}, userKeyword=${userRequest != null ? userRequest.keyword : ''}, userPg=${userRequest != null ? userRequest.pg : 1}, size=${adminRequest != null ? adminRequest.size : 10})}'|">
                                 1
                             </button>
                         </div>
@@ -265,7 +288,7 @@
                         <!-- 다음 -->
                         <button class="page-btn next"
                                 th:if="${adminPage.next}"
-                                th:onclick="|location.href='@{/admin/member/permission(pg=${adminPage.end + 1}, searchType=${pageRequestDTO != null and pageRequestDTO.searchType != null ? pageRequestDTO.searchType : ''}, keyword=${pageRequestDTO != null and pageRequestDTO.keyword != null ? pageRequestDTO.keyword : ''})}'|">
+                                th:onclick="|location.href='@{/admin/member/permission(adminPg=${adminPage.end + 1}, adminSearchType=${adminRequest != null ? adminRequest.searchType : ''}, adminKeyword=${adminRequest != null ? adminRequest.keyword : ''}, userSearchType=${userRequest != null ? userRequest.searchType : ''}, userKeyword=${userRequest != null ? userRequest.keyword : ''}, userPg=${userRequest != null ? userRequest.pg : 1}, size=${adminRequest != null ? adminRequest.size : 10})}'|">
                             &gt;
                         </button>
                     </div>
@@ -286,15 +309,21 @@
         <!-- 선택한 권한 -->
         <input type="hidden" name="role" id="addAdminRole">
 
-        <!-- 검색 조건 유지용 (선택) -->
-        <input type="hidden" name="searchType"
-               th:value="${pageRequestDTO != null ? pageRequestDTO.searchType : ''}">
-        <input type="hidden" name="keyword"
-               th:value="${pageRequestDTO != null ? pageRequestDTO.keyword : ''}">
-        <input type="hidden" name="pg"
-               th:value="${pageRequestDTO != null ? pageRequestDTO.pg : 1}">
+        <!-- 검색 조건 유지용 -->
+        <input type="hidden" name="userSearchType"
+               th:value="${userRequest != null ? userRequest.searchType : ''}">
+        <input type="hidden" name="userKeyword"
+               th:value="${userRequest != null ? userRequest.keyword : ''}">
+        <input type="hidden" name="userPg"
+               th:value="${userRequest != null ? userRequest.pg : 1}">
+        <input type="hidden" name="adminSearchType"
+               th:value="${adminRequest != null ? adminRequest.searchType : ''}">
+        <input type="hidden" name="adminKeyword"
+               th:value="${adminRequest != null ? adminRequest.keyword : ''}">
+        <input type="hidden" name="adminPg"
+               th:value="${adminRequest != null ? adminRequest.pg : 1}">
         <input type="hidden" name="size"
-               th:value="${pageRequestDTO != null ? pageRequestDTO.size : 10}">
+               th:value="${adminRequest != null ? adminRequest.size : 10}">
 
         <!-- CSRF -->
         <input type="hidden"
@@ -305,27 +334,22 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         const updateRoleUrl = /*[[@{/admin/member/permission/role}]]*/ '/admin/member/permission/role';
+        const adminSearchResetUrl = /*[[@{/admin/member/permission(
+                userSearchType=${userRequest != null ? userRequest.searchType : ''},
+                userKeyword=${userRequest != null ? userRequest.keyword : ''},
+                userPg=${userRequest != null ? userRequest.pg : 1},
+                adminPg=1,
+                size=${adminRequest != null ? adminRequest.size : 10}
+        )}]]*/ '/admin/member/permission';
         // Spring Security 에서 제공하는 CSRF 정보
         const csrfHeaderName = /*[[${_csrf.headerName}]]*/ 'X-CSRF-TOKEN';
         const csrfToken      = /*[[${_csrf.token}]]*/ '';
 
         console.log('csrfHeaderName =', csrfHeaderName);
         console.log('csrfToken =', csrfToken);
-        // 검색 결과에서 "관리자 추가" 버튼
-        function addAdmin(custNo) {
-            if (confirm('이 계정을 관리자로 추가하시겠습니까?')) {
-                // TODO: 실제 추가 처리 (POST 요청)
-            }
-        }
-
         // 관리자 목록 검색 초기화
         function resetAdminSearch() {
-            const input = document.querySelector('input[name="adminKeyword"]');
-            if (input) {
-                input.value = '';
-            }
-            // 단순히 페이지 리로드
-            location.href = /*[[@{/admin/member/permission}]]*/ '/admin/member/permission';
+            location.href = adminSearchResetUrl;
         }
 
         // 셀렉트 박스에서 권한 선택 변경 시(미리보기 용)
@@ -394,11 +418,44 @@
         }
 
 
+        const deleteAdminUrl = /*[[@{/admin/member/permission/delete}]]*/ '/admin/member/permission/delete';
+
         // "삭제" 버튼 클릭 시
         function deleteAdmin(adminNo) {
-            if (confirm('정말 이 관리자를 삭제하시겠습니까?')) {
-                // TODO: 실제 삭제 요청 (POST/DELETE)
+            if (!confirm('정말 이 관리자를 삭제하시겠습니까?')) {
+                return;
             }
+
+            fetch(deleteAdminUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                    [csrfHeaderName]: csrfToken
+                },
+                body: new URLSearchParams({
+                    adminNo: adminNo,
+                    _csrf: csrfToken
+                }),
+                credentials: 'same-origin'
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('HTTP ' + res.status);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('관리자가 삭제되었습니다.');
+                        location.reload();
+                    } else {
+                        alert('삭제에 실패했습니다.');
+                    }
+                })
+                .catch(err => {
+                    console.error('관리자 삭제 에러:', err);
+                    alert('삭제 처리 중 오류가 발생했습니다.');
+                });
         }
 
 
