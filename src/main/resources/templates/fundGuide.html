@@ -1,152 +1,228 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>펀드 안내</title>
+
+    <!-- 폰트 & 공통 스타일 -->
     <link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
     <link rel="preconnect" th:href="@{https://fonts.gstatic.com crossorigin}">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/fundGuide.css}">
+
     <script th:src="@{/js/fundGuide.js}" defer></script>
 </head>
+
 <body>
 
-<!-- ==================== HEADER START ==================== -->
+<!-- ===================== HEADER ===================== -->
 <header class="header">
     <div class="header-top">
         <div class="container">
+
             <div class="logo">
                 <a th:href="@{/}">
                     <img th:src="@{/images/main/h1_busanbank_new.png}" alt="BNK부산은행">
                 </a>
             </div>
+
             <div class="header-utils">
-                    <span sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 5px;">
-                        <a th:href="@{/my/dashboard}" class="util-link" style="font-weight: bold; color: #000; text-decoration: none;">
-                            <span th:text="${#authentication.principal.displayName} + '님'">홍길동님</span>
-                        </a>
-                        <span class="util-link" style="color: #ddd;">|</span>
-                        <span id="sessionTimer" class="util-link" style="color: #cb2b11; font-weight: bold;">20:00</span>
-                        <button type="button" id="sessionExtendBtn" class="util-link" style="background: none; border: 1px solid #ccc; padding: 2px 6px; font-size: 11px; border-radius: 4px; cursor: pointer; line-height: 1.4;">
-                            연장
+
+                <!-- 로그인 상태 -->
+                <span sec:authorize="isAuthenticated()" style="display:flex; gap:5px; align-items:center;">
+                    <a th:href="@{/my/dashboard}" class="util-link" style="font-weight:bold; color:#000;">
+                        <span th:text="${#authentication.principal.displayName} + '님'">사용자</span>
+                    </a>
+
+                    <span class="util-link" style="color:#ddd;">|</span>
+
+                    <span id="sessionTimer" class="util-link" style="color:#cb2b11; font-weight:bold;">20:00</span>
+
+                    <button type="button" id="sessionExtendBtn"
+                            style="background:none;border:1px solid #ccc;padding:2px 6px;
+                                   font-size:11px;border-radius:4px;cursor:pointer;">
+                        연장
+                    </button>
+
+                    <span class="util-link" style="color:#ddd;">|</span>
+
+                    <form th:action="@{/logout}" method="post" style="display:inline;">
+                        <button type="submit" class="util-link" style="background:none;border:none;cursor:pointer;">
+                            로그아웃
                         </button>
-                        <span class="util-link" style="color: #ddd;">|</span>
-                        <form th:action="@{/logout}" method="post" style="display: inline; margin: 0; padding: 0;">
-                            <button type="submit" class="util-link" style="background: none; border: none; padding: 0; font-size: 14px; cursor: pointer;">로그아웃</button>
-                        </form>
-                    </span>
+                    </form>
+                </span>
+
+                <!-- 비로그인 -->
                 <span sec:authorize="isAnonymous()">
-                            <a th:href="@{/member/login}" class="util-link">로그인</a>
-                    </span>
-                <button type="button" class="btn-search" title="검색하기">검색하기</button>
-                <button type="button" class="btn-allmenu" title="전체메뉴">전체메뉴</button>
+                    <a th:href="@{/member/login}" class="util-link">로그인</a>
+                </span>
+
+                <button type="button" class="btn-search">검색하기</button>
+                <button type="button" class="btn-allmenu">전체메뉴</button>
             </div>
+
         </div>
     </div>
+
     <nav class="nav">
         <div class="container">
             <ul class="nav-menu">
                 <li><a th:href="@{/fund/productList}">펀드상품</a></li>
-                <li><a href="#">펀드케어</a></li>
-                <li><a href="#">펀드정보센터</a></li>
-                <li><a href="#">펀드이용가이드</a></li>
+                <li><a th:href="@{/fund/fundSihwang}">펀드케어</a></li>
+                <li><a th:href="@{/fund/fundInformation}">펀드정보센터</a></li>
+                <li><a th:href="@{/fund/fundGuide}">펀드이용가이드</a></li>
                 <li><a href="#">펀드서비스</a></li>
             </ul>
         </div>
     </nav>
 </header>
+<!-- ===================== /HEADER ===================== -->
 
-<div class="container">
-    <h1>펀드안내 (표 등등 다듬기 진행 중)</h1>
 
-    <h2>저금리 시대의 자산운용 전략</h2>
 
-    <table>
-        <thead>
-        <tr>
-            <th>분류</th>
-            <th>설명</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>채권형</td>
-            <td>주식 편입 없이 투자신탁자산총액의 60% 이상을 채권(금융채 포함)으로 운용</td>
-        </tr>
-        <tr>
-            <td>주식형</td>
-            <td>투자신탁자산총액의 60% 이상을 주식(수익자산·옵션 포함)으로 운용</td>
-        </tr>
-        <tr>
-            <td>혼합형</td>
-            <td>주식형, 채권형 이외의 경우로서 주식 및 채권에 적정하게 배분하여 운용</td>
-        </tr>
-        <tr>
-            <td>MMF</td>
-            <td>단기상품(우량채권, CP, CD, CALL 등) 위주로 운용하며, 입출금이 자유로운 상품</td>
-        </tr>
-        <tr>
-            <td>해외투자상품</td>
-            <td>전 세계 시장 우량자산에 분산 투자함으로써 안정적인 자산증식을 추구하는 상품</td>
-        </tr>
-        </tbody>
-    </table>
+<!-- ===================== PAGE WRAPPER ===================== -->
+<div class="main-container">
+    <div class="content-wrapper">
 
-    <h2>수익증권 용어해설</h2>
+        <!-- ========== 사이드바 ========== -->
+        <aside class="sidebar">
+            <div class="sidebar-title">펀드 이용 가이드</div>
 
-    <ul class="term-list">
-        <li>
-            <div class="term-title term-bullet">투자신탁</div>
-            <div class="term-desc">
-                투자운용회사(투신운용사, 자산운용사)가 다수 투자자로부터 모아진 자금을 주요 유가증권 등에 투자하고
-                그 수익을 투자자에게 돌려주는 집단적이고 간접적인 증권투자제도를 말합니다.
-            </div>
-        </li>
+            <ul class="sidebar-menu">
 
-        <li>
-            <div class="term-title term-bullet">수익증권</div>
-            <div class="term-desc">
-                투자신탁의 거래(투자 및 환매)를 위해 투자자가 받은 수익권을 표창하는 증권을 말하며,
-                단위는 “좌”로 표시하며, 통장을 통하여 등 증권의 매매를 통해 거래합니다.
-            </div>
-        </li>
+                <li class="menu-item">
+                    <button class="menu-btn active">펀드 안내</button>
+                    <ul class="submenu" style="display:block;">
+                        <li>
+                            <a th:href="@{/fund/guide}"
+                               style="color:#b22222; font-weight:bold;">
+                                펀드 안내
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
-        <li>
-            <div class="term-title term-bullet">펀드(Fund)</div>
-            <div class="term-desc">
-                불특정 다수인으로부터 자금을 모아 유가증권 등에 투자 운용하기 위하여 조성되는 일종의 집합투자기구를 말합니다.
-            </div>
-        </li>
+                <li class="menu-item">
+                    <button class="menu-btn">펀드 가입절차</button>
+                    <ul class="submenu">
+                        <li><a href="#">가입 절차</a></li>
+                    </ul>
+                </li>
 
-        <li>
-            <div class="term-title term-bullet">기준가격</div>
-            <div class="term-desc">
-                수익증권의 거래를 신청 시 적용되는 가격으로 수익증권의 순자산총액을 발행좌수로 나눈 값이며,
-                투자자가 펀드 신탁계좌에 입금한 총자산에서 비용을 공제한 순자산총액을 수익증권의 총좌수로 나눈 가격입니다.
-            </div>
-        </li>
+                <li class="menu-item">
+                    <button class="menu-btn">FAQ</button>
+                    <ul class="submenu">
+                        <li><a href="#">자주 묻는 질문</a></li>
+                    </ul>
+                </li>
 
-        <li>
-            <div class="term-title term-bullet">과표기준가격</div>
-            <div class="term-desc">
-                세금 산정을 위한 과세 산출 시 기준이 되는 가격으로, 주식 등의 평가 및 매매손익을 비과세하므로
-                가격산식에 반영되지 않지만 세전 이득(운용성과) 평가를 위한 세후 기준가격으로 계산합니다.
-            </div>
-        </li>
+            </ul>
+        </aside>
+        <!-- ========== /사이드바 ========== -->
 
-        <li>
-            <div class="term-title term-bullet">잔고좌수</div>
-            <div class="term-desc">
-                수익증권의 잔고좌수는 투자자가 보유하는 수익증권의 잔고를 말하며,
-                이를 근거로 투자자의 수익률을 계산합니다.
-            </div>
-        </li>
-    </ul>
+
+        <!-- ========== 본문 영역 ========== -->
+        <main class="main-content">
+
+            <h1>펀드안내 (표 등등 다듬기 진행 중)</h1>
+
+            <h2>저금리 시대의 자산운용 전략</h2>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>분류</th>
+                    <th>설명</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>채권형</td><td>주식 편입 없이 투자신탁자산총액의 60% 이상을 채권으로 운용</td></tr>
+                <tr><td>주식형</td><td>투자신탁자산총액의 60% 이상을 주식으로 운용</td></tr>
+                <tr><td>혼합형</td><td>주식/채권에 적정하게 배분하여 운용</td></tr>
+                <tr><td>MMF</td><td>우량 단기상품 중심으로 운용하며 입출금 자유</td></tr>
+                <tr><td>해외투자상품</td><td>전 세계 우량자산에 분산 투자</td></tr>
+                </tbody>
+            </table>
+
+            <h2>수익증권 용어해설</h2>
+
+            <ul class="term-list">
+
+                <li>
+                    <div class="term-title term-bullet">투자신탁</div>
+                    <div class="term-desc">투자운용회사가 투자자 자금을 모아 유가증권 등에 투자하는 제도</div>
+                </li>
+
+                <li>
+                    <div class="term-title term-bullet">수익증권</div>
+                    <div class="term-desc">투자신탁 거래를 위해 투자자가 받는 증권(단위: 좌)</div>
+                </li>
+
+                <li>
+                    <div class="term-title term-bullet">펀드(Fund)</div>
+                    <div class="term-desc">다수의 투자자 자금을 모아 운용하는 집합투자기구</div>
+                </li>
+
+                <li>
+                    <div class="term-title term-bullet">기준가격</div>
+                    <div class="term-desc">순자산총액 ÷ 발행좌수</div>
+                </li>
+
+                <li>
+                    <div class="term-title term-bullet">과표기준가격</div>
+                    <div class="term-desc">세금 산정을 위한 기준 가격</div>
+                </li>
+
+                <li>
+                    <div class="term-title term-bullet">잔고좌수</div>
+                    <div class="term-desc">투자자가 보유한 수익증권 잔고로 수익률 계산에 사용</div>
+                </li>
+
+            </ul>
+
+        </main>
+        <!-- ========== /본문 영역 ========== -->
+
+    </div>
 </div>
+<!-- ===================== /PAGE WRAPPER ===================== -->
+
+
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+    <div class="container">
+
+        <div class="footer-links">
+            <a href="#">이용약관</a>
+            <span class="divider">|</span>
+            <a href="#">개인정보처리방침</a>
+            <span class="divider">|</span>
+            <a href="#">전자금융거래 기본약관</a>
+        </div>
+
+        <div class="footer-info">
+            <p>BNK부산은행</p>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>Copyright © BNK Busan Bank.</p>
+            </div>
+        </div>
+
+    </div>
+</footer>
+<!-- ===================== /FOOTER ===================== -->
 
 </body>
 </html>

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -49,9 +51,9 @@
         <div class="container">
             <ul class="nav-menu">
                 <li><a th:href="@{/fund/productList}">펀드상품</a></li>
-                <li><a href="#">펀드케어</a></li>
-                <li><a href="#">펀드정보센터</a></li>
-                <li><a href="#">펀드이용가이드</a></li>
+                <li><a th:href="@{/fund/fundSihwang}">펀드케어</a></li>
+                <li><a th:href="@{/fund/fundInformation}">펀드정보센터</a></li>
+                <li><a th:href="@{/fund/fundGuide}">펀드이용가이드</a></li>
                 <li><a href="#">펀드서비스</a></li>
             </ul>
         </div>
@@ -153,4 +155,9 @@
 
 <script th:src="@{/js/productDetail.js}"></script>
 </body>
+<script th:src="@{/js/index.js}"></script>
+<script sec:authorize="isAuthenticated()" th:inline="javascript">
+    const serverTimeoutInSeconds = /*[[${sessionTimeout}]]*/ 30;
+    initSessionTimer(serverTimeoutInSeconds);
+</script>
 </html>

@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BNK부산은행 - 펀드</title>
+    <title>BNK부산은행 - 펀드 시황</title>
+
     <link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
     <link rel="preconnect" th:href="@{https://fonts.gstatic.com crossorigin}">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/fundSihwang.css}">
-    <script th:src="@{/js/fundSihwang.js}" defer></script></head>
+    <script th:src="@{/js/fundSihwang.js}" defer></script>
+</head>
+
 <body>
-<!-- header -->
+
+<!-- ===================== HEADER ===================== -->
 <header class="header">
     <div class="header-top">
         <div class="container">
@@ -22,148 +25,190 @@
                     <img th:src="@{/images/main/h1_busanbank_new.png}" alt="BNK부산은행">
                 </a>
             </div>
+
             <div class="header-utils">
-                    <span sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 5px;">
-                        <a th:href="@{/my/dashboard}" class="util-link" style="font-weight: bold; color: #000; text-decoration: none;">
-                            <span th:text="${#authentication.principal.displayName} + '님'">홍길동님</span>
-                        </a>
-                        <span class="util-link" style="color: #ddd;">|</span>
-                        <span id="sessionTimer" class="util-link" style="color: #cb2b11; font-weight: bold;">20:00</span>
-                        <button type="button" id="sessionExtendBtn" class="util-link" style="background: none; border: 1px solid #ccc; padding: 2px 6px; font-size: 11px; border-radius: 4px; cursor: pointer; line-height: 1.4;">
-                            연장
+
+                <!-- 로그인 상태 -->
+                <span sec:authorize="isAuthenticated()" style="display:flex;align-items:center;gap:5px;">
+                    <a th:href="@{/my/dashboard}" class="util-link" style="font-weight:bold;color:#000;">
+                        <span th:text="${#authentication.principal.displayName} + '님'">홍길동님</span>
+                    </a>
+                    <span class="util-link" style="color:#ddd;">|</span>
+
+                    <!-- 세션 타이머 -->
+                    <span id="sessionTimer" class="util-link" style="color:#cb2b11;font-weight:bold;">20:00</span>
+
+                    <!-- 연장 버튼 -->
+                    <button type="button" id="sessionExtendBtn"
+                            style="background:none;border:1px solid #ccc;padding:2px 6px;font-size:11px;border-radius:4px;cursor:pointer;">
+                        연장
+                    </button>
+
+                    <span class="util-link" style="color:#ddd;">|</span>
+
+                    <!-- 로그아웃 -->
+                    <form th:action="@{/logout}" method="post" style="display:inline;">
+                        <button type="submit" class="util-link"
+                                style="background:none;border:none;padding:0;font-size:14px;cursor:pointer;">
+                            로그아웃
                         </button>
-                        <span class="util-link" style="color: #ddd;">|</span>
-                        <form th:action="@{/logout}" method="post" style="display: inline; margin: 0; padding: 0;">
-                            <button type="submit" class="util-link" style="background: none; border: none; padding: 0; font-size: 14px; cursor: pointer;">로그아웃</button>
-                        </form>
-                    </span>
+                    </form>
+                </span>
+
+                <!-- 비로그인 -->
                 <span sec:authorize="isAnonymous()">
-                            <a th:href="@{/member/login}" class="util-link">로그인</a>
-                    </span>
-                <button type="button" class="btn-search" title="검색하기">검색하기</button>
-                <button type="button" class="btn-allmenu" title="전체메뉴">전체메뉴</button>
+                    <a th:href="@{/member/login}" class="util-link">로그인</a>
+                </span>
+
+                <button type="button" class="btn-search">검색하기</button>
+                <button type="button" class="btn-allmenu">전체메뉴</button>
             </div>
         </div>
     </div>
+
     <nav class="nav">
         <div class="container">
             <ul class="nav-menu">
                 <li><a th:href="@{/fund/productList}">펀드상품</a></li>
-                <li><a href="#">펀드케어</a></li>
-                <li><a href="#">펀드정보센터</a></li>
-                <li><a href="#">펀드이용가이드</a></li>
+                <li><a th:href="@{/fund/fundSihwang}">펀드케어</a></li>
+                <li><a th:href="@{/fund/fundInformation}">펀드정보센터</a></li>
+                <li><a th:href="@{/fund/fundGuide}">펀드이용가이드</a></li>
                 <li><a href="#">펀드서비스</a></li>
             </ul>
         </div>
     </nav>
 </header>
-<div class="container">
-    <div class="subtitle"></div>
-    <h1>펀드시황</h1>
-    <div class="summary">
-        총 2,698건 현재 : 1 / 270페이지 <b>(나중에 쿼리로 수정해야함)</b>
-    </div>
+<!-- ===================== /HEADER ===================== -->
 
-    <table>
-        <thead>
-        <tr>
-            <th style="width:10%;">번호</th>
-            <th style="width:60%;">제목</th>
-            <th style="width:15%;">등록일</th>
-            <th style="width:15%;">조회수</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>3002</td>
-            <td class="title"><a href="#">관리자페이지에서 등록하면 여기에 나올 수 있게(DB저장)</a></td>
-            <td>2025/10/31</td>
-            <td>241</td>
-        </tr>
-        <tr>
-            <td>3001</td>
-            <td class="title"><a href="#">[10/31 국내] 코스피 사상 첫 4000 돌파</a></td>
-            <td>2025/10/31</td>
-            <td>141</td>
-        </tr>
-        <tr>
-            <td>3000</td>
-            <td class="title"><a href="#">[10/24 해외] 글로벌 증시, 미중 긴장 완화 기대감에 동반 강세</a></td>
-            <td>2025/10/24</td>
-            <td>297</td>
-        </tr>
-        <tr>
-            <td>2999</td>
-            <td class="title"><a href="#">[10/24 국내] AI, 지배구조 개선 기대감에 국내증시 상승</a></td>
-            <td>2025/10/24</td>
-            <td>311</td>
-        </tr>
-        <tr>
-            <td>2998</td>
-            <td class="title"><a href="#">[10/17 해외] 미중 갈등 이어졌지만 미국 증시 보합세</a></td>
-            <td>2025/10/17</td>
-            <td>348</td>
-        </tr>
-        <tr>
-            <td>2997</td>
-            <td class="title"><a href="#">[10/17 국내] AI와 밸류업 프로그램이 이끈 상승 랠리</a></td>
-            <td>2025/10/17</td>
-            <td>329</td>
-        </tr>
-        <tr>
-            <td>2996</td>
-            <td class="title"><a href="#">[10/2 해외] 임명장부 뉴스에도 미증시 상승</a></td>
-            <td>2025/10/02</td>
-            <td>613</td>
-        </tr>
-        <tr>
-            <td>2995</td>
-            <td class="title"><a href="#">[10/2 국내] 단기 투익 불확실성에 코스피 하락</a></td>
-            <td>2025/10/02</td>
-            <td>600</td>
-        </tr>
-        <tr>
-            <td>2994</td>
-            <td class="title"><a href="#">[9/26 해외] 경제지표 호조에 미증시 상승</a></td>
-            <td>2025/09/26</td>
-            <td>962</td>
-        </tr>
-        <tr>
-            <td>2993</td>
-            <td class="title"><a href="#">[9/26 국내] 금리인하 기대 약화로 한국증시 하락</a></td>
-            <td>2025/09/26</td>
-            <td>1026</td>
-        </tr>
-        </tbody>
-    </table>
 
-    <!-- 페이지네이션 -->
-    <div class="pagination">
-        <button disabled>&laquo;</button>
-        <button disabled>&lt;</button>
-        <button class="active">1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-        <button>5</button>
-        <button>6</button>
-        <button>7</button>
-        <button>8</button>
-        <button>9</button>
-        <button>&gt;</button>
-        <button>&raquo;</button>
-    </div>
+<!-- ===================== PAGE LAYOUT (사이드바 + 본문) ===================== -->
+<div class="main-container">
+    <div class="content-wrapper">
 
-    <!-- 검색 영역 -->
-    <div class="search-box">
-        <select>
-            <option>제목</option>
-            <option>내용</option>
-        </select>
-        <input type="text" placeholder="페이징 + 검색 기능 추가 예정">
-        <button id="btnSearch">검색</button>
+        <!-- ========== 사이드바 ========== -->
+        <aside class="sidebar">
+            <div class="sidebar-title">펀드정보센터</div>
+            <ul class="sidebar-menu">
+
+                <li class="menu-item">
+                    <button class="menu-btn">펀드 시황</button>
+                    <ul class="submenu">
+                        <li><a th:href="@{/fund/sihwang}">펀드시황</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-item">
+                    <button class="menu-btn">펀드 뉴스</button>
+                    <ul class="submenu">
+                        <li><a href="#">국내 뉴스</a></li>
+                        <li><a href="#">해외 뉴스</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-item">
+                    <button class="menu-btn">공지사항</button>
+                    <ul class="submenu">
+                        <li><a href="#">은행 공지</a></li>
+                        <li><a href="#">펀드 공시</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </aside>
+        <!-- ========== /사이드바 ========== -->
+
+
+        <!-- ========== 본문: 펀드시황 ========== -->
+        <main class="main-content">
+
+            <h1 style="margin-bottom:15px;">펀드시황</h1>
+
+            <div class="summary">
+                총 2,698건 현재 : 1 / 270페이지 <b>(나중에 코드 수정)</b>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th style="width:10%;">번호</th>
+                    <th style="width:60%;">제목</th>
+                    <th style="width:15%;">등록일</th>
+                    <th style="width:15%;">조회수</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>3002</td>
+                    <td class="title"><a href="#">DB되는건가</a></td>
+                    <td>2025/11/19</td>
+                    <td>14</td>
+                </tr>
+                <tr>
+                    <td>3001</td>
+                    <td class="title"><a href="#">ㅇㅇ</a></td>
+                    <td>2025/11/19</td>
+                    <td>15</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+                <button disabled>&laquo;</button>
+                <button disabled>&lt;</button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+                <button>5</button>
+                <button>&gt;</button>
+                <button>&raquo;</button>
+            </div>
+
+            <!-- 검색 -->
+            <div class="search-box">
+                <select>
+                    <option>제목</option>
+                    <option>내용</option>
+                </select>
+                <input type="text" placeholder="페이징 + 검색 기능 추가 예정">
+                <button id="btnSearch">검색</button>
+            </div>
+
+        </main>
+        <!-- ========== /본문 ========== -->
+
     </div>
 </div>
+<!-- ===================== /PAGE LAYOUT ===================== -->
+
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+    <div class="container">
+
+        <div class="footer-links">
+            <a href="#">이용약관</a>
+            <span class="divider">|</span>
+            <a href="#">개인정보처리방침</a>
+            <span class="divider">|</span>
+            <a href="#">전자금융거래 기본약관</a>
+        </div>
+
+        <div class="footer-info">
+            <p>BNK부산은행</p>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>Copyright © BNK Busan Bank.</p>
+            </div>
+        </div>
+
+    </div>
+</footer>
+<!-- ===================== /FOOTER ===================== -->
 
 </body>
 </html>

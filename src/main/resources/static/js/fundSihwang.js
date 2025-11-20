@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const pages = document.querySelectorAll(".pagination button:not(:disabled)");
     pages.forEach(page => {
         page.addEventListener("click", () => {
-            alert(`페이지 ${page.textContent} 로 이동 (추후 쿼리 적용 예정)`);
+            alert(`페이지 ${page.textContent} 로 이동 (추후 코드 작성 예정)`);
         });
     });
 

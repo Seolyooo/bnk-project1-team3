@@ -72,7 +72,7 @@ document.addEventListener('click', e => {
     if (e.target.classList.contains('btn-view')) {
         e.preventDefault();
         const fundTitle = e.target.closest('tr').querySelector('.title a').textContent;
-        modalContent.innerHTML = `<b>${fundTitle}</b><br>나중에 DB형식에 맞게 바꾸겠습니다.`;
+        modalContent.innerHTML = `<b>${fundTitle}</b><br>DB 쿼리 추가 후 작성하기.`;
         modalOverlay.style.display = 'flex';
     }
 });
