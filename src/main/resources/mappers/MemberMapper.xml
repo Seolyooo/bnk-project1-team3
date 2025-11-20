@@ -32,6 +32,13 @@
         WHERE CUST_EMAIL = #{email}
     </select>
 
+    <!-- 계좌번호 체크 -->
+    <select id="checkAccountExist" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM BNK_ACCOUNT
+        WHERE ACCT_NO = #{generatedAccountNum}
+    </select>
+
     <!-- 회원 정보 저장 -->
     <insert id="insertUser" parameterType="kr.co.bnk.bnk_project.dto.BnkUserDTO">
         <selectKey keyProperty="custNo" resultType="long" order="BEFORE">

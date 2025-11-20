@@ -64,7 +64,18 @@ public class MemberController {
 
     @GetMapping("/register")
     public String register(Model model){
-        model.addAttribute("dto", new BnkUserDTO()); // 빈 객체 전달
+
+        BnkUserDTO dto = new BnkUserDTO();
+
+        // 서비스에서 랜덤 계좌번호 가져오기
+        String randomAccount = memberService.generateAccountNum();
+
+        // DTO에 계좌번호 세팅
+        dto.setAccountNumber(randomAccount);
+
+        // 모델에 담아서 뷰로 전달
+        model.addAttribute("dto", dto);
+
         return "member/register";
     }
 

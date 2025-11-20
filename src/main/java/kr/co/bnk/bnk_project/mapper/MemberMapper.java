@@ -4,7 +4,7 @@ import kr.co.bnk.bnk_project.dto.BnkUserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Map;
+import java.security.SecureRandom;
 
 @Mapper
 public interface MemberMapper {
@@ -17,6 +17,9 @@ public interface MemberMapper {
 
     // 이메일 중복 체크
     int existsByEmail(String email);
+
+    // 계좌번호 중복 체크
+    int checkAccountExist(String generatedAccountNum);
 
     // 회원 정보 저장
     void insertUser(BnkUserDTO dto);

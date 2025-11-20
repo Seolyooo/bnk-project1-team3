@@ -478,6 +478,7 @@
     font-size: 13px;
     line-height: 1.8;
     color: #333;
+    white-space: pre-wrap;
 }
 
 .terms-text p {
@@ -931,4 +932,25 @@
     animation: shake 0.4s ease-in-out; /* 0.4초 동안 흔들림 */
     border-color: #c6281f !important;  /* 테두리 빨간색 강조 */
     box-shadow: 0 0 8px rgba(198, 40, 31, 0.4); /* 붉은색 그림자 효과 */
+}
+
+/* 가상 키보드 컨테이너 스타일 */
+#virtualKeyboardBox {
+    display: none; /* 기본적으로 숨김 */
+    margin-top: 10px;
+    padding: 10px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* 키보드 버튼 스타일 살짝 수정 */
+.hg-button {
+    font-weight: bold !important;
+    color: #333 !important;
+}
+
+/* 숫자키(랜덤 될 부분) 색상 강조 */
+.hg-button-numpad {
+    background: #e3f2fd !important; /* 연한 파란색 */
 }

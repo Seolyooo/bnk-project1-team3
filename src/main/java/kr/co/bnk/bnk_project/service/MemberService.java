@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+
 @Slf4j
 @Service
 @Transactional
@@ -16,6 +18,24 @@ public class MemberService {
 
     private final MemberMapper memberMapper;
     private final PasswordEncoder passwordEncoder;
+
+    // 계좌번호 랜덤 생성
+    public String generateAccountNum() {
+
+        SecureRandom secureRandom = new SecureRandom();
+        String generatedAccountNum = "";
+
+        do {
+            int part1 = secureRandom.nextInt(900) + 100;
+            int part2 = secureRandom.nextInt(900) + 100;
+            int part3 = secureRandom.nextInt(900000) + 100000;
+
+            generatedAccountNum = String.format("%03d-%03d-%06d", part1, part2, part3);
+
+        } while (memberMapper.checkAccountExist(generatedAccountNum) > 0);
+
+        return generatedAccountNum;
+    }
 
     // 회원가입 처리
     @Transactional
