@@ -41,4 +41,9 @@ public class AdminFundService {
         return adminFundMapper.selectFundSuggestions(searchType, keyword);
 
     }
+
+
+    public void updateFundAndChangeStatus(AdminFundMasterDTO dto) {
+        adminFundMapper.updateFundForRegister(dto);
+    }
 }

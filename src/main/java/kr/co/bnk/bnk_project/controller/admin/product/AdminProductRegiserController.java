@@ -28,9 +28,18 @@ public class AdminProductRegiserController {
         model.addAttribute("pageRequestDTO", pageRequestDTO);
         model.addAttribute("fund", fund);
 
-        // 템플릿 경로: src/main/resources/templates/admin/product/adminproduct-register.html
         return "admin/product/adminproduct-register";
     }
+
+
+    @PostMapping("/register")
+    public String registerFund(AdminFundMasterDTO formDto) {
+
+        adminFundService.updateFundAndChangeStatus(formDto);
+
+        return "redirect:/admin/product/pending";
+    }
+
 
     /* 자동완성 API
      */

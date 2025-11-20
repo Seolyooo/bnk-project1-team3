@@ -15,4 +15,9 @@ public interface AdminFundMapper {
 
     List<AdminFundMasterDTO> selectFundSuggestions(@Param("searchType") String searchType,
                                                    @Param("keyword") String keyword);
+
+
+
+    void updateFundForRegister(AdminFundMasterDTO dto);
+
 }

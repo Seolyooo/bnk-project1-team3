@@ -12,7 +12,6 @@
         <result property="fundShortCode"   column="FUND_SHORT_CODE"/>
         <result property="fundName"        column="FUND_NAME"/>
         <result property="fundType"        column="FUND_TYPE"/>
-        <result property="investRegion"    column="INVEST_REGION"/>
         <result property="investGrade"     column="INVEST_GRADE"/>
         <result property="fundFeature"     column="FUND_FEATURE"/>
         <result property="operStatus"      column="OPER_STATUS"/>
@@ -26,8 +25,6 @@
 
     <!--
         등록대기 상태 펀드 단일 조회
-        - PageRequestDTO.searchType : 'code' or 'name'
-        - PageRequestDTO.keyword    : 검색어
      -->
     <select id="selectPendingFund"
             parameterType="kr.co.bnk.bnk_project.dto.PageRequestDTO"
@@ -38,7 +35,6 @@
         fm.FUND_SHORT_CODE,
         fm.FUND_NAME,
         fm.FUND_TYPE,
-        fm.INVEST_REGION,
         fm.INVEST_GRADE,
         fm.FUND_FEATURE,
         fm.OPER_STATUS,
@@ -79,7 +75,6 @@
         fm.FUND_SHORT_CODE,
         fm.FUND_NAME,
         fm.FUND_TYPE,
-        fm.INVEST_REGION,
         fm.INVEST_GRADE,
         fm.FUND_FEATURE,
         fm.OPER_STATUS,
@@ -92,6 +87,7 @@
         LEFT JOIN BNK.FUND_CATEGORY fc
         ON fm.FUND_TYPE = fc.CATEGORY_CODE
         WHERE 1 = 1
+          and oper_status = '등록대기'
 
         <choose>
             <!-- 코드 기준 자동완성 -->
@@ -115,6 +111,18 @@
         WHERE ROWNUM &lt;= 5
     </select>
 
+    <update id="updateFundForRegister"
+            parameterType="kr.co.bnk.bnk_project.dto.admin.AdminFundMasterDTO">
+
+        UPDATE BNK.FUND_MASTER
+        SET
+            FUND_NAME     = #{fundName},
+            INVEST_GRADE  = #{investGrade},
+            FUND_FEATURE  = #{fundFeature},
+            OPER_STATUS   = '등록',            -- 상태 변경
+            LAST_UPD_DATE = SYSDATE
+        WHERE FUND_CODE = #{fundCode}
+    </update>
 
 
 
