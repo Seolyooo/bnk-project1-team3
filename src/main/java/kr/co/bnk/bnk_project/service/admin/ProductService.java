@@ -3,13 +3,18 @@ package kr.co.bnk.bnk_project.service.admin;
 import kr.co.bnk.bnk_project.dto.CsDTO;
 import kr.co.bnk.bnk_project.dto.PageRequestDTO;
 import kr.co.bnk.bnk_project.dto.PageResponseDTO;
+import kr.co.bnk.bnk_project.dto.admin.FundListDetailDTO;
 import kr.co.bnk.bnk_project.dto.admin.ProductListDTO;
 import kr.co.bnk.bnk_project.mapper.admin.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+/*
+    날짜 : 2025/11/24
+    이름 : 이종봉
+    내용 : 펀드목록 돋보기
+ */
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -32,6 +37,11 @@ public class ProductService {
 
         return PageResponseDTO.of(pageRequestDTO, list, total);
 
-
     }
+
+    // 펀드 상세 조회(돋보기)
+    public FundListDetailDTO getProductDetail(String fundCode) {
+        return productMapper.selectProductDetail(fundCode);
+    }
+
 }

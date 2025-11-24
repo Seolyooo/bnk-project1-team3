@@ -42,11 +42,11 @@ public class FundListDetailDTO {
     private String shortCode;        // FUND_MASTER.FUND_SHORT_CODE 단축코드
     private String isUnitType;       // FUND_MASTER.IS_UNIT.TYPE 추가/단위구분
     private String OperPeriodType;   // FUND_MASTER.OPER_PERIOD_TYPE 신탁회계기간.신탁기간
+    private String className;        // FUND_MASTER.CLASS_NAME 특성분류
 
     // 추가컬럼
-    private String disclosureType;   // 운용실적공시분류
-    private String featureType;      // 특성분류
-    private String salesRegionType;  // 판매지역분류
+    private String rgnType;   // 운용실적공시분류
+    private String prfmType;  // 판매지역분류
 
 
     /* ---------------------------

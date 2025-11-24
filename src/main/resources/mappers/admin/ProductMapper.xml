@@ -2,6 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    날짜 : 2025/11/24
+    이름 : 이종봉
+    내용 : 펀드 목록 돋보기
+-->
+
+
 <mapper namespace="kr.co.bnk.bnk_project.mapper.admin.ProductMapper">
 
     <!-- 공통 WHERE 절 -->
@@ -77,5 +84,108 @@
 
         <include refid="productWhere"/>
     </select>
+
+    <!-- 펀드 목록 돋보기 -->
+    <select id="selectProductDetail"
+            parameterType="string"
+            resultType="kr.co.bnk.bnk_project.dto.admin.FundListDetailDTO">
+
+        SELECT
+            /* -------------------------
+             * 1) 요약 정보
+             * ------------------------- */
+            fm.fund_code               AS fundCode,
+            fm.fund_name               AS fundName,
+            fdh.nav_per_unit           AS navPerUnit,
+            fdh.daily_change_rate      AS changeAmount,
+            fdh.daily_change_rate      AS dailyChangeRate,
+            fdh.total_nav              AS totalNav,
+            TO_CHAR(fdh.trade_date, 'YYYY-MM-DD') AS tradeDate,
+
+            /* -------------------------
+             * 2) FUND_MASTER 기본 정보
+             * ------------------------- */
+            fm.fund_type               AS fundType,
+            fm.invest_region           AS investRegion,
+            fm.classify_code           AS classifyCode,
+            TO_CHAR(fm.setup_date, 'YYYY-MM-DD') AS setupDate,
+            fm.initial_nav             AS initialNav,
+            fm.public_private_type     AS publicPrivateType,
+            fm.oper_status             AS operStatus,
+            fm.fund_short_code         AS shortCode,
+            fm.is_unit_type            AS isUnitType,
+            fm.oper_period_type        AS operPeriodType,
+            fm.class_name              AS className,
+
+            fm.rgn_type                AS rgnType,
+            fm.prfm_type               AS prfmType,
+
+            /* -------------------------
+             * 3) FUND_FEE_STRUCTURE 보수/수수료
+             * ------------------------- */
+            ffs.sales_fee_rate         AS salesFeeRate,
+            ffs.mgt_fee_rate           AS mgtFeeRate,
+            ffs.trustee_fee_rate       AS trusteeFeeRate,
+            ffs.admin_fee_rate         AS adminFeeRate,
+            ffs.total_expense_ratio    AS totalExpenseRatio,
+            ffs.total_fee_rate         AS totalFeeRate,
+
+            ffs.upfront_fee            AS upfrontFee,
+            ffs.post_fee_rate          AS postFeeRate,
+
+            /* -------------------------
+             * 4) 관련회사 정보
+             * ------------------------- */
+            amc.operator_name          AS operatorName,
+            fm.admin_company           AS adminCompany,
+            fm.sales_company           AS salesCompany,
+            fm.trustee_company         AS trusteeCompany,
+
+            /* -------------------------
+             * 5) 회사개황/로고/재무현황
+             * ------------------------- */
+            amc.operator_hp            AS operatorHp,
+            amc.ceo_name               AS ceoName,
+            TO_CHAR(amc.establishment_date, 'YYYY-MM-DD') AS establishmentDate,
+            amc.total_asset            AS totalAsset,
+            amc.total_liabilities      AS totalLiabilities,
+            amc.capital                AS capital,
+            amc.equity_capital         AS equityCapital,
+            amc.homepage_url           AS homepageUrl,
+            amc.logo                   AS logo,
+            amc.net_income             AS netIncome,
+            amc.last_modified_date     AS lastModifiedDate,
+
+            /* 계산 컬럼 - 영업용순자본 */
+            (amc.total_asset - amc.total_liabilities) AS operatingCapital
+
+        FROM fund_master fm
+
+                 /* 최신 기준가 */
+                 LEFT JOIN (
+            SELECT f1.*
+            FROM fund_daily_history f1
+            WHERE (f1.fund_code, f1.trade_date) IN (
+                SELECT fund_code, MAX(trade_date)
+                FROM fund_daily_history
+                GROUP BY fund_code
+            )
+        ) fdh
+                           ON fm.fund_code = fdh.fund_code
+
+            /* 보수/수수료 */
+                 LEFT JOIN fund_fee_structure ffs
+                           ON fm.fund_code = ffs.fund_code
+
+            /* 운용사 정보 */
+                 LEFT JOIN asset_management_company amc
+                           ON fm.asset_manager_id = amc.operator_id
+
+        WHERE fm.fund_code = #{fundCode}
+
+    </select>
+
+
+
 
 </mapper>
