@@ -80,4 +80,9 @@ public class FundController {
     public String InfoAndDisclosure() {
         return "admin/info&disclosures/disclosures";
     }
+
+    @GetMapping("/investTest")
+    public String investTest() {
+        return "investTest";
+    }
 }

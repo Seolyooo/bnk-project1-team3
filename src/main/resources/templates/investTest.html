@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>투자성향분석 | BNK부산은행</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/investTest.css}">
+
+    <!-- (선택) 페이지용 JS -->
+    <script th:src="@{/js/investProfile.js}" defer></script>
+</head>
+
+<body>
+
+<main>
+    <div class="main-container">
+        <div class="content-wrapper">
+            <!-- 본문 -->
+            <div class="main-content">
+
+                <div class="content-header">
+                    <h1>투자성향분석</h1>
+                </div>
+
+                <div class="guide-box">
+                    <p>• 고객님은 자본시장통합법 시행령에 의거 일반고객으로 분류되었음을 알려드립니다.</p>
+                    <p>• 본 절차는 고객님의 투자 정보를 파악하여, 그에 적합한 펀드로 안내해 드리기 위한 기초 자료로 활용됩니다.</p>
+                    <p>• 고객님께 정확한 펀드 추천을 제공하기 위해서는 정확한 답변이 필요합니다.</p>
+                </div>
+
+                <!-- 단계 표시 -->
+                <div class="step-indicator">
+                    <span class="step">1 정보제공동의</span>
+                    <span class="step active">2 확인서작성</span>
+                    <span class="step">3 결과확인</span>
+                </div>
+
+                <h2 class="part-title">PART 1 | 투자 목적 및 재산상황</h2>
+
+                <form id="investForm">
+
+                    <!-- Q1 -->
+                    <div class="question-box">
+                        <h3>1. 다음 중 고객님의 수입원을 가장 잘 나타내는 것은 어느 것입니까?</h3>
+
+                        <label class="choice">
+                            <input type="radio" name="q1" value="A">
+                            현재 일정한 수입이 발생하고 있으며, 향후 현재 수준을 유지하거나 증가할 것으로 예상
+                        </label>
+
+                        <label class="choice">
+                            <input type="radio" name="q1" value="B">
+                            현재 일정한 수입이 발생하고 있으나, 향후 감소하거나 불안정할 것으로 예상
+                        </label>
+
+                        <label class="choice">
+                            <input type="radio" name="q1" value="C">
+                            현재 일정한 수입이 없으며, 연금이 수입원임
+                        </label>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="question-box">
+                        <h3>2. 연간소득 중 펀드에 가장 가까운 것은 어느 것입니까?</h3>
+
+                        <label class="choice"><input type="radio" name="q2" value="1"> 1억 이상</label>
+                        <label class="choice"><input type="radio" name="q2" value="2"> 5천만원~1억 미만</label>
+                        <label class="choice"><input type="radio" name="q2" value="3"> 3천만원~5천만원 미만</label>
+                        <label class="choice"><input type="radio" name="q2" value="4"> 3천만원 이하</label>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="question-box">
+                        <h3>3. 총 자산대비 투자자산의 비중은 어느 정도입니까?</h3>
+
+                        <label class="choice"><input type="radio" name="q3" value="30"> 30% 이상</label>
+                        <label class="choice"><input type="radio" name="q3" value="20"> 20% 이상</label>
+                        <label class="choice"><input type="radio" name="q3" value="10"> 10% 미만</label>
+                    </div>
+
+                    <h2 class="part-title">PART 2 | 다음 질문은 금융투자상품 이해에 필요한 지식의 수중 및 이해도에 관한 질문입니다.</h2>
+
+                    <!-- Q4 -->
+                    <div class="question-box">
+                        <h3>4. 본인의 본인의 지식수준과 가장 가까운 것은 어느 것입니까? </h3>
+
+                        <label class="choice"><input type="radio" name="q4" value="1"> 파생상품을 포함한 대부분의 금융 투자 상품의 구조 및 위험을 이해하고 있음</label>
+                        <label class="choice"><input type="radio" name="q4" value="2"> 널리 알려진 금융투자상품(주식,채권 및 펀드 등)의 구조 및 위험을 깊이 있게 이해하고 있음</label>
+                        <label class="choice"><input type="radio" name="q4" value="3"> 널리 알려진 금융투자상품(주식,채권 및 펀드 등)의 구조 및 위험을 일정 부분 이해하고 있음</label>
+                        <label class="choice"><input type="radio" name="q4" value="4"> 금융투자상품에 대해 거의 알지 못함</label>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="question-box">
+                        <h3>5. 투자원금에 손실이 발생할경우 감수할 수 있는 손실수준은 어느 것입니까?</h3>
+
+                        <label class="choice"><input type="radio" name="q5" value="1"> 기대이익이 높다면, 20%이상 전액 손실도 감수할 수 있다.</label>
+                        <label class="choice"><input type="radio" name="q5" value="2"> 원금 기준20% 미만의 손실은 감수할 수 있을 것 같다.</label>
+                        <label class="choice"><input type="radio" name="q5" value="3"> 원금 기준10% 미만의 손실은 감수할 수 있을 것 같다.</label>
+                        <label class="choice"><input type="radio" name="q5" value="4"> 투자 원금은 반드시 보전되어야한다.</label>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="question-box">
+                        <h3>6. 투자하는 자금의 투자예정기간은 얼마나 되십니까?</h3>
+
+                        <label class="choice"><input type="radio" name="q6" value="1"> 3년 이상</label>
+                        <label class="choice"><input type="radio" name="q6" value="2"> 2년이상 ~ 3년 미만</label>
+                        <label class="choice"><input type="radio" name="q6" value="3"> 1년이상 ~ 2년 미만</label>
+                        <label class="choice"><input type="radio" name="q6" value="4"> 6개월 이상 ~ 1년 미만</label>
+                        <label class="choice"><input type="radio" name="q6" value="5"> 6갸월 미만</label>
+                    </div>
+
+
+
+                    <!-- 버튼 영역 -->
+                    <div class="btn-area">
+                        <button type="button" class="btn-prev">결과보기</button>
+                        <button type="submit" class="btn-next">다시입력</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</main>
+<script th:src="@{/js/index.js}"></script>
+
+</body>
+</html>

@@ -3,10 +3,39 @@ let fundData = [];
 // ====== DB 데이터 로드 ======
 async function loadFundData() {
     try {
-        const res = await fetch("/api/fund/list");
-        fundData = await res.json();
+        const res = await fetch("/bnk/api/fund/list");
+        const rawData = await res.json();
 
-        console.log("DB에서 받은 데이터:", fundData);
+        console.log("DB에서 받은 데이터(raw):", rawData);
+
+        // ===== DB 위험등급을 화면 카테고리로 변환 =====
+        fundData = rawData.map(f => {
+            let category = "all";
+
+            switch (f.investgrade) {
+                case "매우 낮은 위험":
+                    category = "safe";          // 안정형
+                    break;
+                case "낮은 위험":
+                    category = "stable";        // 안정추구형
+                    break;
+                case "중간 위험":
+                    category = "neutral";       // 위험중립형
+                    break;
+                case "높은 위험":
+                    category = "dividend";      // 적극투자형
+                    break;
+                case "매우 높은 위험":
+                    category = "ipo";           // 공격투자형
+                    break;
+                default:
+                    category = "all";
+            }
+
+            return { ...f, category };
+        });
+
+        console.log("카테고리 변환 후 데이터:", fundData);
 
         renderFundList("all");
     } catch (error) {
@@ -34,19 +63,30 @@ function renderFundList(category = "all") {
         tbody.innerHTML += `
           <tr>
             <td class="fund-name">
-              ${fund.tag ? `<span class="tag">${fund.tag}</span>` : ""}
-              <a href="/fund/productDetail?fundNo=${fund.fundNo}" target="_blank">
-                ${fund.fundName}
+
+              <a href="/bnk/fund/productDetail/${fund.fundcode}">
+                ${fund.fundName
+        ?? fund.fundNm
+        ?? fund.fundshortcode
+        ?? fund.fundcode}
               </a>
-              <div class="desc">${fund.desc || ""}</div>
+
+              <div class="tag-wrap">
+                <span class="tag">${fund.investgrade || ""}</span>
+              </div>
+
+              <div class="desc">${fund.fundfeature || ""}</div>
+
             </td>
-            <td>${fund.perf1M}</td>
-            <td>${fund.perf3M}</td>
-            <td>${fund.perf6M}</td>
-            <td>${fund.perf12M}</td>
+
+            <td>${fund.perf1M ?? "-"}</td>
+            <td>${fund.perf3M ?? "-"}</td>
+            <td>${fund.perf6M ?? "-"}</td>
+            <td>${fund.perf12M ?? "-"}</td>
+
             <td>
               <button class="btn-join"
-                onclick="location.href='/fund/join?fundNo=${fund.fundNo}'">
+                onclick="location.href='/fund/join?fundNo=${fund.fundcode}'">
                 인터넷가입
               </button>
               <span class="sub-btn">스마트폰가입</span>

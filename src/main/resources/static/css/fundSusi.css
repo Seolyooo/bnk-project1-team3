@@ -16,7 +16,7 @@ h1 {
 .tab-menu {
     display: flex;
     border: 1px solid #ddd;
-    border-bottom: 2px solid #e760a7;
+    border-bottom: 2px solid #b22222;
     margin-bottom: 20px;
 }
 
@@ -38,7 +38,7 @@ h1 {
 }
 
 .tab-menu a.active {
-    background-color: #e760a7;
+    background-color: #b22222;
     color: #fff;
 }
 
@@ -47,7 +47,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
-    border-top: 2px solid #e760a7;
+    border-top: 2px solid #b22222;
 }
 
 th, td {
@@ -104,9 +104,9 @@ td.title {
 }
 
 .pagination button.active {
-    background-color: #e760a7;
+    background-color: #b22222;
     color: #fff;
-    border-color: #e760a7;
+    border-color: #b22222;
 }
 
 .pagination button:disabled {
