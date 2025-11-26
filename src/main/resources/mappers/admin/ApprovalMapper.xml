@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bnk.bnk_project.mapper.admin.ApprovalMapper">
+
+    <resultMap id="approvalResultMap" type="kr.co.bnk.bnk_project.dto.admin.ApprovalDTO">
+        <id property="apprNo" column="APPR_NO"/>
+        <result property="apprType" column="APPR_TYPE"/>
+        <result property="fundCode" column="FUND_CODE"/>
+        <result property="fundName" column="FUND_NAME"/>
+        <result property="requester" column="REQUESTER"/>
+        <result property="requestReason" column="REQUEST_REASON"/>
+        <result property="requestTime" column="REQUEST_TIME"/>
+        <result property="status" column="STATUS"/>
+        <result property="approver" column="APPROVER"/>
+        <result property="approvalTime" column="APPROVAL_TIME"/>
+        <result property="remarks" column="REMARKS"/>
+    </resultMap>
+
+    <sql id="pendingApprovalWhere">
+        <where>
+            <choose>
+                <when test="pageRequestDTO.status != null and pageRequestDTO.status != ''">
+                    AND NVL(ah.STATUS, '대기') = #{pageRequestDTO.status}
+                </when>
+                <otherwise>
+                    AND (ah.STATUS = '대기' OR ah.STATUS IS NULL)
+                </otherwise>
+            </choose>
+
+            <if test="pageRequestDTO.keyword != null and pageRequestDTO.keyword != ''">
+                AND (
+                        ah.APPR_NO LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                        OR fm.FUND_NAME LIKE '%' || #{pageRequestDTO.keyword} || '%'
+                    )
+            </if>
+
+            <if test="pageRequestDTO.requester != null and pageRequestDTO.requester != ''">
+                AND ah.REQUESTER LIKE '%' || #{pageRequestDTO.requester} || '%'
+            </if>
+
+            <if test="pageRequestDTO.dateFrom != null and pageRequestDTO.dateFrom != ''">
+                AND ah.REQUEST_TIME &gt;= TO_DATE(#{pageRequestDTO.dateFrom}, 'YYYY-MM-DD')
+            </if>
+
+            <if test="pageRequestDTO.dateTo != null and pageRequestDTO.dateTo != ''">
+                AND ah.REQUEST_TIME &lt; TO_DATE(#{pageRequestDTO.dateTo}, 'YYYY-MM-DD') + 1
+            </if>
+        </where>
+    </sql>
+
+    <insert id="insertApproval"
+            parameterType="kr.co.bnk.bnk_project.dto.admin.ApprovalDTO">
+
+        INSERT INTO APPROVAL_HISTORY (
+            APPR_TYPE,
+            FUND_CODE,
+            REQUESTER,
+            REQUEST_REASON,
+            REQUEST_TIME
+        )
+        VALUES (
+                   #{apprType},
+                   #{fundCode},
+                   #{requester},
+                   #{requestReason},
+                    SYSDATE
+               )
+    </insert>
+
+    <select id="selectPendingApprovals"
+            resultMap="approvalResultMap">
+        SELECT *
+        FROM (
+            SELECT inner_q.*, ROWNUM rn
+            FROM (
+                SELECT
+                    ah.APPR_NO,
+                    ah.APPR_TYPE,
+                    ah.FUND_CODE,
+                    fm.FUND_NAME,
+                    ah.REQUESTER,
+                    ah.REQUEST_REASON,
+                    ah.REQUEST_TIME,
+                    NVL(ah.STATUS, '대기') AS STATUS,
+                    ah.APPROVER,
+                    ah.APPROVAL_TIME,
+                    ah.REMARKS
+                FROM APPROVAL_HISTORY ah
+                JOIN FUND_MASTER fm
+                    ON fm.FUND_CODE = ah.FUND_CODE
+                <include refid="pendingApprovalWhere"/>
+                ORDER BY ah.REQUEST_TIME DESC
+            ) inner_q
+            WHERE ROWNUM &lt;= #{pageRequestDTO.offset} + #{pageRequestDTO.size}
+        )
+        WHERE rn &gt; #{pageRequestDTO.offset}
+    </select>
+
+    <select id="selectPendingApprovalsTotal"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM APPROVAL_HISTORY ah
+        JOIN FUND_MASTER fm
+            ON fm.FUND_CODE = ah.FUND_CODE
+        <include refid="pendingApprovalWhere"/>
+    </select>
+
+    <select id="selectRecentApprovalHistory"
+            resultMap="approvalResultMap">
+        SELECT *
+        FROM (
+            SELECT
+                ah.APPR_NO,
+                ah.APPR_TYPE,
+                ah.FUND_CODE,
+                fm.FUND_NAME,
+                ah.REQUESTER,
+                ah.REQUEST_REASON,
+                ah.REQUEST_TIME,
+                ah.STATUS,
+                ah.APPROVER,
+                ah.APPROVAL_TIME,
+                ah.REMARKS
+            FROM APPROVAL_HISTORY ah
+            JOIN FUND_MASTER fm
+                ON fm.FUND_CODE = ah.FUND_CODE
+            WHERE ah.STATUS IN ('승인', '반려')
+            ORDER BY ah.APPROVAL_TIME DESC NULLS LAST
+        )
+        WHERE ROWNUM &lt;= 10
+    </select>
+
+
+
+    <update id="approvalFund"
+            parameterType="kr.co.bnk.bnk_project.dto.admin.ApprovalDTO">
+        UPDATE APPROVAL_HISTORY
+        SET
+            approver      = #{approver},
+            approval_time = SYSDATE,
+            status        = #{status},
+            remarks       = #{remarks}
+        WHERE APPR_NO = #{apprNo}
+          AND FUND_CODE = #{fundCode}
+          AND NVL(status, '대기') = '대기'
+    </update>
+
+
+
+    
+
+</mapper>

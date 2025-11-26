@@ -19,6 +19,8 @@ public class ProductListDTO {
     private String operatorName;    // 회사명
     private LocalDateTime regDate;  // 등록일자
     private String operStatus;      // 상태 - 게시중, 수정중, 대기중, 중단
+    private String updateStat;      // OPER_STATUS
+
 
     // 추가
     private String categoryName; // 카테고리 이름 (한글)

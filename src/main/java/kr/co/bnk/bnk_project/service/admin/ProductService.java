@@ -4,6 +4,7 @@ import kr.co.bnk.bnk_project.dto.CsDTO;
 import kr.co.bnk.bnk_project.dto.PageRequestDTO;
 import kr.co.bnk.bnk_project.dto.PageResponseDTO;
 import kr.co.bnk.bnk_project.dto.admin.FundListDetailDTO;
+import kr.co.bnk.bnk_project.dto.admin.FundSettlementHistoryDTO;
 import kr.co.bnk.bnk_project.dto.admin.ProductListDTO;
 import kr.co.bnk.bnk_project.mapper.admin.ProductMapper;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,43 @@ public class ProductService {
 
     // 펀드 상세 조회(돋보기)
     public FundListDetailDTO getProductDetail(String fundCode) {
-        return productMapper.selectProductDetail(fundCode);
-    }
 
+        // 기존 상세 조회
+        FundListDetailDTO dto = productMapper.selectProductDetail(fundCode);
+
+        // 상세 없다면 null 반환 (방어코드)
+        if(dto == null) return null;
+
+        // 문서조회(약관, 투자설명서, 간이투자설명서)
+        List<FundListDetailDTO> docs = productMapper.selectFundDocuments(fundCode);
+
+        String termsUrl = null;
+        String investUrl = null;
+        String summaryUrl = null;
+
+        for(FundListDetailDTO doc : docs){
+            switch (doc.getDocType()){
+                case "TERMS":
+                    termsUrl = doc.getDocUrl();
+                    break;
+                case "INVEST":
+                    investUrl = doc.getDocUrl();
+                    break;
+                case "SUMMARY":
+                    summaryUrl = doc.getDocUrl();
+                    break;
+            }
+        }
+
+        dto.setTermsUrl(termsUrl);
+        dto.setInvestUrl(investUrl);
+        dto.setSummaryUrl(summaryUrl);
+
+        // 결산 및 상환
+        List<FundSettlementHistoryDTO> settlementList = productMapper.selectFundSettlementHistory(fundCode);
+
+        dto.setSettlementList(settlementList);
+
+        return dto;
+    }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bnk.bnk_project.mapper.RiskTestMapper">
+    <insert id="insertRiskTestResult" parameterType="kr.co.bnk.bnk_project.dto.RiskTestResultDTO">
+        INSERT INTO RISK_TEST_RESULT (
+            TEST_RUN_ID, CUST_NO, TEST_DATE, TOTAL_SCORE, RISK_TYPE, END_DATE
+        ) VALUES (
+                     'REQ_' || TO_CHAR(SYSDATE, 'YYYYMMDD') || '_' || LPAD(SEQ_RISK_TEST_ID.NEXTVAL, 5, '0'),
+                     #{custNo},
+                     SYSTIMESTAMP,
+                     #{totalScore},
+                     #{riskType},
+                     TRUNC(SYSDATE) + 1
+                 )
+    </insert>
+</mapper>

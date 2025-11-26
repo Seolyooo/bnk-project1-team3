@@ -2,8 +2,11 @@ package kr.co.bnk.bnk_project.controller;
 
 import jakarta.validation.Valid;
 import kr.co.bnk.bnk_project.dto.BnkUserDTO;
+import kr.co.bnk.bnk_project.dto.InvestmentResultDTO;
+import kr.co.bnk.bnk_project.dto.InvestmentSurveyDTO;
 import kr.co.bnk.bnk_project.dto.UserTermsDTO;
 import kr.co.bnk.bnk_project.service.EmailService;
+import kr.co.bnk.bnk_project.service.InvestmentService;
 import kr.co.bnk.bnk_project.service.MemberService;
 import kr.co.bnk.bnk_project.service.UserTermsService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +30,7 @@ public class MemberController {
     private final MemberService memberService;
     private final UserTermsService userTermsService;
     private final EmailService emailService;
+    private final InvestmentService investmentService;
 
     @GetMapping("/login")
     public String login(){
@@ -180,20 +185,30 @@ public class MemberController {
         return response;
     }
 
-    // 투자성향분석 설문 페이지
+    // 투자성향분석
     @GetMapping("/survey")
     public String survey(Model model) {
 
         return "member/survey";
     }
 
-    // 투자성향분석 결과 페이지 (임시)
+    // 투자성향분석 결과
     @PostMapping("/survey-result")
-    public String surveyResult(Model model) {
+    public String surveyResult(@ModelAttribute InvestmentSurveyDTO surveyDTO, Model model, Principal principal) {
 
-        // 지금은 무조건 '적극투자형'으로 결과를 보여주도록 설정
-        model.addAttribute("riskType", "적극투자형");
-        model.addAttribute("score", "82");
+        if (principal == null) return "redirect:/member/login";
+
+        // 서비스 호출
+        InvestmentResultDTO result = investmentService.processAnalysis(surveyDTO, principal.getName());
+
+        // View 데이터 전달
+        model.addAttribute("riskType", result.getType());
+        model.addAttribute("score", result.getScore());
+        model.addAttribute("description", result.getDescription());
+
+        // 그래프 위치
+        model.addAttribute("position", result.getScore());
+
         return "member/survey_result";
     }
 

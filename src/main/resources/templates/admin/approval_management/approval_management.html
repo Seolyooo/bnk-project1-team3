@@ -21,34 +21,7 @@
             <header class="page-header">
                 <h1>결재(승인) 관리</h1>
             </header>
-
-            <section class="section-block approval-overview">
-                <h2 class="section-title">상품 결재 현황</h2>
-                <div class="stat-grid">
-                    <div class="stat-card">
-                        <span class="stat-label">전체 요청</span>
-                        <span class="stat-value" data-metric="total">0건</span>
-                        <span class="stat-subtext">최근 30일</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">대기</span>
-                        <span class="stat-value" data-metric="pending">0건</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">승인</span>
-                        <span class="stat-value" data-metric="approved">0건</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">반려</span>
-                        <span class="stat-value" data-metric="rejected">0건</span>
-                    </div>
-                </div>
-                <ul class="summary-list">
-                    <li>상품 신규 등록 및 수정 요청만 확인합니다.</li>
-                    <li>승인 시 즉시 상품 관리 화면에 반영됩니다.</li>
-                </ul>
-            </section>
-
+            
             <section class="section-block approval-filter">
                 <h2 class="section-title">결재 요청 검색</h2>
                 <div class="search-section">
@@ -65,10 +38,10 @@
                                     <td class="search-label">상태</td>
                                     <td class="search-inputs">
                                         <select class="form-select search-select-medium" id="filterStatus" name="status">
-                                            <option value="">전체</option>
-                                            <option value="대기">대기</option>
-                                            <option value="승인">승인</option>
-                                            <option value="반려">반려</option>
+                                            <option value="" th:selected="${pageRequestDTO == null || #strings.isEmpty(pageRequestDTO.status)}">전체</option>
+                                            <option value="대기" th:selected="${pageRequestDTO != null && pageRequestDTO.status == '대기'}">대기</option>
+                                            <option value="승인" th:selected="${pageRequestDTO != null && pageRequestDTO.status == '승인'}">승인</option>
+                                            <option value="반려" th:selected="${pageRequestDTO != null && pageRequestDTO.status == '반려'}">반려</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -98,10 +71,14 @@
 
             <section class="section-block">
                 <h2 class="section-title">상품 결재 대기 목록</h2>
-                <div class="history-table">
+                <div class="history-table"
+                     th:with="pageSize=${pageRequestDTO != null && pageRequestDTO.size > 0 ? pageRequestDTO.size : 10},
+                              currentPage=${pageRequestDTO != null && pageRequestDTO.pg > 0 ? pageRequestDTO.pg : 1},
+                              totalPages=${pageResponse != null && pageResponse.total > 0 ? T(java.lang.Math).floorDiv(pageResponse.total + pageSize - 1, pageSize) : 1}">
                     <div class="table-info">
-                        <span>총 <strong>2</strong>건</span>
-                        <span class="pagination-info">1 / 1 page</span>
+                        <span>총 <strong th:text="${pageResponse != null ? pageResponse.total : 0}">0</strong>건</span>
+                        <span class="pagination-info"
+                              th:text="|${currentPage} / ${totalPages} page|">1 / 1 page</span>
                     </div>
                     <table class="fund-table" id="pendingTable">
                         <thead>
@@ -115,94 +92,60 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="approval-row selected" data-id="APR-2024-021" data-product="BNK 스마트 적금" data-product-code="BNK-001" data-type="상품 신규 등록" data-requester="김운용" data-requested="2024-05-02 09:30" data-status="대기" data-status-key="pending" data-reason="신규 BNK 스마트 적금 상품 출시 결재 요청입니다." data-attachment="BNK_스마트적금_상품설명서.pdf" data-attachment-url="#">
-                            <td class="table-ellipsis">APR-2024-021</td>
-                            <td class="table-ellipsis">BNK 스마트 적금</td>
-                            <td class="table-ellipsis emphasis">상품 신규 등록</td>
-                            <td class="table-ellipsis">김운용</td>
-                            <td class="table-ellipsis">2024-05-02 09:30</td>
-                            <td class="table-ellipsis"><span class="status-badge status-pending">대기</span></td>
+                        <tr th:if="${pageResponse == null || #lists.isEmpty(pageResponse.dtoList)}">
+                            <td colspan="6" class="empty-row">조회된 결재 요청이 없습니다.</td>
                         </tr>
-                        <tr class="approval-row" data-id="APR-2024-020" data-product="BNK 기업대출상품" data-product-code="BNK-102" data-type="상품 수정" data-requester="박심사" data-requested="2024-05-01 14:10" data-status="대기" data-status-key="pending" data-reason="기업대출상품 금리 조건 변경에 대한 승인 요청입니다." data-attachment="기업대출상품_변경내역.pdf" data-attachment-url="#">
-                            <td class="table-ellipsis">APR-2024-020</td>
-                            <td class="table-ellipsis">BNK 기업대출상품</td>
-                            <td class="table-ellipsis emphasis">상품 수정</td>
-                            <td class="table-ellipsis">박심사</td>
-                            <td class="table-ellipsis">2024-05-01 14:10</td>
-                            <td class="table-ellipsis"><span class="status-badge status-pending">대기</span></td>
+                        <tr th:each="dto : ${pageResponse.dtoList}"
+                            class="approval-row"
+                            th:attr="data-id=${dto.apprNo},
+                                     data-product=${dto.fundName},
+                                     data-product-code=${dto.fundCode},
+                                     data-type=${dto.apprType},
+                                     data-requester=${dto.requester},
+                                     data-requested=${dto.requestTime != null ? #temporals.format(dto.requestTime, 'yyyy-MM-dd HH:mm') : ''},
+                                     data-status=${dto.status != null ? dto.status : '대기'},
+                                     data-status-key=${dto.status == '승인' ? 'approved' : (dto.status == '반려' ? 'rejected' : 'pending')},
+                                     data-reason=${dto.requestReason}">
+                            <td class="table-ellipsis" th:text="${dto.apprNo}">APR-2024-021</td>
+                            <td class="table-ellipsis" th:text="${dto.fundName}">BNK 스마트 적금</td>
+                            <td class="table-ellipsis emphasis" th:text="${dto.apprType}">상품 신규 등록</td>
+                            <td class="table-ellipsis" th:text="${dto.requester}">김운용</td>
+                            <td class="table-ellipsis"
+                                th:text="${dto.requestTime != null ? #temporals.format(dto.requestTime, 'yyyy-MM-dd HH:mm') : '-'}">2024-05-02 09:30</td>
+                            <td class="table-ellipsis">
+                                <span class="status-badge"
+                                      th:text="${dto.status != null ? dto.status : '대기'}"
+                                      th:classappend="${dto.status == '승인' ? ' status-approved' : (dto.status == '반려' ? ' status-rejected' : ' status-pending')}">대기</span>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
-                    <div class="pagination">
-                        <button class="page-btn prev" disabled>&lt;</button>
+                    <div class="pagination"
+                         th:if="${pageResponse != null && pageResponse.total > 0}">
+                        <button class="page-btn prev"
+                                th:disabled="${!pageResponse.prev}"
+                                th:attr="onclick=${pageResponse.prev} ? 'location.href=\'' + @{/admin/approval(pg=${pageResponse.start - 1}, size=${pageRequestDTO.size}, keyword=${pageRequestDTO.keyword}, status=${pageRequestDTO.status}, requester=${pageRequestDTO.requester}, dateFrom=${pageRequestDTO.dateFrom}, dateTo=${pageRequestDTO.dateTo})} + '\'' : null">&lt;</button>
                         <div class="page-numbers">
-                            <button class="page-number active">1</button>
+                            <button class="page-number"
+                                    th:each="pageNum : ${#numbers.sequence(pageResponse.start, pageResponse.end)}"
+                                    th:text="${pageNum}"
+                                    th:classappend="${pageNum == (pageRequestDTO != null ? pageRequestDTO.pg : 1) ? ' active' : ''}"
+                                    th:attr="onclick='location.href=\'' + @{/admin/approval(pg=${pageNum}, size=${pageRequestDTO.size}, keyword=${pageRequestDTO.keyword}, status=${pageRequestDTO.status}, requester=${pageRequestDTO.requester}, dateFrom=${pageRequestDTO.dateFrom}, dateTo=${pageRequestDTO.dateTo})} + '\''">
+                                1
+                            </button>
                         </div>
-                        <button class="page-btn next" disabled>&gt;</button>
+                        <button class="page-btn next"
+                                th:disabled="${!pageResponse.next}"
+                                th:attr="onclick=${pageResponse.next} ? 'location.href=\'' + @{/admin/approval(pg=${pageResponse.end + 1}, size=${pageRequestDTO.size}, keyword=${pageRequestDTO.keyword}, status=${pageRequestDTO.status}, requester=${pageRequestDTO.requester}, dateFrom=${pageRequestDTO.dateFrom}, dateTo=${pageRequestDTO.dateTo})} + '\'' : null">&gt;</button>
                     </div>
                 </div>
             </section>
 
-            <div class="split-layout">
-                <section class="section-block approval-detail">
-                    <h2 class="section-title">결재 상세</h2>
-                    <div class="detail-panel">
-                        <div class="detail-grid">
-                            <div class="detail-item">
-                                <span class="detail-label">결재 ID</span>
-                                <span class="detail-value" id="detailId">APR-2024-021</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">결재 유형</span>
-                                <span class="detail-value" id="detailType">상품 신규 등록</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">상품명</span>
-                                <span class="detail-value" id="detailProduct">BNK 스마트 적금</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">상품 코드</span>
-                                <span class="detail-value" id="detailProductCode">BNK-001</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">요청자</span>
-                                <span class="detail-value" id="detailRequester">김운용</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">요청 일시</span>
-                                <span class="detail-value" id="detailRequestedAt">2024-05-02 09:30</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">상태</span>
-                                <span class="detail-value" id="detailStatus"><span class="status-badge status-pending">대기</span></span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">첨부 문서</span>
-                                <a href="#" class="detail-link" id="detailAttachment">BNK_스마트적금_상품설명서.pdf</a>
-                            </div>
-                            <div class="detail-item span-2">
-                                <span class="detail-label">요청 사유</span>
-                                <span class="detail-desc" id="detailReason">신규 BNK 스마트 적금 상품 출시 결재 요청입니다.</span>
-                            </div>
-                        </div>
-                        <div class="form-field">
-                            <label for="approvalComment">결재 의견</label>
-                            <textarea id="approvalComment" placeholder="승인 또는 반려 사유를 입력하세요."></textarea>
-                        </div>
-                        <div class="error-message" id="approvalError" aria-live="polite"></div>
-                        <div class="detail-actions">
-                            <button type="button" class="btn btn-red" id="approveButton">승인</button>
-                            <button type="button" class="btn btn-secondary" id="rejectButton">반려</button>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="section-block approval-history">
+            <section class="section-block approval-history">
                     <h2 class="section-title">최근 결재 이력</h2>
                     <div class="history-table">
                         <div class="table-info">
-                            <span>총 <strong>2</strong>건</span>
-                            <span class="pagination-info">1 / 1 page</span>
+                            <span>총 <strong th:text="${recentHistory != null ? #lists.size(recentHistory) : 0}">0</strong>건</span>
                         </div>
                         <table class="fund-table" id="historyTable">
                             <thead>
@@ -217,36 +160,95 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr data-status-key="approved">
-                                <td class="table-ellipsis">APR-2024-013</td>
-                                <td class="table-ellipsis">BNK 더드림 펀드</td>
-                                <td class="table-ellipsis emphasis">상품 신규 등록</td>
-                                <td class="table-ellipsis">홍관리</td>
-                                <td class="table-ellipsis">2024-04-20 14:05</td>
-                                <td class="table-ellipsis"><span class="status-badge status-approved">승인</span></td>
-                                <td class="remark">상품 신규 등록 승인</td>
+                            <tr th:if="${recentHistory == null || #lists.isEmpty(recentHistory)}">
+                                <td colspan="7" class="empty-row">최근 승인/반려 이력이 없습니다.</td>
                             </tr>
-                            <tr data-status-key="rejected">
-                                <td class="table-ellipsis">APR-2024-012</td>
-                                <td class="table-ellipsis">BNK 하모니 적립식</td>
-                                <td class="table-ellipsis emphasis">상품 수정</td>
-                                <td class="table-ellipsis">홍관리</td>
-                                <td class="table-ellipsis">2024-04-19 11:20</td>
-                                <td class="table-ellipsis"><span class="status-badge status-rejected">반려</span></td>
-                                <td class="remark">근거 자료 부족</td>
+                            <tr th:each="history : ${recentHistory}"
+                                th:attr="data-status-key=${history.status == '승인' ? 'approved' : (history.status == '반려' ? 'rejected' : '')}">
+                                <td class="table-ellipsis" th:text="${history.apprNo}">APR-2024-013</td>
+                                <td class="table-ellipsis" th:text="${history.fundName}">BNK 더드림 펀드</td>
+                                <td class="table-ellipsis emphasis" th:text="${history.apprType}">상품 신규 등록</td>
+                                <td class="table-ellipsis" th:text="${history.approver}">홍관리</td>
+                                <td class="table-ellipsis"
+                                    th:text="${history.approvalTime != null ? #temporals.format(history.approvalTime, 'yyyy-MM-dd HH:mm') : '-'}">2024-04-20 14:05</td>
+                                <td class="table-ellipsis">
+                                    <span class="status-badge"
+                                          th:text="${history.status}"
+                                          th:classappend="${history.status == '승인' ? ' status-approved' : ' status-rejected'}">승인</span>
+                                </td>
+                                <td class="remark" th:text="${history.remarks}">상품 신규 등록 승인</td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="pagination">
-                            <button class="page-btn prev" disabled>&lt;</button>
-                            <div class="page-numbers">
-                                <button class="page-number active">1</button>
-                            </div>
-                            <button class="page-btn next" disabled>&gt;</button>
-                        </div>
                     </div>
                 </section>
+
+    <!-- 결재 상세 모달 -->
+    <div id="approvalDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>결재 상세</h2>
+                <span class="close" onclick="closeApprovalDetailModal()">&times;</span>
             </div>
+            <div class="modal-body">
+                <div class="detail-panel">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">결재 ID</span>
+                            <span class="detail-value" id="detailId">APR-2024-021</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">결재 유형</span>
+                            <span class="detail-value" id="detailType">상품 신규 등록</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">상품명</span>
+                            <span class="detail-value" id="detailProduct">BNK 스마트 적금</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">상품 코드</span>
+                            <span class="detail-value" id="detailProductCode">BNK-001</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">요청자</span>
+                            <span class="detail-value" id="detailRequester">김운용</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">요청 일시</span>
+                            <span class="detail-value" id="detailRequestedAt">2024-05-02 09:30</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">상태</span>
+                            <span class="detail-value" id="detailStatus"><span class="status-badge status-pending">대기</span></span>
+                        </div>
+                        <div class="detail-item span-2">
+                            <span class="detail-label">요청 사유</span>
+                            <span class="detail-desc" id="detailReason">신규 BNK 스마트 적금 상품 출시 결재 요청입니다.</span>
+                        </div>
+                    </div>
+                    <form id="approvalForm" th:action="@{/admin/approval/approve}" method="post">
+                        <input type="hidden" id="approvalApprNo" name="apprNo">
+                        <input type="hidden" id="approvalFundCode" name="fundCode">
+                        <input type="hidden" id="approvalRequestReason" name="requestReason">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <input type="hidden" id="approvalStatus" name="status" value="승인">
+                        <div class="form-field">
+                            <label for="approvalComment">결재 의견</label>
+                            <textarea id="approvalComment" name="remarks" placeholder="승인 또는 반려 사유를 입력하세요."></textarea>
+                        </div>
+                        <div class="error-message" id="approvalError" aria-live="polite"></div>
+                        <div class="detail-actions">
+                            <button type="submit" class="btn btn-red" id="approveButton">승인</button>
+                            <button type="button" class="btn btn-secondary" id="rejectButton">반려</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeApprovalDetailModal()">닫기</button>
+            </div>
+        </div>
+    </div>
             <!-- 푸터 영역 -->
             <footer class="admin-footer"></footer>
         </div>
@@ -262,11 +264,15 @@
         const detailRequestedAt = document.getElementById('detailRequestedAt');
         const detailStatus = document.getElementById('detailStatus');
         const detailReason = document.getElementById('detailReason');
-        const detailAttachment = document.getElementById('detailAttachment');
         const detailProduct = document.getElementById('detailProduct');
         const detailProductCode = document.getElementById('detailProductCode');
         const commentField = document.getElementById('approvalComment');
         const errorBox = document.getElementById('approvalError');
+        const approvalForm = document.getElementById('approvalForm');
+        const approvalApprNoInput = document.getElementById('approvalApprNo');
+        const approvalFundCodeInput = document.getElementById('approvalFundCode');
+        const approvalRequestReasonInput = document.getElementById('approvalRequestReason');
+        const approvalStatusInput = document.getElementById('approvalStatus');
         const approveButton = document.getElementById('approveButton');
         const rejectButton = document.getElementById('rejectButton');
         const overviewMap = {
@@ -290,20 +296,34 @@
             detailStatus.innerHTML = `<span class="status-badge status-${statusKey}">${statusLabel}</span>`;
 
             detailReason.textContent = row.dataset.reason || '';
-            if (row.dataset.attachment) {
-                detailAttachment.textContent = row.dataset.attachment;
-                detailAttachment.href = row.dataset.attachmentUrl || '#';
-                detailAttachment.style.display = '';
-            } else {
-                detailAttachment.textContent = '첨부 파일 없음';
-                detailAttachment.removeAttribute('href');
-            }
             detailProduct.textContent = row.dataset.product || '-';
             detailProductCode.textContent = row.dataset.productCode || '-';
+            if (approvalApprNoInput) {
+                approvalApprNoInput.value = row.dataset.id || '';
+            }
+            if (approvalFundCodeInput) {
+                approvalFundCodeInput.value = row.dataset.productCode || '';
+            }
+            if (approvalRequestReasonInput) {
+                approvalRequestReasonInput.value = row.dataset.reason || '';
+            }
+            if (approvalStatusInput) {
+                approvalStatusInput.value = '승인';
+            }
 
             commentField.value = '';
             errorBox.textContent = '';
+            
+            // 모달 표시
+            document.getElementById('approvalDetailModal').classList.add('active');
         }
+
+        function closeApprovalDetailModal() {
+            document.getElementById('approvalDetailModal').classList.remove('active');
+        }
+        
+        // 전역 스코프에서 접근 가능하도록 설정
+        window.closeApprovalDetailModal = closeApprovalDetailModal;
 
         function updateOverviewCounts() {
             const counts = { total: 0, pending: 0, approved: 0, rejected: 0 };
@@ -331,10 +351,14 @@
             row.addEventListener('click', () => setDetail(row));
         });
 
-        approveButton.addEventListener('click', () => {
-            errorBox.textContent = '';
-            // 승인 로직 연결 시 이곳에서 처리
-        });
+        if (approveButton) {
+            approveButton.addEventListener('click', () => {
+                if (approvalStatusInput) {
+                    approvalStatusInput.value = '승인';
+                }
+                errorBox.textContent = '';
+            });
+        }
 
         rejectButton.addEventListener('click', () => {
             if (!commentField.value.trim()) {
@@ -342,8 +366,11 @@
                 commentField.focus();
                 return;
             }
+            if (approvalStatusInput) {
+                approvalStatusInput.value = '반려';
+            }
             errorBox.textContent = '';
-            // 반려 처리 로직 추가 가능
+            approvalForm.submit();
         });
 
         commentField.addEventListener('input', () => {
@@ -352,9 +379,14 @@
             }
         });
 
-        if (rows.length) {
-            setDetail(rows[0]);
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('approvalDetailModal');
+            if (event.target === modal) {
+                closeApprovalDetailModal();
+            }
         }
+
         updateOverviewCounts();
     });
 </script>

@@ -1,10 +1,13 @@
 package kr.co.bnk.bnk_project.controller.admin.product;
 
+import kr.co.bnk.bnk_project.dto.CsDTO;
 import kr.co.bnk.bnk_project.dto.PageRequestDTO;
 import kr.co.bnk.bnk_project.dto.PageResponseDTO;
 import kr.co.bnk.bnk_project.dto.admin.AdminFundMasterDTO;
+import kr.co.bnk.bnk_project.dto.admin.ApprovalDTO;
 import kr.co.bnk.bnk_project.dto.admin.ProductListDTO;
 import kr.co.bnk.bnk_project.service.admin.AdminFundService;
+import kr.co.bnk.bnk_project.service.admin.ApprovalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ import java.util.Map;
 public class AdminProductRegiserController {
 
     private final AdminFundService adminFundService;
+    private final ApprovalService approvalService;
 
     /*펀드 신규 등록 화면*/
     @GetMapping("/register")
@@ -127,5 +131,17 @@ public class AdminProductRegiserController {
                 "message", "운용재개 처리되었습니다."
         ));
     }
+
+
+    /*---------------------------------------------*/
+    /*--------------------결제-------------------------*/
+
+    @PostMapping("/approval")
+    public String insertApproval(ApprovalDTO approvalDTO) {
+        approvalService.insertApproval(approvalDTO);
+        return "redirect:/admin/product/pending";
+    }
+
+
 
 }

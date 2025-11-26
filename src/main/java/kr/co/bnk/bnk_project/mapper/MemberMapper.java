@@ -11,7 +11,10 @@ public interface MemberMapper {
 
     //Spring Security 인증을 위한 사용자 정보 조회
     BnkUserDTO findByCustId(@Param("custId") String custId);
-
+    
+    //UserId로 CustNo조회
+    Long findCustNoByUserId(String userId);
+    
     // 아이디 중복 체크
     int existsByCustId(String userId);
 

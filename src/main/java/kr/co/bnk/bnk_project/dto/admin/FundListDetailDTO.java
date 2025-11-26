@@ -3,6 +3,7 @@ package kr.co.bnk.bnk_project.dto.admin;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,10 +14,20 @@ import java.time.LocalDate;
 public class FundListDetailDTO {
 
     /*
-        날짜 : 2025/11/21
+        날짜 : 2025/11/26
         이름 : 이종봉
         내용 : 펀드목록 돋보기
      */
+
+    // 약관, 투자설명서, 간이투자설명서
+    private String termsUrl;
+    private String investUrl;
+    private String summaryUrl;
+    // 펀드 문서 컬럼 추가
+    private String docType; // 문서종류 (terms, invest, summary)
+    private String docUrl;  // 문서 URL
+    private String docFileName; // 파일명
+
 
     /* ---------------------------
      * 1) 요약 정보 (상단 Summary)
@@ -91,9 +102,9 @@ public class FundListDetailDTO {
 
 
     /* ---------------------------
-     * 7) 자산구성내역 (FUND_ASSET_ALLOCATION)
+     * 7) 자산구성내역 (FUND_SETTLEMENT_HISTORY)
      * --------------------------- */
-    //private List<AssetAllocationDTO> assetAllocations;
+    private List<FundSettlementHistoryDTO> settlementList;
 
     /* ---------------------------
      * 8) 문서 정보 (FUND_DOCUMENTS)

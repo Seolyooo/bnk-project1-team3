@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 /*
-    날짜 : 2025/11/24
+    날짜 : 2025/11/26
     이름 : 이종봉
     내용 : 펀드 목록 상세(돋보기)
  */

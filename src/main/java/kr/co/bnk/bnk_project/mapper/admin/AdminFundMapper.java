@@ -39,4 +39,9 @@ public interface AdminFundMapper {
     // 전체 갯수 조회
     int selectProductTotal(@Param("pageRequestDTO")PageRequestDTO pageRequestDTO);
 
+    void updateOperStatus(@Param("fundCode") String fundCode);  // 추가
+
+    void updateStatusAfterApproval(@Param("fundCode") String fundCode,
+                                   @Param("status") String status);
+
 }

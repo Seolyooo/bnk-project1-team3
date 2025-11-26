@@ -15,6 +15,7 @@
         <result property="investGrade"     column="INVEST_GRADE"/>
         <result property="fundFeature"     column="FUND_FEATURE"/>
         <result property="operStatus"      column="OPER_STATUS"/>
+        <result property="updateStat"      column="UPDATE_STAT"/>
 
         <result property="notice1"      column="NOTICE_1"/>
         <result property="notice2"      column="NOTICE_2"/>
@@ -45,7 +46,8 @@
         am.OPERATOR_NAME,
         fc.CATEGORY_NAME AS FUND_TYPE_NAME,
         fm.NOTICE_1,
-        fm.NOTICE_2
+        fm.NOTICE_2,
+        fm.UPDATE_STAT
         FROM BNK.FUND_MASTER fm
         LEFT JOIN BNK.ASSET_MANAGEMENT_COMPANY am
         ON fm.ASSET_MANAGER_ID = am.OPERATOR_ID
@@ -87,14 +89,15 @@
         am.OPERATOR_NAME,
         fc.CATEGORY_NAME AS FUND_TYPE_NAME,
         fm.NOTICE_1,
-        fm.NOTICE_2
+        fm.NOTICE_2,
+        fm.UPDATE_STAT
         FROM BNK.FUND_MASTER fm
         LEFT JOIN BNK.ASSET_MANAGEMENT_COMPANY am
         ON fm.ASSET_MANAGER_ID = am.OPERATOR_ID
         LEFT JOIN BNK.FUND_CATEGORY fc
         ON fm.FUND_TYPE = fc.CATEGORY_CODE
         WHERE 1 = 1
-          and oper_status = '등록대기'
+          and oper_status = '대기'
 
         <choose>
             <!-- 코드 기준 자동완성 (대소문자 무시) -->
@@ -173,7 +176,7 @@
             FUND_FEATURE  = #{fundFeature},
             NOTICE_1      =#{notice1},
             NOTICE_2      =#{notice2},
-            OPER_STATUS   = '수정',            -- 상태 변경
+            UPDATE_STAT   = '수정',            -- 상태 변경
             LAST_UPD_DATE = SYSDATE
         WHERE FUND_CODE = #{fundCode}
     </update>
@@ -235,6 +238,7 @@
             <if test="pageRequestDTO.status != null and pageRequestDTO.status != ''">
                 AND fm.oper_status = #{pageRequestDTO.status}
             </if>
+            AND fm.oper_status != '대기'
 
         </where>
     </sql>
@@ -253,7 +257,8 @@
         amc.operator_name      AS operatorName,
         fm.reg_date            AS regDate,
         fm.oper_status         AS operStatus,
-        fm.last_upd_date       AS lastUpdDate
+        fm.last_upd_date       AS lastUpdDate,
+        fm.UPDATE_STAT         AS updateStat
         FROM fund_master fm
         JOIN asset_management_company amc
         ON fm.asset_manager_id = amc.operator_id
@@ -261,7 +266,6 @@
         ON fm.fund_type = fc.category_code
 
         <include refid="productWhere"/>
-
         ORDER BY fm.reg_date DESC
         OFFSET #{pageRequestDTO.offset} ROWS
         FETCH NEXT #{pageRequestDTO.size} ROWS ONLY
@@ -273,10 +277,32 @@
             resultType="int">
         SELECT COUNT(*)
         FROM fund_master fm
-
         <include refid="productWhere"/>
+
     </select>
 
+    <update id="updateOperStatus">
+        UPDATE BNK.FUND_MASTER
+        SET
+            OPER_STATUS   = '등록대기',
+            LAST_UPD_DATE = SYSDATE
+        WHERE FUND_CODE = #{fundCode}
+    </update>
 
+    <update id="updateStatusAfterApproval">
+        UPDATE BNK.FUND_MASTER
+        SET
+            OPER_STATUS = CASE
+                              WHEN OPER_STATUS='등록대기'
+                                  THEN (CASE WHEN #{status} = '승인' THEN '등록완료' ELSE '등록반려' END)
+                              ELSE OPER_STATUS
+                          END,
+            UPDATE_STAT = CASE
+                              WHEN UPDATE_STAT = '수정대기'
+                                  THEN (CASE WHEN #{status} = '승인' THEN '수정완료' ELSE '수정반려' END)
+                              ELSE UPDATE_STAT
+                          END
+        WHERE FUND_CODE = #{fundCode}
+    </update>
 
 </mapper>

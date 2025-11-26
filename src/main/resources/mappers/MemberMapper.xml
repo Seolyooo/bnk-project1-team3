@@ -18,6 +18,11 @@
             cust_id = #{custId}
     </select>
 
+    <!-- CustNo조회 -->
+    <select id="findCustNoByUserId" parameterType="String" resultType="Long">
+        SELECT CUST_NO FROM BNK_USER WHERE CUST_ID = #{userId}
+    </select>
+
     <!-- ID중복 체크 -->
     <select id="existsByCustId" parameterType="string" resultType="int">
         SELECT COUNT(1)

@@ -32,6 +32,7 @@ public class PageRequestDTO {
     // 펀드 목록 검색 추가
     private String category;
     private String status;
+    private String requester;
 
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
