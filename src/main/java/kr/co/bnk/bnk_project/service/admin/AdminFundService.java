@@ -78,7 +78,13 @@ public class AdminFundService {
     }
 
 
+    public void updateOperStatus(String fundCode) {
+        adminFundMapper.updateOperStatus(fundCode);
+    }
 
+    public void updateStatusAfterApproval(String fundCode, String status) {
+        adminFundMapper.updateStatusAfterApproval(fundCode, status);
+    }
 
 
 
@@ -102,6 +108,7 @@ public class AdminFundService {
 
 
         return PageResponseDTO.of(pageRequestDTO, list, total);
+
 
     }
 }

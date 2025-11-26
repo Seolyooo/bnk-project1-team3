@@ -25,6 +25,7 @@ public class AdminFundMasterDTO {
     private String fundFeature;     // FUND_FEATURE (CLOB -> String)
 
     private String operStatus;      // OPER_STATUS
+    private String updateStat;      // OPER_STATUS
 
     private String notice1;
     private String notice2;

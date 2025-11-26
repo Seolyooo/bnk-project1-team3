@@ -446,6 +446,45 @@
     color: white;
 }
 
+.action-btn.stop:disabled {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
+    cursor: not-allowed;
+}
+
+.action-btn.stop:disabled:hover {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
+}
+
+.action-btn.resume:disabled {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
+    cursor: not-allowed;
+}
+
+.action-btn.resume:disabled:hover {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
+}
+
+.action-btn.waiting {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
+    cursor: not-allowed;
+}
+
+.action-btn.waiting:hover {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
+}
+
 .action-btn.edit {
     background: #f0f0f0;
     color: #333;
@@ -468,6 +507,19 @@
     color: white;
 }
 
+.action-btn.approval:disabled {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
+    cursor: not-allowed;
+}
+
+.action-btn.approval:disabled:hover {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
+}
+
 .action-btn.reserve {
     background: #f0f0f0;
     color: #333;
@@ -477,6 +529,19 @@
 .action-btn.reserve:hover {
     background: #e0e0e0;
     color: #333;
+}
+
+.action-btn.reserve:disabled {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
+    cursor: not-allowed;
+}
+
+.action-btn.reserve:disabled:hover {
+    background: #d0d0d0;
+    color: #666;
+    border-color: #d0d0d0;
 }
 
 .status-badge {
