@@ -14,6 +14,8 @@
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/fundSusi.css}">
     <script th:src="@{/js/fundSusi.js}" defer></script>
+    <link rel="stylesheet" th:href="@{/css/productList.css}">
+    <script th:src="@{/js/sidebar.js}"></script>
 <body>
 
 <header class="header">
@@ -60,17 +62,26 @@
     </nav>
 </header>
 
-<div class="container">
-    <h1>수시공시</h1>
+<main>
+    <div class="main-container">
+        <div class="content-wrapper">
 
-    <!-- 상단 탭 -->
-    <div class="tab-menu">
-        <a class="tab active" data-tab="recent">수시공시(최근 1개월)</a>
-        <a class="tab" data-tab="manage">자산운용보고서</a>
-        <a class="tab" data-tab="trust">수탁관리보고서</a>
-        <a class="tab" data-tab="audit">회계감사보고서</a>
-        <a class="tab" data-tab="all">수시공시(전체)</a>
-    </div>
+            <!-- ⭐ 사이드바 -->
+            <div th:replace="~{sidebar :: sidebar}"></div>
+
+            <!-- ⭐ 본문 -->
+            <div class="main-content">
+
+            <h1>수시공시</h1>
+
+            <!-- 상단 탭 -->
+            <div class="tab-menu">
+                <a class="tab active" data-tab="recent">수시공시(최근 1개월)</a>
+                <a class="tab" data-tab="manage">자산운용보고서</a>
+                <a class="tab" data-tab="trust">수탁관리보고서</a>
+                <a class="tab" data-tab="audit">회계감사보고서</a>
+                <a class="tab" data-tab="all">수시공시(전체)</a>
+            </div>
 
     <!-- 수시공시(최근 1개월) -->
     <div class="tab-content active" id="recent">
@@ -197,6 +208,43 @@
         </table>
     </div>
 </div>
-
+</div>
+</div>
+</main>
+<footer class="footer">
+    <div class="container">
+        <div class="footer-links">
+            <a href="#"><span style="color: #004890 !important;">개인정보처리방침</span></a>
+            <span class="divider">·</span>
+            <a href="#">영업점</a>
+            <span class="divider">·</span>
+            <a href="#">고객정보취급방침</a>
+            <span class="divider">·</span>
+            <a href="#">보호금융상품목록</a>
+            <span class="divider">·</span>
+            <a href="#">상품공시실</a>
+            <span class="divider">·</span>
+            <a href="#">전자민원접수</a>
+            <span class="divider">·</span>
+            <a href="#">전자금융이용자보호조치</a>
+            <span class="divider">·</span>
+            <a href="#">전자금융거래기본약관펀드</a>
+        </div>
+        <div class="footer-links">
+            <a href="#">위치기반서비스 이용약관</a>
+        </div>
+        <div class="footer-info">
+            <p><strong>고객상담 1588-6200, 1544-6200 | 해외 82-2-1588-6200</strong></p>
+        </div>
+        <div class="footer-copyright">
+            <p>COPYRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</p>
+        </div>
+    </div>
+</footer>
+<script th:src="@{/js/index.js}"></script>
+<script sec:authorize="isAuthenticated()" th:inline="javascript">
+    const serverTimeoutInSeconds = /*[[${sessionTimeout}]]*/ 1200;
+    initSessionTimer(serverTimeoutInSeconds);
+</script>
 </body>
 </html>

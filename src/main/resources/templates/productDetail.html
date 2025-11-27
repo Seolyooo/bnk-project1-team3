@@ -8,13 +8,16 @@
     <link rel="stylesheet" th:href="@{/css/productDetail.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:src="@{/js/sidebar.js}"></script>
     <title>펀드상품 상세 | BNK부산은행</title>
     <link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
     <link rel="preconnect" th:href="@{https://fonts.gstatic.com crossorigin}">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/productList.css}">
+
 </head>
+
 <body>
 <header class="header">
     <div class="header-top">
@@ -25,28 +28,31 @@
                 </a>
             </div>
             <div class="header-utils">
-                    <span sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 5px;">
-                        <a th:href="@{/my/dashboard}" class="util-link" style="font-weight: bold; color: #000; text-decoration: none;">
-                            <span th:text="${#authentication.principal.displayName} + '님'">홍길동님</span>
-                        </a>
-                        <span class="util-link" style="color: #ddd;">|</span>
-                        <span id="sessionTimer" class="util-link" style="color: #cb2b11; font-weight: bold;">20:00</span>
-                        <button type="button" id="sessionExtendBtn" class="util-link" style="background: none; border: 1px solid #ccc; padding: 2px 6px; font-size: 11px; border-radius: 4px; cursor: pointer; line-height: 1.4;">
-                            연장
-                        </button>
-                        <span class="util-link" style="color: #ddd;">|</span>
-                        <form th:action="@{/logout}" method="post" style="display: inline; margin: 0; padding: 0;">
-                            <button type="submit" class="util-link" style="background: none; border: none; padding: 0; font-size: 14px; cursor: pointer;">로그아웃</button>
-                        </form>
-                    </span>
+                <span sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 5px;">
+                    <a th:href="@{/my/dashboard}" class="util-link" style="font-weight: bold; color: #000; text-decoration: none;">
+                        <span th:text="${#authentication.principal.displayName} + '님'">홍길동님</span>
+                    </a>
+                    <span class="util-link" style="color: #ddd;">|</span>
+                    <span id="sessionTimer" class="util-link" style="color: #cb2b11; font-weight: bold;">20:00</span>
+                    <button type="button" id="sessionExtendBtn" class="util-link" style="background: none; border: 1px solid #ccc; padding: 2px 6px; font-size: 11px; border-radius: 4px; cursor: pointer; line-height: 1.4;">
+                        연장
+                    </button>
+                    <span class="util-link" style="color: #ddd;">|</span>
+                    <form th:action="@{/logout}" method="post" style="display: inline; margin: 0; padding: 0;">
+                        <button type="submit" class="util-link" style="background: none; border: none; padding: 0; font-size: 14px; cursor: pointer;">로그아웃</button>
+                    </form>
+                </span>
+
                 <span sec:authorize="isAnonymous()">
-                            <a th:href="@{/member/login}" class="util-link">로그인</a>
-                    </span>
+                    <a th:href="@{/member/login}" class="util-link">로그인</a>
+                </span>
+
                 <button type="button" class="btn-search" title="검색하기">검색하기</button>
                 <button type="button" class="btn-allmenu" title="전체메뉴">전체메뉴</button>
             </div>
         </div>
     </div>
+
     <nav class="nav">
         <div class="container">
             <ul class="nav-menu">
@@ -60,101 +66,110 @@
     </nav>
 </header>
 
-<div class="container">
-    <div class="subtitle">주식형</div>
-    <h1 th:text="${detail.fundNm}"></h1>
+<!-- 사이드바 + 본문 레이아웃 시작 -->
+<main>
+    <div class="main-container">
+        <div class="content-wrapper">
 
-    <!-- 기본정보 + 차트 -->
-    <div class="info-box">
-        <div class="info-left">
-            <table class="info-table">
-                <tr><td>클래스명칭</td><td th:text="${detail.classname}"></td></tr>
-                <tr><td>상품성향</td><td>적극투자형</td></tr>
-                <tr><td>가입대상</td><td>제한없음</td></tr>
-                <tr><td>투자등급</td><td th:text="${detail.investgrade}"></td></tr>
-                <tr><td>설정일</td><td>[[${detail.regdate}]]</td></tr>
-                <tr><td>운용사</td><td th:text="${detail.admincompany}"></td></tr>
-                <tr>
-                    <td colspan="2" th:text="${detail.overview}"></td>
-                </tr>
-            </table>
-        </div>
+            <!-- 사이드바 -->
+            <div th:replace="~{sidebar :: sidebar}"></div>
 
-        <div class="chart-box">
-            <h4>최근 3개월 기준가(DB 데이터 예정)</h4>
-            <canvas id="fundTrend"></canvas>
-        </div>
-    </div>
+            <!-- 본문 -->
+            <div class="main-content">
 
-    <!-- 가입 버튼 -->
-    <div class="btn-area">
-        <a href="#" class="btn red">인터넷가입</a>
-        <a href="#" class="btn gray">스마트폰가입</a>
-        <a href="#" class="btn dark">상담신청</a>
-        <a href="#" class="btn gray2">클래스별수수료</a>
-    </div>
+                <h1 th:text="${detail.fundName}" class="fund-title"></h1>
+                <div class="subtitle">주식형</div>
 
-    <!-- 사용자 분석 -->
-    <div class="section">
-        <h2>사용자분석</h2>
-        <p>이 상품에 가입하신 고객 현황입니다.</p>
-        <div class="chart-area">
-            <div>
-                <h4>성별 비율</h4>
-                <canvas id="genderChart"></canvas>
+                <!-- 기본정보 + 차트 -->
+                <div class="info-box">
+                    <div class="info-left">
+                        <table class="info-table">
+                            <tr><td>클래스명칭</td><td th:text="${detail.classname}"></td></tr>
+                            <tr><td>상품성향</td><td>적극투자형</td></tr>
+                            <tr><td>가입대상</td><td>제한없음</td></tr>
+                            <tr><td>투자등급</td><td th:text="${detail.investgrade}"></td></tr>
+                            <tr><td>설정일</td><td>[[${detail.regdate}]]</td></tr>
+                            <tr><td>운용사</td><td th:text="${detail.admincompany}"></td></tr>
+                            <tr><td colspan="2" th:text="${detail.overview}"></td></tr>
+                        </table>
+                    </div>
+
+                    <div class="chart-box">
+                        <h4>최근 3개월 기준가(DB 데이터 예정)</h4>
+                        <canvas id="fundTrend"></canvas>
+                    </div>
+                </div>
+
+                <div class="btn-area">
+                    <a href="#" class="btn red">인터넷가입</a>
+                    <a href="#" class="btn gray">스마트폰가입</a>
+                    <a href="#" class="btn dark">상담신청</a>
+                    <a href="#" class="btn gray2">클래스별수수료</a>
+                </div>
+
+                <!-- 사용자 분석 -->
+                <div class="section">
+                    <h2>사용자분석</h2>
+                    <p>이 상품에 가입하신 고객 현황입니다.</p>
+
+                    <div class="chart-area">
+                        <div>
+                            <h4>성별 비율</h4>
+                            <canvas id="genderChart"></canvas>
+                        </div>
+                        <div>
+                            <h4>연령대별 가입자 현황</h4>
+                            <canvas id="ageChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 상세정보 탭 -->
+                <div class="detail-tabs">
+                    <div class="detail-tab active" data-tab="overview">상품개요</div>
+                    <div class="detail-tab" data-tab="nav">펀드기준가</div>
+                    <div class="detail-tab" data-tab="performance">성과분석</div>
+                    <div class="detail-tab" data-tab="chart">차트분석</div>
+                    <div class="detail-tab" data-tab="risk">위험분석</div>
+                    <div class="detail-tab" data-tab="portfolio">포트폴리오분석</div>
+                    <div class="detail-tab" data-tab="bou">보유내역</div>
+                </div>
+
+                <div class="detail-content" id="tab-content">
+                    <h3>상품개요</h3>
+                    <p>
+                        급격하게 성장하고 변화하는 산업 패러다임에 적극적으로 대응할 수 있는 기술과 경쟁력을 지닌 국내 및 글로벌 기업에 투자합니다.<br>
+                        - 정보통신, 반도체, 소프트웨어 및 IT 관련 서비스 기업 중심<br>
+                        - AI, 로봇, 전기차 등 고성장 산업에 초점을 맞춤<br>
+                        - 장기적으로 안정적 자본이득을 목표로 합니다.
+                    </p>
+                </div>
+
+                <!-- 투자 유의 문구 -->
+                <div class="notice-box">
+                    <div class="notice-icon">ℹ️</div>
+                    <div class="notice-text">
+                        집합투자증권을 취득하기 전에 투자대상, 보수, 수수료 및 환매방법 등에 관하여
+                        <span class="highlight">투자설명서를 반드시 읽어보시기 바랍니다.</span><br>
+                        운용결과에 따라 투자원금의 손실이 발생할 수 있으며,
+                        과거 운용실적이 미래의 수익을 보장하지 않습니다.
+                    </div>
+                </div>
+
+                <div class="bottom-btn-area">
+                    <a href="#" class="btn red">인터넷가입</a>
+                    <a href="#" class="btn gray">스마트폰가입</a>
+                    <a th:href="@{/fund/productList}" class="btn white">목록보기</a>
+                </div>
+
             </div>
-            <div>
-                <h4>연령대별 가입자 현황</h4>
-                <canvas id="ageChart"></canvas>
-            </div>
+
         </div>
     </div>
-
-    <!-- 상세정보 탭 -->
-    <div class="detail-tabs">
-        <div class="detail-tab active" data-tab="overview">상품개요</div>
-        <div class="detail-tab" data-tab="nav">펀드기준가</div>
-        <div class="detail-tab" data-tab="performance">성과분석</div>
-        <div class="detail-tab" data-tab="chart">차트분석</div>
-        <div class="detail-tab" data-tab="risk">위험분석</div>
-        <div class="detail-tab" data-tab="portfolio">포트폴리오분석</div>
-        <div class="detail-tab" data-tab="bou">보유내역</div>
-    </div>
-
-    <div class="detail-content" id="tab-content">
-        <h3>상품개요</h3>
-        <p>
-            급격하게 성장하고 변화하는 산업 패러다임에 적극적으로 대응할 수 있는 기술과 경쟁력을 지닌 국내 및 글로벌 기업에 투자합니다.<br>
-            - 정보통신, 반도체, 소프트웨어 및 IT 관련 서비스 기업 중심<br>
-            - AI, 로봇, 전기차 등 고성장 산업에 초점을 맞춤<br>
-            - 장기적으로 안정적 자본이득을 목표로 합니다.
-        </p>
-    </div>
-
-    <!-- 투자 유의 문구 -->
-    <div class="notice-box">
-        <div class="notice-icon">ℹ️</div>
-        <div class="notice-text">
-            집합투자증권을 취득하기 전에 투자대상, 보수, 수수료 및 환매방법 등에 관하여
-            <span class="highlight">투자설명서를 반드시 읽어보시기 바랍니다.</span><br>
-            운용결과에 따라 투자원금의 손실이 발생할 수 있으며,
-            과거 운용실적이 미래의 수익을 보장하지 않습니다.
-        </div>
-    </div>
-
-    <!-- 하단 버튼 -->
-    <div class="bottom-btn-area">
-        <a href="#" class="btn red">인터넷가입</a>
-        <a href="#" class="btn gray">스마트폰가입</a>
-        <a th:href="@{/fund/productList}" class="btn white">목록보기</a>
-    </div>
-</div>
+</main>
 
 <script th:src="@{/js/productDetail.js}"></script>
-</body>
 <script th:src="@{/js/index.js}"></script>
-<script sec:authorize="isAuthenticated()" th:inline="javascript">
-    const serverTimeoutInSeconds = /*[[${sessionTimeout}]]*/ 30;
-    initSessionTimer(serverTimeoutInSeconds);
-</script>
+
+</body>
 </html>

@@ -203,9 +203,17 @@ h1 {
 .bottom-btn-area .btn:hover {
     opacity: 0.85;
 }
+
+.fund-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
 .subtitle {
     font-size: 16px;
     color: #b22222;
-    margin-top: 25px;   /* ★ 헤더 아래 간격 조절 */
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+
 }

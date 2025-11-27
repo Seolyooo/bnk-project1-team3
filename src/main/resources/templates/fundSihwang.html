@@ -147,40 +147,44 @@
                 <input type="text" placeholder="페이징 + 검색 기능 추가 예정">
                 <button id="btnSearch">검색</button>
             </div>
-
         </main>
-        <!-- ========== /본문 ========== -->
-
     </div>
 </div>
-<!-- ===================== /PAGE LAYOUT ===================== -->
 
-
-<!-- ===================== FOOTER ===================== -->
 <footer class="footer">
     <div class="container">
-
         <div class="footer-links">
-            <a href="#">이용약관</a>
-            <span class="divider">|</span>
-            <a href="#">개인정보처리방침</a>
-            <span class="divider">|</span>
-            <a href="#">전자금융거래 기본약관</a>
+            <a href="#"><span style="color: #004890 !important;">개인정보처리방침</span></a>
+            <span class="divider">·</span>
+            <a href="#">영업점</a>
+            <span class="divider">·</span>
+            <a href="#">고객정보취급방침</a>
+            <span class="divider">·</span>
+            <a href="#">보호금융상품목록</a>
+            <span class="divider">·</span>
+            <a href="#">상품공시실</a>
+            <span class="divider">·</span>
+            <a href="#">전자민원접수</a>
+            <span class="divider">·</span>
+            <a href="#">전자금융이용자보호조치</a>
+            <span class="divider">·</span>
+            <a href="#">전자금융거래기본약관펀드</a>
         </div>
-
+        <div class="footer-links">
+            <a href="#">위치기반서비스 이용약관</a>
+        </div>
         <div class="footer-info">
-            <p>BNK부산은행</p>
+            <p><strong>고객상담 1588-6200, 1544-6200 | 해외 82-2-1588-6200</strong></p>
         </div>
-
-        <div class="footer-bottom">
-            <div class="footer-copyright">
-                <p>Copyright © BNK Busan Bank.</p>
-            </div>
+        <div class="footer-copyright">
+            <p>COPYRIGHT © 2014 BUSANBANK. ALL RIGHTS RESERVED.</p>
         </div>
-
     </div>
 </footer>
-<!-- ===================== /FOOTER ===================== -->
-
+<script th:src="@{/js/index.js}"></script>
+<script sec:authorize="isAuthenticated()" th:inline="javascript">
+    const serverTimeoutInSeconds = /*[[${sessionTimeout}]]*/ 1200;
+    initSessionTimer(serverTimeoutInSeconds);
+</script>
 </body>
 </html>
