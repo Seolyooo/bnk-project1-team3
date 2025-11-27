@@ -10,6 +10,7 @@ import kr.co.bnk.bnk_project.security.AdminUserDetails;
 import kr.co.bnk.bnk_project.service.admin.AdminFundService;
 import kr.co.bnk.bnk_project.service.admin.ApprovalService;
 import kr.co.bnk.bnk_project.service.admin.EditLockService;
+import kr.co.bnk.bnk_project.service.admin.FundCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,11 @@ public class AdminProductRegiserController {
     private final AdminFundService adminFundService;
     private final ApprovalService approvalService;
     private final EditLockService editLockService;
+    private final FundCategoryService fundCategoryService;
+
+    private void populateCategories(Model model) {
+        model.addAttribute("categoryList", fundCategoryService.getAllCategories());
+    }
 
     /*펀드 신규 등록 화면*/
     @GetMapping("/register")
@@ -40,6 +46,7 @@ public class AdminProductRegiserController {
 
         model.addAttribute("pageRequestDTO", pageRequestDTO);
         model.addAttribute("fund", fund);
+        populateCategories(model);
 
         return "admin/product/adminproduct-register";
     }
@@ -100,6 +107,7 @@ public class AdminProductRegiserController {
         AdminFundMasterDTO fund = adminFundService.getPendingFundEdit(fundCode);
         model.addAttribute("fund", fund);
         model.addAttribute("sessionId", sessionId);
+        populateCategories(model);
         
         // 잠금 시도
         String lockResult = editLockService.tryLock(fundCode, sessionId, userId);
@@ -157,6 +165,7 @@ public class AdminProductRegiserController {
         model.addAttribute("pageResponse", pageResponse);
         model.addAttribute("dtoList", pageResponse.getDtoList());
         model.addAttribute("lockStatusMap", lockStatusMap);
+        populateCategories(model);
 
         return "admin/product/adminproduct-pending";
     }

@@ -90,20 +90,17 @@ public class EditLockService {
         LockInfo lock = editLocks.get(fundCode);
 
         if (lock == null) {
-            System.out.println("잠금 없음 - null 반환");
             return null; // 잠금 없음
         }
 
         // 만료된 잠금은 무시
         if (lock.isExpired()) {
-            System.out.println("만료된 잠금 제거");
             editLocks.remove(fundCode);
             return null;
         }
 
         // 같은 세션이면 null 반환 (본인 잠금)
         if (lock.getSessionId().equals(sessionId)) {
-            System.out.println("본인 잠금 - null 반환");
             return null;
         }
 
@@ -120,22 +117,18 @@ public class EditLockService {
     public boolean unlock(String fundCode, String sessionId) {
 
         if (fundCode == null || sessionId == null) {
-            System.out.println("fundCode 또는 sessionId가 null - false 반환");
             return false;
         }
 
         LockInfo lock = editLocks.get(fundCode);
-        System.out.println("lock 존재: " + (lock != null));
-        
+
         if (lock == null) {
-            System.out.println("잠금 없음 - 성공으로 간주");
             return true; // 잠금이 없으면 성공으로 간주
         }
         
 
         // 같은 세션이 아니면 해제 불가
         if (!lock.getSessionId().equals(sessionId)) {
-            System.out.println("다른 세션 잠금 - 해제 불가 (false 반환)");
             return false;
         }
 
@@ -152,20 +145,17 @@ public class EditLockService {
     public boolean keepLock(String fundCode, String sessionId) {
 
         if (fundCode == null || sessionId == null) {
-            System.out.println("fundCode 또는 sessionId가 null - false 반환");
             return false;
         }
 
         LockInfo lock = editLocks.get(fundCode);
 
         if (lock == null) {
-            System.out.println("잠금 없음 - false 반환");
             return false; // 잠금이 없음
         }
 
         // 같은 세션이 아니면 갱신 불가
         if (!lock.getSessionId().equals(sessionId)) {
-            System.out.println("다른 세션 잠금 - 갱신 불가 (false 반환)");
             return false;
         }
 
