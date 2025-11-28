@@ -1,6 +1,5 @@
 package kr.co.bnk.bnk_project.service;
 
-import jakarta.transaction.Transactional;
 import kr.co.bnk.bnk_project.dto.InvestmentResultDTO;
 import kr.co.bnk.bnk_project.dto.InvestmentSurveyDTO;
 import kr.co.bnk.bnk_project.dto.RiskTestResultDTO;
@@ -8,6 +7,7 @@ import kr.co.bnk.bnk_project.mapper.MemberMapper;
 import kr.co.bnk.bnk_project.mapper.RiskTestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +52,10 @@ public class InvestmentService {
         // ... (Q3~Q9 생략) ...
         score += (dto.getQ10() != null) ? dto.getQ10() * 5 : 0;     // 손실감내(가중치 높음)
         return Math.min(score, 100); // 최대 100점 제한
+    }
+    @Transactional(readOnly = true)
+    public boolean isRiskTestValid(Long custNo) {
+        RiskTestResultDTO result = riskTestMapper.findValidTestByCustNo(custNo);
+        return result != null;
     }
 }

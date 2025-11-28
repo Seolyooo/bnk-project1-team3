@@ -4,25 +4,29 @@ import jakarta.validation.Valid;
 import kr.co.bnk.bnk_project.dto.*;
 import kr.co.bnk.bnk_project.security.MyUserDetails;
 import kr.co.bnk.bnk_project.service.CsService;
+import kr.co.bnk.bnk_project.service.FundService;
 import kr.co.bnk.bnk_project.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/my")
 public class MyController {
 
     private final MemberService memberService;
+    private final FundService fundService;
     private final CsService csService;
 
     @GetMapping("/dashboard")
@@ -32,11 +36,11 @@ public class MyController {
         Long custNo = userDetails.getUserDTO().getCustNo();
 
         // 2. 서비스 호출
-        List<UserFundDTO> fundList = memberService.getMyFundList(custNo);
+        List<UserFundDTO> fundList = fundService.getMyFundList(custNo);
 
         // 3. 상단 요약 정보 계산 (총 평가금액, 총 수익률 등)
-        long totalEval = memberService.calculateTotalEval(fundList);
-        double totalYield = memberService.calculateTotalYield(fundList);
+        long totalEval = fundService.calculateTotalEval(fundList);
+        double totalYield = fundService.calculateTotalYield(fundList);
         long totalDiff = totalEval - fundList.stream().mapToLong(UserFundDTO::getPurchaseAmount).sum();
 
         // 4. 모델에 담아서 뷰로 전달
@@ -132,17 +136,97 @@ public class MyController {
     }
 
     @GetMapping("/account")
-    public String myAccountInquiry() {
+    public String myAccountInquiry(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
+        // 로그인한 사용자 정보 가져오기
+        Long custNo = userDetails.getUserDTO().getCustNo();
+
+        // DB에서 내 펀드 목록 가져오기
+        List<UserFundDTO> accountList = fundService.getMyFundList(custNo);
+
+        log.info("조회된 펀드 개수: {}", accountList != null ? accountList.size() : 0);
+
+        model.addAttribute("accountList", accountList);
+
         return "my/check/fundAccountInquiry";
     }
 
     @GetMapping("/price")
-    public String myPriceInquiry() {
+    public String myPriceInquiry(Model model,
+                                 @AuthenticationPrincipal MyUserDetails userDetails,
+                                 @RequestParam(required = false, defaultValue = "customer") String queryType,
+                                 @RequestParam(required = false) String fundCode,
+                                 @RequestParam(required = false) String startDate,
+                                 @RequestParam(required = false) String endDate) {
+
+        Long custNo = userDetails.getUserDTO().getCustNo();
+        List<FundMasterDTO> fundList = new ArrayList<>();
+
+        // 펀드 목록 조회
+        if ("customer".equals(queryType)) {
+            // [고객보유상품] - 내 계좌에서 펀드 목록 가져와서 변환
+            List<UserFundDTO> myFunds = fundService.getMyFundList(custNo);
+            // UserFundDTO -> FundMasterDTO 변환 (드롭다운 표시용)
+            for (UserFundDTO myFund : myFunds) {
+                FundMasterDTO dto = new FundMasterDTO();
+                dto.setFundCode(myFund.getFundCode());
+                dto.setFundName(myFund.getFundName());
+                fundList.add(dto);
+            }
+            // 중복 제거
+            fundList = fundList.stream().distinct().collect(Collectors.toList());
+
+        } else {
+            // [전체상품] - 마스터 테이블에서 전체 조회
+            fundList = fundService.getAllFunds();
+        }
+
+        model.addAttribute("fundList", fundList);
+
+        // 기준가격 이력 조회
+        if (fundCode != null && startDate != null && endDate != null) {
+            List<FundPriceDTO> priceList = fundService.getPriceHistory(fundCode, startDate, endDate);
+            model.addAttribute("priceList", priceList);
+        }
+
+        // 입력한 검색 조건 유지
+        model.addAttribute("queryType", queryType);
+        model.addAttribute("fundCode", fundCode);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+
         return "my/check/basicPriceInquiry";
     }
 
     @GetMapping("/yield")
-    public String myYieldInquiry() {
+    public String myYieldInquiry(@AuthenticationPrincipal MyUserDetails userDetails,
+                                 @ModelAttribute("searchDTO") FundSearchDTO searchDTO,
+                                 Model model) {
+
+        Long custNo = userDetails.getUserDTO().getCustNo();
+        searchDTO.setCustNo(custNo);
+
+        // 펀드 목록 조회
+        List<UserFundDTO> myFunds = fundService.getMyFundList(custNo);
+        model.addAttribute("myFunds", myFunds);
+
+        // startDate가 없으면 '초기 진입'으로 간주
+        if (searchDTO.getStartDate() == null) {
+
+            // 초기 진입 시: 날짜 입력창에 기본값(3개월)만 세팅하고, DB 조회는 안 함
+            searchDTO.setStartDate(LocalDate.now().minusMonths(3).toString());
+            searchDTO.setEndDate(LocalDate.now().toString());
+            searchDTO.setSearchType("hold");
+
+            // ★ 중요: yieldList를 모델에 담지 않음 (null 상태)
+
+        } else {
+            // 검색 버튼 클릭 시: DB 조회 실행
+            List<UserFundDTO> yieldList = fundService.getYieldList(searchDTO);
+
+            // 조회 결과가 있을 때만 모델에 담음
+            model.addAttribute("yieldList", yieldList);
+        }
+
         return "my/check/yieldInquiry";
     }
 
