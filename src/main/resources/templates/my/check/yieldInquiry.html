@@ -25,20 +25,28 @@
 
                 <div class="search-section">
                     <h3>조회기준선택</h3>
-                    <form action="#" method="get">
+
+                    <form th:action="@{/my/yield}" th:object="${searchDTO}" method="get" name="searchForm">
                         <table class="search-table">
                             <tr>
                                 <th>조회내용</th>
                                 <td>
-                                    <label class="form-radio"><input type="radio" name="searchType" value="hold" checked> 고객보유상품</label>
-                                    <label class="form-radio"><input type="radio" name="searchType" value="all"> 전체상품</label>
+                                    <label class="form-radio">
+                                        <input type="radio" th:field="*{searchType}" value="hold"> 고객보유상품
+                                    </label>
+                                    <label class="form-radio">
+                                        <input type="radio" th:field="*{searchType}" value="all"> 전체상품
+                                    </label>
                                 </td>
                             </tr>
                             <tr>
                                 <th>펀드명</th>
                                 <td>
-                                    <select class="form-select">
-                                        <option>보유중인 펀드상품이 없습니다.</option>
+                                    <select class="form-select" th:field="*{fundCode}">
+                                        <option value="">전체</option>
+                                        <option th:each="fund : ${myFunds}"
+                                                th:value="${fund.fundCode}"
+                                                th:text="${fund.fundName}">펀드명</option>
                                     </select>
                                 </td>
                             </tr>
@@ -46,18 +54,17 @@
                                 <th>조회기간</th>
                                 <td>
                                     <div class="date-btn-group">
-                                        <button type="button" class="btn-date">3일</button>
-                                        <button type="button" class="btn-date">1주일</button>
-                                        <button type="button" class="btn-date">1개월</button>
-                                        <button type="button" class="btn-date">3개월</button>
-                                        <button type="button" class="btn-date">6개월</button>
-                                        <button type="button" class="btn-date">12개월</button>
+                                        <button type="button" class="btn-date" onclick="setDateRange(3)">3일</button>
+                                        <button type="button" class="btn-date" onclick="setDateRange(7)">1주일</button>
+                                        <button type="button" class="btn-date" onclick="setDateRange(30)">1개월</button>
+                                        <button type="button" class="btn-date" onclick="setDateRange(90)">3개월</button>
+                                        <button type="button" class="btn-date" onclick="setDateRange(180)">6개월</button>
+                                        <button type="button" class="btn-date" onclick="setDateRange(365)">12개월</button>
                                     </div>
                                     <div style="margin-top: 5px;">
-                                        <input type="date" class="form-date" value="2025-05-07">
+                                        <input type="date" class="form-date" th:field="*{startDate}" id="startDate">
                                         <span>~</span>
-                                        <input type="date" class="form-date" value="2025-11-06">
-                                        <button type="button" style="border: none; background: none; cursor: pointer;">📅</button>
+                                        <input type="date" class="form-date" th:field="*{endDate}" id="endDate">
                                     </div>
                                 </td>
                             </tr>
@@ -69,8 +76,168 @@
                     </form>
                 </div>
 
-            </div> </div>
+                <div class="result-section" th:if="${yieldList != null}">
+
+                    <h3>
+                        조회내역
+                        <span style="font-size:13px; color:#666; font-weight:normal;">
+            (총 <span style="color:#cb2b11;" th:text="${yieldList.size()}">0</span>건)
+        </span>
+                    </h3>
+
+                    <table class="list-table">
+                        <colgroup>
+                            <col style="width: 15%">
+                            <col style="width: auto">
+                            <col style="width: 15%">
+                            <col style="width: 15%">
+                            <col style="width: 15%">
+                            <col style="width: 12%">
+                        </colgroup>
+
+                        <thead th:if="${searchDTO.searchType == 'hold' or searchDTO.searchType == null}">
+                        <tr>
+                            <th>가입일</th>
+                            <th>펀드명 (계좌번호)</th>
+                            <th>투자원금</th>
+                            <th>평가금액</th>
+                            <th>평가손익</th>
+                            <th>수익률</th>
+                        </tr>
+                        </thead>
+
+                        <thead th:if="${searchDTO.searchType == 'all'}">
+                        <tr>
+                            <th>펀드명</th>
+                            <th>조회기간</th>
+                            <th>시작일 기준가</th>
+                            <th>종료일 기준가</th>
+                            <th>변동액</th>
+                            <th>기간 수익률</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:if="${#lists.isEmpty(yieldList)}">
+                            <td colspan="6" class="no-data-msg">조회된 펀드 내역이 없습니다.</td>
+                        </tr>
+
+                        <tr th:if="${searchDTO.searchType == 'hold' or searchDTO.searchType == null}" th:each="item : ${yieldList}">
+                            <td th:text="${item?.regDate}">2025-11-28</td>
+                            <td class="text-left">
+                                <span th:text="${item?.fundName}" style="font-weight:bold; color:#333;">펀드명</span><br>
+                                <span th:text="'(' + ${item?.acctNo} + ')'" style="font-size:12px; color:#888;">(계좌)</span>
+                            </td>
+                            <td class="text-right" th:text="${#numbers.formatInteger(item?.purchaseAmount, 0, 'COMMA')} + '원'">원금</td>
+                            <td class="text-right" style="font-weight:bold;" th:text="${#numbers.formatInteger(item?.currentEvalAmount, 0, 'COMMA')} + '원'">평가금액</td>
+                            <td class="text-right">
+                <span th:class="${item?.profitAmount >= 0 ? 'fc-red' : 'fc-blue'}"
+                      th:text="${#numbers.formatInteger(item?.profitAmount, 0, 'COMMA')} + '원'">손익</span>
+                            </td>
+                            <td class="text-right">
+                <span th:class="${item?.yieldPct >= 0 ? 'fc-red' : 'fc-blue'}"
+                      th:text="${#numbers.formatDecimal(item?.yieldPct, 1, 2)} + '%'">5.00%</span>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${searchDTO.searchType == 'all'}" th:each="item : ${yieldList}">
+                            <td class="text-left" style="font-weight:bold; color:#333;" th:text="${item?.fundName}">펀드명</td>
+                            <td>
+                                <span th:text="${searchDTO.startDate} + ' ~ ' + ${searchDTO.endDate}" style="font-size:12px;">기간</span>
+                            </td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item?.startNav, 1, 2)}">1000.00</td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item?.endNav, 1, 2)}">1050.00</td>
+                            <td class="text-right">
+                <span th:if="${item?.endNav != null}"
+                      th:with="diff=${item.endNav - item.startNav}"
+                      th:class="${diff >= 0 ? 'fc-red' : 'fc-blue'}"
+                      th:text="${#numbers.formatDecimal(diff, 1, 2)}">50.00</span>
+                            </td>
+                            <td class="text-right">
+                <span th:class="${item?.periodYieldPct >= 0 ? 'fc-red' : 'fc-blue'}"
+                      th:text="${#numbers.formatDecimal(item?.periodYieldPct, 1, 2)} + '%'">5.00%</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
+
+<script>
+    // 페이지 로드 완료 시 실행
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const radioButtons = document.querySelectorAll('input[name="searchType"]');
+        const fundSelect = document.getElementById('fundCode');
+
+        // 1. 라디오 버튼 변경 이벤트 감지
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', function() {
+                toggleSearchOptions(this.value);
+            });
+        });
+
+        // 2. 초기 로드 시 상태에 맞춰 UI 세팅 (새로고침 시 상태 유지)
+        const checkedRadio = document.querySelector('input[name="searchType"]:checked');
+        if (checkedRadio) {
+            // 초기 진입 시에는 값 초기화는 하지 않고, disable 상태만 맞춤
+            if (checkedRadio.value === 'all') {
+                fundSelect.disabled = true;
+            } else {
+                fundSelect.disabled = false;
+            }
+        }
+    });
+
+    /**
+     * 검색 옵션 제어 및 초기화 함수
+     */
+    function toggleSearchOptions(searchType) {
+        const fundSelect = document.getElementById('fundCode');
+
+        // 내용 변경 시 값 초기화
+        fundSelect.value = ''; // 펀드명 '전체'로 초기화
+        setDateRange(90);      // 조회기간 '3개월'로 초기화 (기본값 설정)
+
+        // 전체상품 선택 시 드롭다운 고정(비활성화)
+        if (searchType === 'all') {
+            fundSelect.disabled = true;  // 선택 불가
+            fundSelect.style.backgroundColor = "#f5f5f5"; // 시각적 회색 처리
+        } else {
+            fundSelect.disabled = false; // 선택 가능
+            fundSelect.style.backgroundColor = "#fff";    // 흰색 복귀
+        }
+    }
+
+    /**
+     * 날짜 세팅 함수 (UTC 버그 수정됨)
+     */
+    function setDateRange(days) {
+        const endDate = new Date(); // 오늘
+        const startDate = new Date();
+
+        startDate.setDate(endDate.getDate() - days);
+
+        // 로컬 시간대 기준 포맷팅 함수 (YYYY-MM-DD)
+        const formatDate = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        // HTML ID가 startDate, endDate인지 확인 필요 (th:field로 생성됨)
+        const startInput = document.getElementById('startDate');
+        const endInput = document.getElementById('endDate');
+
+        if(startInput && endInput) {
+            startInput.value = formatDate(startDate);
+            endInput.value = formatDate(endDate);
+        }
+    }
+</script>
 
 <div th:replace="~{my/_tail.html}"></div>

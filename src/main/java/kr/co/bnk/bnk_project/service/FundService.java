@@ -1,12 +1,10 @@
 package kr.co.bnk.bnk_project.service;
 
-import kr.co.bnk.bnk_project.dto.FundMasterDTO;
-import kr.co.bnk.bnk_project.dto.FundPriceDTO;
-import kr.co.bnk.bnk_project.dto.ProductDTO;
-import kr.co.bnk.bnk_project.dto.UserFundDTO;
+import kr.co.bnk.bnk_project.dto.*;
 import kr.co.bnk.bnk_project.mapper.FundMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -82,4 +80,9 @@ public class FundService {
         return productMapper.selectFundPriceHistory(fundCode, startDate, endDate);
     }
 
+    // 수익률 조회
+    @Transactional(readOnly = true)
+    public List<UserFundDTO> getYieldList(FundSearchDTO params) {
+        return productMapper.selectFundYieldList(params);
+    }
 }
