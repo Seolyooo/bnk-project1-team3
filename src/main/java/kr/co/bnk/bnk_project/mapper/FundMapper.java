@@ -1,9 +1,6 @@
 package kr.co.bnk.bnk_project.mapper;
 
-import kr.co.bnk.bnk_project.dto.FundMasterDTO;
-import kr.co.bnk.bnk_project.dto.FundPriceDTO;
-import kr.co.bnk.bnk_project.dto.ProductDTO;
-import kr.co.bnk.bnk_project.dto.UserFundDTO;
+import kr.co.bnk.bnk_project.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,4 +21,7 @@ public interface FundMapper {
                                               @Param("startDate") String startDate,
                                               @Param("endDate") String endDate);
     List<FundMasterDTO> selectAllFundList();
+
+    //마이페이지 - 수익률 조회
+    List<UserFundDTO> selectFundYieldList(FundSearchDTO params);
 }

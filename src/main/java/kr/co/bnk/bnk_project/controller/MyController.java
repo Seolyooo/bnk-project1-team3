@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -181,13 +182,13 @@ public class MyController {
 
         model.addAttribute("fundList", fundList);
 
-        // 2. 기준가격 이력 조회 (검색 실행 시)
+        // 기준가격 이력 조회
         if (fundCode != null && startDate != null && endDate != null) {
             List<FundPriceDTO> priceList = fundService.getPriceHistory(fundCode, startDate, endDate);
             model.addAttribute("priceList", priceList);
         }
 
-        // 3. [중요] 입력한 검색 조건 유지 (화면 리셋 방지)
+        // 입력한 검색 조건 유지
         model.addAttribute("queryType", queryType);
         model.addAttribute("fundCode", fundCode);
         model.addAttribute("startDate", startDate);
@@ -197,7 +198,35 @@ public class MyController {
     }
 
     @GetMapping("/yield")
-    public String myYieldInquiry() {
+    public String myYieldInquiry(@AuthenticationPrincipal MyUserDetails userDetails,
+                                 @ModelAttribute("searchDTO") FundSearchDTO searchDTO,
+                                 Model model) {
+
+        Long custNo = userDetails.getUserDTO().getCustNo();
+        searchDTO.setCustNo(custNo);
+
+        // 펀드 목록 조회
+        List<UserFundDTO> myFunds = fundService.getMyFundList(custNo);
+        model.addAttribute("myFunds", myFunds);
+
+        // startDate가 없으면 '초기 진입'으로 간주
+        if (searchDTO.getStartDate() == null) {
+
+            // 초기 진입 시: 날짜 입력창에 기본값(3개월)만 세팅하고, DB 조회는 안 함
+            searchDTO.setStartDate(LocalDate.now().minusMonths(3).toString());
+            searchDTO.setEndDate(LocalDate.now().toString());
+            searchDTO.setSearchType("hold");
+
+            // ★ 중요: yieldList를 모델에 담지 않음 (null 상태)
+
+        } else {
+            // 검색 버튼 클릭 시: DB 조회 실행
+            List<UserFundDTO> yieldList = fundService.getYieldList(searchDTO);
+
+            // 조회 결과가 있을 때만 모델에 담음
+            model.addAttribute("yieldList", yieldList);
+        }
+
         return "my/check/yieldInquiry";
     }
 

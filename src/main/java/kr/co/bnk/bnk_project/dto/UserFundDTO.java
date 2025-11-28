@@ -14,4 +14,8 @@ public class UserFundDTO {
     private long profitAmount;      // 평가 손익 (금액방식)
     private double yieldPct;        // 수익률
     private String status;          // 상태
+    private String regDate;         // 가입일
+    private double startNav;        // 조회 시작일 기준가
+    private double endNav;          // 조회 종료일 기준가
+    private double periodYieldPct;  // 기간 수익률 (펀드 기준가 변동률)
 }
