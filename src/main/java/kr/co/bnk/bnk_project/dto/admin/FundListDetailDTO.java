@@ -29,14 +29,20 @@ public class FundListDetailDTO {
     private Double dailyChangeRate;  // 전일대비 %
     private Double totalNav;         // FUND_DAILY_HISTORY.TOTAL_NAV (순자산총액)
     private LocalDate tradeDate;     // 기준일자
-    // 추가
     private Double navPerUnit;       // 현재기준가
-    private Double prevWeekChange;   // 전주대비
-    private Double prevWeekPercent;   // 전주대비 %
+
+    // 추가
+    private Double prevDayNav;       // 전일기준가
+    private Double prevDayChange;    // 전일대비 금액
+    private Double prevWeekNav;      // 전주 기준가
+    private Double prevWeekChange;   // 전주대비 금액
+    private Double prevWeekPercent;  // 전주대비 %
+    private Double setupOriginAmount;   // 설정원본 FUND_DAILY_HISTORY.SETUP_ORIGIN_AMOUNT (설정원본)
 
     /* ---------------------------
      * 2) 펀드 기본 정보 (FUND_MASTER)
      * --------------------------- */
+    private String categoryName;     // 펀드 카테고리 한글 이름
     private String fundType;         // FUND_MASTER.FUND_TYPE 펀드유형, 구분
     private String investRegion;     // FUND_MASTER.INVEST_REGION 투자지역. 투자지역구분
     private String classifyCode;     // FUND_MASTER.CLASSIFY_CODE 분류코드
@@ -51,6 +57,9 @@ public class FundListDetailDTO {
 
     private String rgnType;   // 판매지역분류
     private String prfmType;  // 운용실적공시분류
+
+
+
 
 
     /* ---------------------------
