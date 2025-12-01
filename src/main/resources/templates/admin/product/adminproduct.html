@@ -265,9 +265,9 @@
 
                 // PDF 버튼 RUL
                 const ctx = "/bnk";
-                document.getElementById("termsBtn").href = ctx + "/files/" + (product.termsUrl ?? "#");
-                document.getElementById("investBtn").href = ctx + "/files/" + (product.investUrl ?? "#");
-                document.getElementById("summaryBtn").href = ctx + "/files/" + (product.summaryUrl ?? "#");
+                document.getElementById("termsBtn").href = ctx + (product.termsUrl ?? "#");
+                document.getElementById("investBtn").href = ctx + (product.investUrl ?? "#");
+                document.getElementById("summaryBtn").href = ctx + (product.summaryUrl ?? "#");
 
 
 
