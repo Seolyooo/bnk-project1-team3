@@ -899,19 +899,33 @@
         // 잠금 상태 업데이트 함수
         function updateLockStatus(lockStatusMap) {
             if (!lockStatusMap || Object.keys(lockStatusMap).length === 0) {
+                console.log('updateLockStatus: lockStatusMap이 비어있습니다.');
                 return; // 잠금 상태 정보가 없으면 업데이트하지 않음
             }
             
+            console.log('updateLockStatus: lockStatusMap =', lockStatusMap);
             const rows = document.querySelectorAll('.product-table tbody tr');
+            console.log('updateLockStatus: 조회된 행 개수 =', rows.length);
+            
             rows.forEach(row => {
                 const fundCode = row.getAttribute('data-fund-code') || 
                                 row.querySelector('.action-btn.edit')?.getAttribute('data-fund-code');
                 
-                if (!fundCode) return;
+                if (!fundCode) {
+                    console.log('updateLockStatus: fundCode를 찾을 수 없습니다.');
+                    return;
+                }
                 
                 const isLocked = lockStatusMap[fundCode] === true;
+                console.log('updateLockStatus: FUND_CODE=' + fundCode + ', isLocked=' + isLocked);
+                
                 const editBtn = row.querySelector('.action-btn.edit');
                 const statusCell = row.querySelector('td:nth-child(5)'); // 최근수정일시 컬럼 (5번째)
+                
+                if (!statusCell) {
+                    console.log('updateLockStatus: statusCell을 찾을 수 없습니다. (FUND_CODE=' + fundCode + ')');
+                    return;
+                }
                 
                 // 수정 버튼 비활성화/활성화 (운용대기, 운용중, 운용중단일 때만 활성화)
                 if (editBtn) {
@@ -922,23 +936,23 @@
                 }
                 
                 // 수정상태 표시 업데이트
-                if (statusCell) {
-                    // 기존 수정중 표시 제거
-                    const existingLockStatus = statusCell.querySelector('span[data-lock-status]');
-                    if (existingLockStatus) {
-                        existingLockStatus.remove();
-                    }
-                    
-                    // 잠금 상태일 때 수정중 표시 추가
-                    if (isLocked) {
-                        const lockStatusSpan = document.createElement('span');
-                        lockStatusSpan.setAttribute('data-lock-status', 'true');
-                        lockStatusSpan.style.marginLeft = '10px';
-                        lockStatusSpan.style.color = '#cd1317';
-                        lockStatusSpan.style.fontWeight = '600';
-                        lockStatusSpan.textContent = '[수정중]';
-                        statusCell.appendChild(lockStatusSpan);
-                    }
+                // 기존 수정중 표시 제거 (서버에서 렌더링된 것과 JavaScript로 추가된 것 모두)
+                const existingLockStatus = statusCell.querySelector('span[data-lock-status]');
+                if (existingLockStatus) {
+                    existingLockStatus.remove();
+                    console.log('updateLockStatus: 기존 수정중 표시 제거 (FUND_CODE=' + fundCode + ')');
+                }
+                
+                // 잠금 상태일 때 수정중 표시 추가
+                if (isLocked) {
+                    const lockStatusSpan = document.createElement('span');
+                    lockStatusSpan.setAttribute('data-lock-status', 'true');
+                    lockStatusSpan.style.marginLeft = '10px';
+                    lockStatusSpan.style.color = '#cd1317';
+                    lockStatusSpan.style.fontWeight = '600';
+                    lockStatusSpan.textContent = '[수정중]';
+                    statusCell.appendChild(lockStatusSpan);
+                    console.log('updateLockStatus: 수정중 표시 추가 (FUND_CODE=' + fundCode + ')');
                 }
             });
         }

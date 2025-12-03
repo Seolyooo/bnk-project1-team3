@@ -25,6 +25,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -72,14 +73,23 @@ public class ReserveBatchConfig {
     public ItemReader<AdminFundMasterDTO> fundOperateReserveReader() {
         return new ItemReader<>() {
             private Iterator<AdminFundMasterDTO> iterator;
+            private boolean isFirstRead = true;
 
             @Override
             public AdminFundMasterDTO read() {
                 if (iterator == null) {
                     List<AdminFundMasterDTO> list = adminFundMapper.selectFundsForOperateReserve();
-                    iterator = list.iterator();
+                    iterator = list != null ? list.iterator() : null;
+                    isFirstRead = true;
                 }
-                return iterator.hasNext() ? iterator.next() : null;
+                
+                if (iterator != null && iterator.hasNext()) {
+                    AdminFundMasterDTO fund = iterator.next();
+                    isFirstRead = false;
+                    return fund;
+                }
+                
+                return null;
             }
         };
     }
@@ -103,10 +113,29 @@ public class ReserveBatchConfig {
     public ItemWriter<AdminFundMasterDTO> fundOperateReserveWriter() {
         return items -> {
             for (AdminFundMasterDTO fund : items) {
-                adminFundMapper.updateOperStatusToRunning(
-                        fund.getFundCode(),
-                        "batch_system"
-                );
+                try {
+                    if (fund == null || fund.getFundCode() == null) {
+                        continue;
+                    }
+                    
+                    String fundCode = fund.getFundCode();
+                    String operStatus = fund.getOperStatus();
+                    
+                    // 등록완료 상태인 경우: 운용대기로 변경
+                    if ("등록완료".equals(operStatus)) {
+                        adminFundMapper.updateStatusToPending(fundCode);
+                        adminFundMapper.clearReserveTime(fundCode);
+                    } 
+                    // 운용대기 상태인 경우: 운용중으로 변경
+                    else if ("운용대기".equals(operStatus)) {
+                        adminFundMapper.updateOperStatusToRunning(
+                                fundCode,
+                                "batch_system"
+                        );
+                    }
+                } catch (Exception e) {
+                    throw e;
+                }
             }
         };
     }
@@ -119,6 +148,39 @@ public class ReserveBatchConfig {
         try {
             Set<JobExecution> runningExecutions = jobExplorer.findRunningJobExecutions("fundOperateReserveJob");
             if (runningExecutions != null && !runningExecutions.isEmpty()) {
+                long currentTime = System.currentTimeMillis();
+                boolean hasRunningJob = false;
+                
+                for (JobExecution execution : runningExecutions) {
+                    if (execution.isRunning()) {
+                        long startTime = currentTime;
+                        if (execution.getStartTime() != null) {
+                            if (execution.getStartTime() instanceof java.time.LocalDateTime) {
+                                startTime = ((java.time.LocalDateTime) execution.getStartTime())
+                                    .atZone(java.time.ZoneId.systemDefault())
+                                    .toInstant()
+                                    .toEpochMilli();
+                            }
+                        }
+                        long elapsedTime = currentTime - startTime;
+                        long timeoutMs = 5 * 60 * 1000; // 5분
+                        
+                        if (elapsedTime > timeoutMs) {
+                            // 타임아웃된 작업은 무시하고 계속 진행
+                        } else {
+                            hasRunningJob = true;
+                        }
+                    }
+                }
+                
+                if (hasRunningJob) {
+                    return;
+                }
+            }
+
+            List<AdminFundMasterDTO> fundsToOperate = adminFundMapper.selectFundsForOperateReserve();
+            
+            if (fundsToOperate == null || fundsToOperate.isEmpty()) {
                 return;
             }
 
@@ -205,10 +267,19 @@ public class ReserveBatchConfig {
                     }
                     
                     Long revId = revision.getRevId();
+                    String fundCode = revision.getFundCode();
                     
+                    // revision 내용을 FUND_MASTER에 업데이트
                     fundMasterRevisionMapper.applyRevisionToMaster(revId);
+                    
+                    // revision 상태를 '적용완료'로 변경
                     fundMasterRevisionMapper.updateRevisionStatusToApplied(revId);
-                    adminFundMapper.clearReserveTime(revision.getFundCode());
+                    
+                    // 예약 시간 초기화
+                    adminFundMapper.clearReserveTime(fundCode);
+                    
+                    // 반영예약 완료 후 revision 삭제
+                    fundMasterRevisionMapper.deleteRevision(revId);
                 } catch (Exception e) {
                     throw e;
                 }
@@ -221,6 +292,127 @@ public class ReserveBatchConfig {
         try {
             Set<JobExecution> runningExecutions = jobExplorer.findRunningJobExecutions("applyRevisionJob");
             if (runningExecutions != null && !runningExecutions.isEmpty()) {
+                long currentTime = System.currentTimeMillis();
+                for (JobExecution execution : runningExecutions) {
+                    if (execution.isRunning()) {
+                        long startTime = currentTime;
+                        if (execution.getStartTime() != null) {
+                            if (execution.getStartTime() instanceof java.time.LocalDateTime) {
+                                startTime = ((java.time.LocalDateTime) execution.getStartTime())
+                                    .atZone(java.time.ZoneId.systemDefault())
+                                    .toInstant()
+                                    .toEpochMilli();
+                            }
+                        }
+                        long elapsedTime = currentTime - startTime;
+                        long timeoutMs = 5 * 60 * 1000; // 5분
+                        
+                        if (elapsedTime > timeoutMs) {
+                            // 타임아웃된 작업은 무시하고 계속 진행
+                        } else {
+                            return;
+                        }
+                    }
+                }
+            }
+            
+            JobParameters params = new JobParametersBuilder()
+                    .addLong("time", System.currentTimeMillis())
+                    .toJobParameters();
+
+            jobLauncher.run(applyRevisionJob(), params);
+        } catch (Exception e) {
+            // 에러 발생 시 무시
+        }
+    }
+
+    // 적용완료된 revision 정리 배치 Job
+    @Bean
+    public Job cleanupAppliedRevisionJob() {
+        return new JobBuilder("cleanupAppliedRevisionJob", jobRepository)
+                .start(cleanupAppliedRevisionStep())
+                .build();
+    }
+
+    @Bean
+    public Step cleanupAppliedRevisionStep() {
+        return new StepBuilder("cleanupAppliedRevisionStep", jobRepository)
+                .<FundMasterRevisionDTO, FundMasterRevisionDTO>chunk(100, transactionManager)
+                .reader(cleanupAppliedRevisionReader())
+                .processor(cleanupAppliedRevisionProcessor())
+                .writer(cleanupAppliedRevisionWriter())
+                .build();
+    }
+
+    @Bean
+    public ItemReader<FundMasterRevisionDTO> cleanupAppliedRevisionReader() {
+        return new ItemReader<>() {
+            private Iterator<FundMasterRevisionDTO> iterator;
+
+            @Override
+            public FundMasterRevisionDTO read() {
+                if (iterator == null || !iterator.hasNext()) {
+                    List<FundMasterRevisionDTO> list = fundMasterRevisionMapper.selectAppliedRevisions();
+
+                    if (list != null && !list.isEmpty()) {
+                        list.removeIf(rev -> rev == null || rev.getRevId() == null);
+                    }
+
+                    if (list == null || list.isEmpty()) {
+                        return null;
+                    }
+
+                    iterator = list.iterator();
+                }
+
+                if (iterator.hasNext()) {
+                    FundMasterRevisionDTO revision = iterator.next();
+                    
+                    if (revision == null || revision.getRevId() == null) {
+                        return null;
+                    }
+                    
+                    return revision;
+                }
+                return null;
+            }
+        };
+    }
+
+    @Bean
+    public ItemProcessor<FundMasterRevisionDTO, FundMasterRevisionDTO> cleanupAppliedRevisionProcessor() {
+        return revision -> {
+            if (revision == null || revision.getRevId() == null) {
+                return null;
+            }
+            return revision;
+        };
+    }
+
+    @Bean
+    public ItemWriter<FundMasterRevisionDTO> cleanupAppliedRevisionWriter() {
+        return items -> {
+            for (FundMasterRevisionDTO revision : items) {
+                try {
+                    if (revision == null || revision.getRevId() == null) {
+                        continue;
+                    }
+                    
+                    Long revId = revision.getRevId();
+                    // 적용완료 상태인 revision 삭제
+                    fundMasterRevisionMapper.deleteRevision(revId);
+                } catch (Exception e) {
+                    throw e;
+                }
+            }
+        };
+    }
+
+    @Scheduled(cron = "0 0 * * * *") // 매 시간마다 실행
+    public void runCleanupAppliedRevisionJob() {
+        try {
+            Set<JobExecution> runningExecutions = jobExplorer.findRunningJobExecutions("cleanupAppliedRevisionJob");
+            if (runningExecutions != null && !runningExecutions.isEmpty()) {
                 return;
             }
 
@@ -228,7 +420,7 @@ public class ReserveBatchConfig {
                     .addLong("time", System.currentTimeMillis())
                     .toJobParameters();
 
-            jobLauncher.run(applyRevisionJob(), params);
+            jobLauncher.run(cleanupAppliedRevisionJob(), params);
         } catch (Exception e) {
             // 에러 발생 시 무시
         }
