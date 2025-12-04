@@ -17,15 +17,30 @@ const itemsPerPage = 10;  // 페이지마다 10개
    ================================================================ */
 async function loadFundData() {
     try {
-        const res = await fetch("/bnk/api/fund/list");
-        const rawData = await res.json();
+        let rawData = [];
 
-        console.log("DB에서 받은 데이터(raw):", rawData);
+        // 1. HTML에서 넘겨준 'serverFundList' 변수가 있는지 확인합니다.
+        // 2. 내용이 있다면 API 호출을 하지 않고 그 데이터를 바로 사용합니다.
+        if (window.serverFundList && window.serverFundList.length > 0) {
+            console.log("✅ 서버에서 이미 필터링된 데이터를 사용합니다.");
+            rawData = window.serverFundList;
+        } else {
+            // 3. 변수가 없거나 비어있으면 기존처럼 API를 호출합니다 (전체 조회 등).
+            console.log("⚠️ 서버 데이터 없음. API로 전체 조회 실행.");
+            const res = await fetch("/bnk/api/fund/list");
+            rawData = await res.json();
+        }
 
+        console.log("사용할 데이터(raw):", rawData);
+
+        // 기존 로직: DB의 한글 등급을 영어 카테고리로 변환
         fundData = rawData.map(f => {
             let category = "all";
 
-            switch (f.investgrade) {
+            // 공백 문제 방지를 위해 trim() 추가
+            const grade = f.investgrade ? f.investgrade.trim() : "";
+
+            switch (grade) {
                 case "매우 낮은 위험":
                     category = "safe";
                     break;
@@ -48,7 +63,7 @@ async function loadFundData() {
             return { ...f, category };
         });
 
-        filteredData = fundData; // 초기에는 전체 목록
+        filteredData = fundData; // 초기에는 받아온 목록 전체를 보여줌
 
         console.log("카테고리 변환 후:", fundData);
 

@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface FundMapper {
     ProductDTO findProductDetail(String fundcode);
-    List<ProductDTO> find_ProductList();
+    List<ProductDTO> find_ProductList(int userGrade);
     List<ProductDTO> findALL();
     List<ProductDTO> findFundDocuments();
 
