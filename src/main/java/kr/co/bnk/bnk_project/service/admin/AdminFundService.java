@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminFundService {
 
-    @Value("${file.path}")
+    @Value("${file.doc-path}")
     private String filePath;
 
     private final AdminFundMapper adminFundMapper;
