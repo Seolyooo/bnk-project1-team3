@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bnk.bnk_project.mapper.mobile.FundOrderMapper">
+
+    <!-- ORDER_ID 생성 (MAX+1) -->
+    <select id="getNextOrderId" resultType="long">
+        SELECT NVL(MAX(ORDER_ID), 0) + 1 FROM USER_FUND_ORDER
+    </select>
+
+    <!-- 펀드 가입 INSERT -->
+    <insert id="insertFundOrder" parameterType="kr.co.bnk.bnk_project.dto.mobile.FundOrderDTO">
+        INSERT INTO USER_FUND_ORDER(
+                ORDER_ID,
+                CUST_NO,
+                ACCT_NO,
+                FUND_CODE,
+                TYPE,
+                STATUS,
+                REQUEST_AT,
+                REQ_AMOUNT,
+                PLAN_ID
+        ) VALUES (
+                #{orderId},
+                #{custNo},           <!-- 배치에서는 plan에서 가져온 값 사용 -->
+                #{acctNo},           <!-- 배치에서는 plan에서 가져온 값 사용 -->
+                #{fundCode},
+                #{type},
+                #{status},
+                #{requestAt},
+                #{reqAmount},
+                #{planId, jdbcType=NUMERIC}
+        )
+    </insert>
+
+    <!-- 이미 가입된 펀드의 주문 정보 조회 (USER_FUND_PLAN에 없을 경우) -->
+    <select id="getExistingOrderInfo" resultType="kr.co.bnk.bnk_project.dto.mobile.FundOrderDTO">
+        SELECT
+            ORDER_ID AS orderId,
+            CUST_NO AS custNo,
+            ACCT_NO AS acctNo,
+            FUND_CODE AS fundCode,
+            TYPE AS type,
+            STATUS AS status,
+            REQUEST_AT AS requestAt,
+            REQ_AMOUNT AS reqAmount,
+            FIX_AMOUNT AS fixAmount,
+            PLAN_ID AS planId
+        FROM USER_FUND_ORDER
+        WHERE CUST_NO = #{custNo}
+          AND FUND_CODE = #{fundCode}
+          AND STATUS IN ('REQUESTED', 'PROCESSING', 'COMPLETED')
+        ORDER BY REQUEST_AT DESC
+        FETCH FIRST 1 ROW ONLY
+    </select>
+
+</mapper>

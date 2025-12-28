@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bnk.bnk_project.mapper.mobile.FundPlanMapper">
+
+    <!-- PLAN_ID 생성 (MAX+1) -->
+    <select id="getNextPlanId" resultType="long">
+        SELECT NVL(MAX(PLAN_ID), 0) + 1 FROM USER_FUND_PLAN
+    </select>
+
+    <!-- 자동이체 INSERT -->
+    <insert id="insertFundPlan" parameterType="kr.co.bnk.bnk_project.dto.mobile.FundPlanDTO">
+        INSERT INTO USER_FUND_PLAN(
+               PLAN_ID,
+               CUST_NO,
+               ACCT_NO,
+               FUND_CODE,
+               STATUS,
+               CYCLE_TYPE,
+               AMOUNT,
+               START_AT,
+               WEEKDAY,
+               DAY_OF_MONTH,
+               CREATED_AT,
+               INVESTMENT_TYPE
+        ) VALUES (
+              #{planId},
+              #{custNo},           <!-- Service에서 설정된 값 사용 -->
+              #{acctNo},           <!-- Service에서 설정된 값 사용 -->
+              #{fundCode},
+              #{status},
+              #{cycleType, jdbcType=VARCHAR},
+              #{amount},
+              #{startAt},
+              #{weekday, jdbcType=NUMERIC},
+              #{dayOfMonth, jdbcType=NUMERIC},
+              #{createdAt},
+              #{investmentType}
+        )
+    </insert>
+
+    <!-- 오늘 실행할 자동이체 계획 조회 -->
+    <select id="selectPlansToExecuteToday" resultType="kr.co.bnk.bnk_project.dto.mobile.FundPlanDTO">
+        SELECT
+            PLAN_ID AS planId,
+            CUST_NO AS custNo,
+            ACCT_NO AS acctNo,
+            FUND_CODE AS fundCode,
+            STATUS AS status,
+            CYCLE_TYPE AS cycleType,
+            AMOUNT AS amount,
+            START_AT AS startAt,
+            WEEKDAY AS weekday,
+            DAY_OF_MONTH AS dayOfMonth,
+            CREATED_AT AS createdAt,
+            INVESTMENT_TYPE AS investmentType
+        FROM USER_FUND_PLAN
+        WHERE STATUS = 'ACTIVE'
+          AND TRUNC(START_AT) &lt;= TRUNC(SYSDATE)  -- 시간 제거하고 날짜만 비교
+          AND (
+              -- 매일: 항상 실행 (9시에 실행되므로 당일이면 실행)
+              (CYCLE_TYPE = 'DAILY')
+              OR
+              -- 매주: 오늘 요일이 WEEKDAY와 일치
+              -- Oracle의 TO_CHAR(SYSDATE, 'D'): 일요일=1, 월요일=2, ..., 토요일=7
+              -- 우리 DB WEEKDAY: 월요일=1, 화요일=2, ..., 일요일=7
+              (CYCLE_TYPE = 'WEEKLY' 
+               AND WEEKDAY = CASE 
+                   WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'D')) = 1 THEN 7  -- 일요일
+                   ELSE TO_NUMBER(TO_CHAR(SYSDATE, 'D')) - 1         -- 월~토
+               END)
+              OR
+              -- 매월: 오늘 일자가 DAY_OF_MONTH와 일치
+              (CYCLE_TYPE = 'MONTHLY' 
+               AND DAY_OF_MONTH = EXTRACT(DAY FROM SYSDATE))
+          )
+        ORDER BY PLAN_ID
+    </select>
+
+    <!-- 다음 실행 예정일 업데이트 -->
+    <update id="updateNextRunAt" parameterType="long">
+        UPDATE USER_FUND_PLAN
+        SET NEXT_RUN_AT = 
+            CASE
+                WHEN CYCLE_TYPE = 'DAILY' THEN SYSDATE + 1
+                WHEN CYCLE_TYPE = 'WEEKLY' THEN SYSDATE + 7
+                WHEN CYCLE_TYPE = 'MONTHLY' THEN ADD_MONTHS(SYSDATE, 1)
+                ELSE SYSDATE + 1
+            END
+        WHERE PLAN_ID = #{planId}
+    </update>
+
+    <!-- 고객이 특정 펀드에 이미 가입했는지 확인 -->
+    <select id="existsActiveSubscription" resultType="boolean">
+        SELECT CASE 
+            WHEN COUNT(*) > 0 THEN 1 
+            ELSE 0 
+        END
+        FROM (
+            -- USER_FUND_PLAN에서 ACTIVE 상태인 계획 확인
+            SELECT 1
+            FROM USER_FUND_PLAN
+            WHERE CUST_NO = #{custNo}
+              AND FUND_CODE = #{fundCode}
+              AND STATUS = 'ACTIVE'
+            
+            UNION ALL
+            
+            -- USER_FUND_ORDER에서 처리 중이거나 완료된 주문 확인
+            SELECT 1
+            FROM USER_FUND_ORDER
+            WHERE CUST_NO = #{custNo}
+              AND FUND_CODE = #{fundCode}
+              AND STATUS IN ('REQUESTED', 'PROCESSING', 'COMPLETED')
+        )
+    </select>
+
+    <!-- 이미 가입된 펀드의 정보 조회 (투자금액, 투자시작일) -->
+    <!-- 우선 USER_FUND_PLAN에서 ACTIVE 상태인 계획 조회, 없으면 USER_FUND_ORDER에서 조회 -->
+    <select id="getExistingSubscriptionInfo" resultType="kr.co.bnk.bnk_project.dto.mobile.FundPlanDTO">
+        SELECT
+            PLAN_ID AS planId,
+            CUST_NO AS custNo,
+            ACCT_NO AS acctNo,
+            FUND_CODE AS fundCode,
+            STATUS AS status,
+            CYCLE_TYPE AS cycleType,
+            AMOUNT AS amount,
+            START_AT AS startAt,
+            WEEKDAY AS weekday,
+            DAY_OF_MONTH AS dayOfMonth,
+            CREATED_AT AS createdAt,
+            INVESTMENT_TYPE AS investmentType
+        FROM USER_FUND_PLAN
+        WHERE CUST_NO = #{custNo}
+          AND FUND_CODE = #{fundCode}
+          AND STATUS = 'ACTIVE'
+        ORDER BY CREATED_AT DESC
+        FETCH FIRST 1 ROW ONLY
+    </select>
+
+</mapper>
