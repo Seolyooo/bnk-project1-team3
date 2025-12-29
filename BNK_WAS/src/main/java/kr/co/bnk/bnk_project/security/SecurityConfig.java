@@ -92,9 +92,9 @@ public class SecurityConfig {
                 .securityMatcher("/**")
 
                 // 챗봇 용도 (필터 무시)
-                // [2024-12-24 추가] Flutter 앱을 위한 CSRF 예외 처리 (/api/fund/**, /api/funds/**)
+                // [2024-12-24 추가] Flutter 앱을 위한 CSRF 예외 처리 (/api/fund/**, /api/funds/**, /faq, /inquiry/**, /chatbot/**)
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/chatbot/ask", "/api/mock/**", "/api/fund/**", "/api/funds/**")
+                        .ignoringRequestMatchers("/api/chatbot/ask", "/api/mock/**", "/api/fund/**", "/api/funds/**", "/faq", "/inquiry/**", "/chatbot/**")
                 )
 
                 // 경로별 권한 설정 (⭐️ 순서가 중요 ⭐️)
