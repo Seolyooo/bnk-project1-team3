@@ -6,6 +6,19 @@ spring:
     username: BNK
     password: abc1234!
     driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      pool-name: AP_HikariPool
+      maximum-pool-size: 5
+      minimum-idle: 2
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 600000
+      leak-detection-threshold: 15000
+      auto-commit: true
+
+  # 웹 서버 비활성화 (소켓 서버만 사용)
+  main:
+    web-application-type: none
 
   jpa:
     hibernate:

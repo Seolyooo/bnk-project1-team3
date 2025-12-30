@@ -1,13 +1,19 @@
 package kr.co.bnk.bnk_project.controller;
 
+import kr.co.bnk.bnk_project.dto.MyFundResponse;
 import kr.co.bnk.bnk_project.dto.ProductDTO;
 import kr.co.bnk.bnk_project.dto.mobile.FundSubscriptionRequestDTO;
 import kr.co.bnk.bnk_project.exception.DuplicateFundSubscriptionException;
+import kr.co.bnk.bnk_project.security.MyUserDetails;
 import kr.co.bnk.bnk_project.service.FundService;
+import kr.co.bnk.bnk_project.service.MyFundService;
 import kr.co.bnk.bnk_project.service.mobile.FundSubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.http.HttpStatus;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -31,6 +37,7 @@ public class FlutterFundController {
 
     private final FundService fundService;
     private final FundSubscriptionService fundSubscriptionService;
+    private final MyFundService myFundService;
 
     /**
      * 판매량 Best 펀드 목록
@@ -105,6 +112,118 @@ public class FlutterFundController {
             response.put("message", "펀드 가입 중 오류가 발생했습니다: " + e.getMessage());
 
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    /**
+     * 보유펀드 목록 조회
+     * GET /api/funds/my
+     * 
+     * 로그인한 사용자 또는 파라미터에서 사용자 정보를 추출하여 해당 사용자의 보유펀드 목록을 반환
+     * - 보유중(HOLDING): 체결 반영 완료된 펀드
+     * - 신청중(PENDING): 체결 전/진행중인 펀드
+     * - 로그인이 안되어있으면 custNo=18로 기본값 설정
+     */
+    @GetMapping("/my")
+    public ResponseEntity<List<MyFundResponse>> getMyFunds(
+            @RequestParam(required = false) Integer custNo,
+            @AuthenticationPrincipal MyUserDetails userDetails
+    ) {
+        // custNo가 파라미터로 없으면 로그인한 사용자 정보에서 가져오기
+        if (custNo == null) {
+            if (userDetails != null && userDetails.getUserDTO() != null) {
+                // 로그인한 사용자가 있으면 해당 사용자의 custNo 사용
+                custNo = userDetails.getUserDTO().getCustNo().intValue();
+            } else {
+                // 로그인이 안되어있으면 기본값 18 사용
+                custNo = 18;
+            }
+        }
+        
+        List<MyFundResponse> myFunds = myFundService.getMyFunds(custNo);
+        return ResponseEntity.ok(myFunds);
+    }
+
+    /**
+     * 보유펀드 상세 정보 조회
+     * GET /api/funds/my/{fundCode}/detail
+     */
+    @GetMapping("/my/{fundCode}/detail")
+    public ResponseEntity<Map<String, Object>> getMyFundDetail(
+            @PathVariable String fundCode,
+            @RequestParam(required = false) Integer custNo,
+            @AuthenticationPrincipal MyUserDetails userDetails
+    ) {
+        if (custNo == null) {
+            if (userDetails != null && userDetails.getUserDTO() != null) {
+                custNo = userDetails.getUserDTO().getCustNo().intValue();
+            } else {
+                custNo = 18; // 기본값
+            }
+        }
+        
+        try {
+            Map<String, Object> detail = myFundService.getMyFundDetail(custNo, fundCode);
+            return ResponseEntity.ok(detail);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 보유펀드 수익률 히스토리 조회
+     * GET /api/funds/my/{fundCode}/profit-history?period={period}
+     * period: '1M', '3M', '6M', '1Y', 'ALL'
+     */
+    @GetMapping("/my/{fundCode}/profit-history")
+    public ResponseEntity<List<Map<String, Object>>> getMyFundProfitHistory(
+            @PathVariable String fundCode,
+            @RequestParam(defaultValue = "ALL") String period,
+            @RequestParam(required = false) Integer custNo,
+            @AuthenticationPrincipal MyUserDetails userDetails
+    ) {
+        if (custNo == null) {
+            if (userDetails != null && userDetails.getUserDTO() != null) {
+                custNo = userDetails.getUserDTO().getCustNo().intValue();
+            } else {
+                custNo = 18; // 기본값
+            }
+        }
+        
+        try {
+            List<Map<String, Object>> history = myFundService.getMyFundProfitHistory(custNo, fundCode, period);
+            return ResponseEntity.ok(history);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 보유펀드 거래 내역 조회
+     * GET /api/funds/my/{fundCode}/transactions
+     */
+    @GetMapping("/my/{fundCode}/transactions")
+    public ResponseEntity<List<Map<String, Object>>> getMyFundTransactions(
+            @PathVariable String fundCode,
+            @RequestParam(required = false) Integer custNo,
+            @AuthenticationPrincipal MyUserDetails userDetails
+    ) {
+        if (custNo == null) {
+            if (userDetails != null && userDetails.getUserDTO() != null) {
+                custNo = userDetails.getUserDTO().getCustNo().intValue();
+            } else {
+                custNo = 18; // 기본값
+            }
+        }
+        
+        try {
+            List<Map<String, Object>> transactions = myFundService.getMyFundTransactions(custNo, fundCode);
+            return ResponseEntity.ok(transactions);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
