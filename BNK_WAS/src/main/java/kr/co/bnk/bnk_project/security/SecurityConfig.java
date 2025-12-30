@@ -106,6 +106,9 @@ public class SecurityConfig {
                         // 모의투자 API는 로그인 없이도 접근 가능하게 허용 (테스트 용도)
                         .requestMatchers("/api/mock/**").permitAll()
 
+                        // Flutter 앱 API는 로그인 없이도 접근 가능하게 허용
+                        .requestMatchers("/api/funds/**").permitAll()
+
                         // 2순위: 인증이 필요한 사용자 전용 페이지 (예: 마이페이지, 펀드 가입 신청 등)
                         .requestMatchers("/my/**", "/fund/**", "/user/profile/**","/api/session/extend", "/member/survey/**").authenticated() // USER ROLE이 따로 없어서 로그인 하면 허용
 
