@@ -85,7 +85,7 @@ spring:
   ai:
     google:
       ai:
-        api-key: ${GEMINI_API_KEY:AIzaSyBwwnE9HPkW_Ic0-Uq9Ora6QAumNpc5mbk}
+        api-key: ${GEMINI_API_KEY:AI}
 
 file:
   doc-path: /home/rsa-key-20251117/upload
