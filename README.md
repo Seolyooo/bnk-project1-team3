@@ -32,6 +32,7 @@ BNK 펀드 관리 시스템은
 ---
 
 ## 📁 프로젝트 구조
+'''
 BNK_WAS/
 ├── controller/        # 요청 처리 (Spring MVC Controller)
 ├── service/           # 비즈니스 로직
@@ -42,7 +43,7 @@ BNK_WAS/
 ├── security/          # Spring Security 설정
 ├── config/            # 공통 설정 클래스
 └── templates/         # Thymeleaf 템플릿
-
+'''
 
 
 ## ✨ 주요 기능
