@@ -32,14 +32,17 @@ BNK 펀드 관리 시스템은
 ---
 
 ## 📁 프로젝트 구조
-├── BNK_WAS/ # 메인 웹 애플리케이션 (Spring MVC)
-│ ├── controller
-│ ├── service
-│ ├── mapper
-│ ├── repository
-│ ├── entity / dto
-│ ├── security / config
-│ └── templates (Thymeleaf)
+BNK_WAS/
+├── controller/        # 요청 처리 (Spring MVC Controller)
+├── service/           # 비즈니스 로직
+├── mapper/            # MyBatis Mapper 인터페이스
+├── repository/        # JPA Repository
+├── entity/            # JPA Entity
+├── dto/               # 데이터 전송 객체
+├── security/          # Spring Security 설정
+├── config/            # 공통 설정 클래스
+└── templates/         # Thymeleaf 템플릿
+
 
 
 ## ✨ 주요 기능
