@@ -1,4 +1,4 @@
-# 🏦 BNK 펀드 관리 시스템
+# BNK 펀드 관리 시스템
 > Spring 기반 펀드 상품 안내 및 투자 관리 웹 애플리케이션
 
 ---
@@ -18,280 +18,74 @@ BNK 펀드 관리 시스템은
 ### Backend
 - Java 17
 - Spring Boot
-- Spring MVC
-- Spring Security
-- MyBatis / JPA
-- Oracle Database
-- Thymeleaf
+- MyBatis
 
-### Build & Tool
-- Gradle
-- Git / GitHub
-- Lombok
+### Database 
+- Oracle XE
+  
+### Frontend
+- Thymeleaf
+- JavaScript
+- CSS
+
+### CI/CD
+- GitHub Actions
+- AWS EC2
 
 ---
-
-## 📁 프로젝트 구조
-```
-BNK_WAS/
-├── build.gradle                          # Gradle 빌드 설정
-├── settings.gradle                       # Gradle 프로젝트 설정
-├── README.md                             # 프로젝트 README
-│
-└── src/
-    ├── main/
-    │   ├── java/
-    │   │   └── kr/co/bnk/bnk_project/
-    │   │       ├── BnkProjectApplication.java    # 메인 애플리케이션 클래스
-    │   │       │
-    │   │       ├── config/                       # 설정 클래스
-    │   │       │   ├── AppInfo.java
-    │   │       │   ├── BatchTransactionManagerConfig.java
-    │   │       │   ├── EditLockSessionListener.java
-    │   │       │   ├── GlobalModelAdvice.java
-    │   │       │   ├── ReserveBatchConfig.java
-    │   │       │   ├── SchedulerConfig.java
-    │   │       │   └── WebMvcConfig.java
-    │   │       │
-    │   │       ├── controller/                   # 컨트롤러 (HTTP 요청 처리)
-    │   │       │   ├── admin/                    # 관리자 컨트롤러
-    │   │       │   │   ├── AdminController.java
-    │   │       │   │   ├── approval/
-    │   │       │   │   │   └── AdminApprovalController.java
-    │   │       │   │   ├── cs/
-    │   │       │   │   ├── info/
-    │   │       │   │   ├── member/
-    │   │       │   │   ├── product/
-    │   │       │   │   └── settings/
-    │   │       │   ├── ChatController.java
-    │   │       │   ├── ControllerEx.java
-    │   │       │   ├── FlutterFundController.java      # Flutter API 컨트롤러
-    │   │       │   ├── FundApiController.java
-    │   │       │   ├── FundController.java
-    │   │       │   ├── GlobalControllerAdvice.java
-    │   │       │   ├── MainController.java
-    │   │       │   ├── MemberController.java
-    │   │       │   ├── mobile/                   # 모바일 API 컨트롤러
-    │   │       │   │   ├── FlutterCsController.java
-    │   │       │   │   ├── MockAiController.java
-    │   │       │   │   └── MockInvestmentController.java
-    │   │       │   └── MyController.java
-    │   │       │
-    │   │       ├── service/                      # 비즈니스 로직
-    │   │       │   ├── admin/                    # 관리자 서비스
-    │   │       │   │   ├── AdminFundService.java
-    │   │       │   │   ├── AdminMemberService.java
-    │   │       │   │   ├── ApprovalService.java
-    │   │       │   │   ├── EditLockService.java
-    │   │       │   │   ├── FundCategoryService.java
-    │   │       │   │   ├── InfoPostService.java
-    │   │       │   │   ├── PermissionService.java
-    │   │       │   │   └── ProductService.java
-    │   │       │   ├── mobile/                   # 모바일 서비스
-    │   │       │   │   ├── FundOrderFixService.java
-    │   │       │   │   ├── FundOrderStartService.java
-    │   │       │   │   ├── FundSubscriptionService.java
-    │   │       │   │   ├── MockAiDiagnosisService.java
-    │   │       │   │   └── MockInvestmentService.java
-    │   │       │   ├── ChatBotService.java
-    │   │       │   ├── CsService.java
-    │   │       │   ├── EmailService.java
-    │   │       │   ├── FundService.java
-    │   │       │   ├── GeminiService.java
-    │   │       │   ├── InvestmentService.java
-    │   │       │   ├── KeywordService.java
-    │   │       │   ├── MemberService.java
-    │   │       │   ├── MyFundService.java
-    │   │       │   ├── UserTermsService.java
-    │   │       │   └── WishListService.java
-    │   │       │
-    │   │       ├── mapper/                       # MyBatis 매퍼 인터페이스
-    │   │       │   ├── admin/
-    │   │       │   │   ├── AdminFundMapper.java
-    │   │       │   │   ├── AdminMemberMapper.java
-    │   │       │   │   ├── ApprovalMapper.java
-    │   │       │   │   ├── FundCategoryMapper.java
-    │   │       │   │   ├── FundMasterRevisionMapper.java
-    │   │       │   │   ├── InfoAttachmentMapper.java
-    │   │       │   │   ├── InfoPostMapper.java
-    │   │       │   │   ├── PermissionMapper.java
-    │   │       │   │   └── ProductMapper.java
-    │   │       │   ├── mobile/
-    │   │       │   │   ├── FundOrderMapper.java
-    │   │       │   │   ├── FundPlanMapper.java
-    │   │       │   │   ├── FundPositionMapper.java
-    │   │       │   │   ├── FundTransactionMapper.java
-    │   │       │   │   ├── MockAccountMapper.java
-    │   │       │   │   └── MockInvestmentMapper.java
-    │   │       │   ├── AdminMapper.java
-    │   │       │   ├── CsMapper.java
-    │   │       │   ├── FundMapper.java
-    │   │       │   ├── KeywordMapper.java
-    │   │       │   ├── LoginHistoryMapper.java
-    │   │       │   ├── MemberMapper.java
-    │   │       │   ├── RiskTestMapper.java
-    │   │       │   ├── UserTermsMapper.java
-    │   │       │   └── WishListMapper.java
-    │   │       │
-    │   │       ├── repository/                   # JPA 리포지토리
-    │   │       │   ├── CsRepository.java
-    │   │       │   ├── FundRepository.java
-    │   │       │   ├── RiskTestResultRepository.java
-    │   │       │   └── temp.java
-    │   │       │
-    │   │       ├── dto/                          # 데이터 전송 객체
-    │   │       │   ├── admin/                    # 관리자 DTO
-    │   │       │   │   ├── AdminFundMasterDTO.java
-    │   │       │   │   ├── AdminListDTO.java
-    │   │       │   │   ├── ApprovalDTO.java
-    │   │       │   │   ├── FieldChangeDTO.java
-    │   │       │   │   ├── FundAssetAllocationDTO.java
-    │   │       │   │   ├── FundCategoryDTO.java
-    │   │       │   │   ├── FundDocumentDTO.java
-    │   │       │   │   ├── FundListDetailDTO.java
-    │   │       │   │   ├── FundMasterRevisionDTO.java
-    │   │       │   │   ├── FundPriceHistoryDTO.java
-    │   │       │   │   ├── FundReturnHistoryDTO.java
-    │   │       │   │   ├── FundSettlementHistoryDTO.java
-    │   │       │   │   ├── InfoAttachmentDTO.java
-    │   │       │   │   ├── InfoPostDTO.java
-    │   │       │   │   ├── MemberListDTO.java
-    │   │       │   │   ├── ProductListDTO.java
-    │   │       │   │   └── UserSearchDTO.java
-    │   │       │   ├── mobile/                   # 모바일 DTO
-    │   │       │   │   ├── FundOrderDTO.java
-    │   │       │   │   ├── FundPlanDTO.java
-    │   │       │   │   ├── FundPositionDTO.java
-    │   │       │   │   ├── FundSubscriptionRequestDTO.java
-    │   │       │   │   ├── FundTransactionDTO.java
-    │   │       │   │   ├── MockAccountDTO.java
-    │   │       │   │   └── MockUserInvestmentDto.java
-    │   │       │   ├── BnkAdminDTO.java
-    │   │       │   ├── BnkUserDTO.java
-    │   │       │   ├── CsDTO.java
-    │   │       │   ├── FundChartDTO.java
-    │   │       │   ├── FundMasterDTO.java
-    │   │       │   ├── FundPeriodDTO.java
-    │   │       │   ├── FundPriceDTO.java
-    │   │       │   ├── FundSearchDTO.java
-    │   │       │   ├── InvestmentResultDTO.java
-    │   │       │   ├── InvestmentSurveyDTO.java
-    │   │       │   ├── KeywordDTO.java
-    │   │       │   ├── LoginHistoryDTO.java
-    │   │       │   ├── MemberUpdateDTO.java
-    │   │       │   ├── MyFundResponse.java
-    │   │       │   ├── PageRequestDTO.java
-    │   │       │   ├── PageResponseDTO.java
-    │   │       │   ├── ProductDTO.java
-    │   │       │   ├── RiskTestResultDTO.java
-    │   │       │   ├── UserFundDTO.java
-    │   │       │   └── UserTermsDTO.java
-    │   │       │
-    │   │       ├── entity/                       # JPA 엔티티
-    │   │       │   ├── Cs.java
-    │   │       │   ├── FundMaster.java
-    │   │       │   ├── RiskTestResult.java
-    │   │       │   └── temp.java
-    │   │       │
-    │   │       ├── security/                     # 보안 설정
-    │   │       │   ├── AdminLoginSuccessHandler.java
-    │   │       │   ├── AdminSecurityService.java
-    │   │       │   ├── AdminUserDetails.java
-    │   │       │   ├── LoginSuccessHandler.java
-    │   │       │   ├── MyUserDetails.java
-    │   │       │   ├── SecurityConfig.java
-    │   │       │   └── UserSecurityService.java
-    │   │       │
-    │   │       ├── scheduler/                    # 스케줄러
-    │   │       │   └── FundOrderScheduler.java   # 펀드 주문 배치 처리
-    │   │       │
-    │   │       ├── exception/                    # 예외 클래스
-    │   │       │   └── DuplicateFundSubscriptionException.java
-    │   │       │
-    │   │       ├── interceptor/                  # 인터셉터
-    │   │       │   └── FundAccessInterceptor.java
-    │   │       │
-    │   │       ├── socket/                       # 소켓 통신
-    │   │       │   └── TcpClient.java
-    │   │       │
-    │   │       └── util/                         # 유틸리티
-    │   │           └── HolidayUtil.java          # 휴일 처리 유틸
-    │   │
-    │   └── resources/
-    │       ├── application.yml                   # 애플리케이션 설정
-    │       │
-    │       ├── mappers/                          # MyBatis XML 매퍼
-    │       │   ├── admin/
-    │       │   │   ├── AdminFundMapper.xml
-    │       │   │   ├── AdminMemberMapper.xml
-    │       │   │   ├── AdminProductMapper.xml
-    │       │   │   ├── ApprovalMapper.xml
-    │       │   │   ├── FundCategofyMapper.xml
-    │       │   │   ├── FundMasterRevisionMapper.xml
-    │       │   │   ├── InfoAttachment.xml
-    │       │   │   └── InfoMapper.xml
-    │       │   ├── mobile/
-    │       │   │   ├── FundOrderMapper.xml
-    │       │   │   ├── FundPlanMapper.xml
-    │       │   │   ├── FundPositionMapper.xml
-    │       │   │   ├── FundTransactionMapper.xml
-    │       │   │   ├── MockAccountMapper.xml
-    │       │   │   └── MockInvestmentMapper.xml
-    │       │   ├── AdminMapper.xml
-    │       │   ├── CsMapper.xml
-    │       │   ├── FundMapper.xml
-    │       │   ├── KeywordMapper.xml
-    │       │   ├── LoginHistoryMapper.xml
-    │       │   ├── MemberMapper.xml
-    │       │   ├── PermissionMapper.xml
-    │       │   ├── RiskTestMapper.xml
-    │       │   ├── UserTermsMapper.xml
-    │       │   └── WishListMapper.xml
-    │       │
-    │       ├── templates/                        # Thymeleaf 템플릿
-    │       │   ├── admin/                        # 관리자 페이지
-    │       │   ├── member/                       # 회원 페이지
-    │       │   ├── my/                           # 마이페이지
-    │       │   ├── chatbot.html
-    │       │   ├── dopisitGuide.html
-    │       │   ├── FAQ.html
-    │       │   ├── fundGuide.html
-    │       │   ├── fundInformation.html
-    │       │   ├── fundSihwang.html
-    │       │   ├── fundSusi.html
-    │       │   ├── gaip.html
-    │       │   ├── index.html
-    │       │   ├── investorInfo.html
-    │       │   ├── investTest.html
-    │       │   ├── productDetail.html
-    │       │   ├── productList.html
-    │       │   ├── searchResult.html
-    │       │   └── sidebar.html
-    │       │
-    │       └── static/                           # 정적 리소스
-    │           ├── css/                          # 스타일시트
-    │           ├── js/                           # JavaScript
-    │           └── images/                       # 이미지
-    │
-    └── test/                                     # 테스트 코드
-        └── java/
-            └── kr/co/bnk/bnk_project/
-                └── BnkProjectApplicationTests.java
-```
-
 
 ## ✨ 주요 기능
 
 ### 👤 고객 기능
+- 로그인 / 회원가입
 - 펀드 상품 목록 / 상세 조회
 - 펀드 수익률 및 NAV 조회
-- 투자 성향 조사
+- 투자 성향 분석
+- 고객센터 / 챗봇
 
 ### 🛠 관리자 기능
 - 펀드 상품 목록 / 상세 조회
 - 펀드 상품 등록 / 수정 / 승인 / 반영예약
 - 회원 관리 / 고객센터
 - 펀드 카테고리 / 검색어 관리
+
+
+##  맡은 업무
+- Frontend : 관리자 메인페이지, 펀드목록 및 상세, 펀드관리, 고객센터
+- Backend : 펀드관리(상품 등록 / 수정 / 승인 / 반영예약) , 회원 관리 / 고객센터 , 펀드 카테고리 / 검색어 관리
+
+---
+
+## 메인
+<img width="1746" height="891" alt="image" src="https://github.com/user-attachments/assets/83c727a7-81c0-4a6e-b9c0-f8503634e807" />
+
+## 관리자 메인
+<img width="1260" height="709" alt="image" src="https://github.com/user-attachments/assets/6a701130-98ee-47c2-ad4e-89df82e3c133" />
+
+## 펀드 목록(관리자)
+<img width="1220" height="733" alt="image" src="https://github.com/user-attachments/assets/a3dcba02-bc04-41df-a3c6-a9b218f5ec04" />
+
+## 펀드 상세 (관리자)
+<img width="1042" height="741" alt="image" src="https://github.com/user-attachments/assets/97a961ba-e4f5-4b18-8d00-5aab10ec816f" />
+
+## 펀드 관리 (관리자)
+<img width="1125" height="655" alt="image" src="https://github.com/user-attachments/assets/bad75d59-820c-4a67-b47c-668d99b8969b" />
+
+## 결재 (관리자)
+<img width="949" height="531" alt="image" src="https://github.com/user-attachments/assets/d8528ca9-6a96-4781-80f3-d6326d01d740" />
+
+---
+## ERD
+### 펀드
+<img width="1577" height="756" alt="image" src="https://github.com/user-attachments/assets/e0bc712e-d3de-4f65-8446-0b0b8faffb25" />
+
+### 유저
+<img width="1225" height="677" alt="image" src="https://github.com/user-attachments/assets/0f5d6f39-4eff-422e-9143-347f36b72381" />
+
+
+
+
+
 
 
 
