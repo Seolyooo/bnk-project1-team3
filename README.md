@@ -22,6 +22,7 @@ BNK 펀드 관리 시스템은
 | Category  | Stack |
 |-----------|--------|
 | **Backend** | Java 17, Spring Boot, MyBatis |
+| **Batch** | Spring Batch |
 | **Database** | Oracle XE |
 | **Frontend** | Thymeleaf, JavaScript, CSS |
 | **CI/CD** | GitHub Actions, AWS EC2 |
@@ -58,7 +59,9 @@ BNK 펀드 관리 시스템은
 
 ### 🔹 Backend
 - 펀드 관리  
-  - 상품 등록 / 수정 / 승인 / 반영 예약  
+  - 상품 등록 / 수정
+  - 결
+  - Spring Batch를 활용한 반영 예약 상품 자동 반영 처리
 - 회원 관리  
 - 고객센터 관리  
 - 펀드 카테고리 / 검색어 관리  
