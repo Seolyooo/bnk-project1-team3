@@ -60,11 +60,39 @@ BNK 펀드 관리 시스템은
 ### 🔹 Backend
 - 펀드 관리  
   - 상품 등록 / 수정
-  - 결
-  - Spring Batch를 활용한 반영 예약 상품 자동 반영 처리
-- 회원 관리  
-- 고객센터 관리  
-- 펀드 카테고리 / 검색어 관리  
+  - 결재">
+<img width="70%" src="https://github.com/user-attachments/assets/a3dcba02-bc04-41df-a3c6-a9b218f5ec04" />
+</p>
+
+### 📌 펀드 상세 (관리자)
+<p align="center">
+<img width="65%" src="https://github.com/user-attachments/assets/97a961ba-e4f5-4b18-8d00-5aab10ec816f" />
+</p>
+
+### 📌 펀드 관리 (관리자)
+<p align="center">
+<img width="70%" src="https://github.com/user-attachments/assets/bad75d59-820c-4a67-b47c-668d99b8969b" />
+</p>
+
+### 📌 결재 (관리자)
+<p align="center">
+<img width="60%" src="https://github.com/user-attachments/assets/d8528ca9-6a96-4781-80f3-d6326d01d740" />
+</p>
+
+---
+
+## 🗄 ERD
+
+### 📊 펀드
+<p align="center">
+<img width="90%" src="https://github.com/user-attachments/assets/e0bc712e-d3de-4f65-8446-0b0b8faffb25" />
+</p>
+
+### 👤 유저
+<p align="center">
+<img width="75%" src="https://github.com/user-attachments/assets/0f5d6f39-4eff-422e-9143-347f36b72381" />
+</p>
+
 
 ---
 
