@@ -20,7 +20,7 @@
 | **Backend** | Java 17, Spring Boot, MyBatis |
 | **Batch** | Spring Batch |
 | **Database** | Oracle XE |
-| **Frontend** | Thymeleaf, JavaScript, CSS |
+| **Frontend** | HTML, Thymeleaf, JavaScript, CSS |
 | **CI/CD** | GitHub Actions, AWS EC2 |
 
 </p>
